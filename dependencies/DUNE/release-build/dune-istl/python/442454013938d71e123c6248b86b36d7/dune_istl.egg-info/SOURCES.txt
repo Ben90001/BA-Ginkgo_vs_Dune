@@ -1,8 +1,0 @@
-setup.py
-/Users/ben/Desktop/BA/src/DUNE/release-build/dune-istl/python/442454013938d71e123c6248b86b36d7/dune_istl.egg-info/PKG-INFO
-/Users/ben/Desktop/BA/src/DUNE/release-build/dune-istl/python/442454013938d71e123c6248b86b36d7/dune_istl.egg-info/SOURCES.txt
-/Users/ben/Desktop/BA/src/DUNE/release-build/dune-istl/python/442454013938d71e123c6248b86b36d7/dune_istl.egg-info/dependency_links.txt
-/Users/ben/Desktop/BA/src/DUNE/release-build/dune-istl/python/442454013938d71e123c6248b86b36d7/dune_istl.egg-info/not-zip-safe
-/Users/ben/Desktop/BA/src/DUNE/release-build/dune-istl/python/442454013938d71e123c6248b86b36d7/dune_istl.egg-info/requires.txt
-/Users/ben/Desktop/BA/src/DUNE/release-build/dune-istl/python/442454013938d71e123c6248b86b36d7/dune_istl.egg-info/top_level.txt
-dune/istl/__init__.py

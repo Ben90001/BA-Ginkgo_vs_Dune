@@ -1,8 +1,0 @@
-setup.py
-dune/istl/__init__.py
-dune_istl.egg-info/PKG-INFO
-dune_istl.egg-info/SOURCES.txt
-dune_istl.egg-info/dependency_links.txt
-dune_istl.egg-info/not-zip-safe
-dune_istl.egg-info/requires.txt
-dune_istl.egg-info/top_level.txt

@@ -1,7 +1,0 @@
-pip>=21.a
-portalocker
-numpy
-wheel
-setuptools>=41
-jinja2
-mpi4py
