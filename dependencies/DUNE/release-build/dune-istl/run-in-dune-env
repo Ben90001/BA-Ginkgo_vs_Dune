@@ -1,0 +1,21 @@
+#!/bin/bash
+# SPDX-FileCopyrightInfo: Copyright (C) DUNE Project contributors, see file LICENSE.md in module root
+# SPDX-License-Identifier: LicenseRef-GPL-2.0-only-with-DUNE-exception
+
+
+if [ -f "/Users/ben/Desktop/BA/src/DUNE/release-build/dune-python-env/bin/activate" ]; then
+  source /Users/ben/Desktop/BA/src/DUNE/release-build/dune-python-env/bin/activate
+else
+  echo "Dune internal virtual environment not found:"
+  echo "No activate script in /Users/ben/Desktop/BA/src/DUNE/release-build/dune-python-env/bin"
+  exit 77
+fi
+
+# test if build directory matches installed dune python packages
+python -m dune checkbuilddirs dune-istl /Users/ben/Desktop/BA/src/DUNE/release-build/dune-istl
+if [ $? -eq 0 ] ; then
+  "$@"
+else
+  echo "Dune python package could not be found."
+  exit 77
+fi

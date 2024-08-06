@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: dune-istl
+Version: 2.9.0
+Summary: Iterative solver template library which provides generic sparse matrix/vector classes and a variety of solvers based on these classes
+Author: The Dune Core developers
+Author-email: dune-devel@lists.dune-project.org
+Requires-Dist: dune-common
