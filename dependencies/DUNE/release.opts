@@ -1,8 +1,0 @@
-CMAKE_FLAGS="
--DCMAKE_C_COMPILER='/usr/local/bin/gcc-14'
--DCMAKE_CXX_COMPILER='/usr/local/bin/g++-14'
--DCMAKE_Fortran_COMPILER='/usr/local/bin/gfortran-14'
--DCMAKE_CXX_FLAGS_RELEASE='-O3 -DNDEBUG -g0 -funroll-loops -ftemplate-depth=5120 -march=native'
--DCMAKE_BUILD_TYPE=Release
--DDUNE_SYMLINK_TO_SOURCE_TREE=1
-"

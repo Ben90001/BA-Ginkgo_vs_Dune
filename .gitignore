@@ -1,11 +1,9 @@
 
-#excluding dune build for now
-#in hopes of including statically
-#hoping to give compiler greater scope for optimization
-src/DUNE/release-build
 
 
 
+# not including Dune, install via dune_installer
+dependencies/DUNE/
 
 
 

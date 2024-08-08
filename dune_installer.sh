@@ -8,12 +8,20 @@
 # here you may manually define command names
 # comment out these definitions to overwrite the default from your system
 export F77=gfortran-14
-export CC=gcc-14
-export CXX=g++-14
+#export CC=gcc-14
+#export CXX=g++-14
+export CC=clang
+export CXX=clang++
 export CXXFLAGS='-O3 -DNDEBUG'
 export MPICC=mpicc
 export MPICXX=mpicxx
 #export CMAKE=/home/hd/hd_hd/hd_wi126/local/bin/cmake
+
+# specify project details
+project_name="evaluation"
+module_dependencies="dune-common dune-istl"
+dune_version="2.9"
+maintainers_email="lu259@stud.uni-heidelberg.de"
 
 # print requirements
 print_requirements_message ()
@@ -123,6 +131,18 @@ echo "CMAKE_FLAGS=\"
 \"" > release.opts
 }
 
+# create project folder to use Dune in
+generate_custom_project ()
+{
+./dune-common/bin/duneproject <<EOF
+    dune-$project_name
+    $module_dependencies
+    $dune_version
+    $maintainers_email
+    y
+EOF
+}
+
 # create build script
 generate_buildscript ()
 {
@@ -130,7 +150,7 @@ echo '#!/bin/bash
 ROOT=$(pwd)
 BUILDDIR=$ROOT/release-build
 OPTSFILE=release.opts
-MODULES="common istl "
+MODULES="common istl evaluation "
 for i in $MODULES; do
     echo build $i
     ./dune-common/bin/dunecontrol --builddir=$BUILDDIR  --opts=$OPTSFILE --only=dune-$i all
@@ -142,4 +162,6 @@ chmod 755 buildmodules.sh
 #select here what you want to install
 checkout_dune_core
 generate_optsfile
+generate_custom_project
 generate_buildscript
+echo "END of dune_installer.sh"
