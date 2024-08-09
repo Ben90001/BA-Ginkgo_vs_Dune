@@ -4,6 +4,7 @@
 
 # not including Dune, install via dune_installer
 dependencies/DUNE/
+dependencies/GINKGO/
 
 
 
