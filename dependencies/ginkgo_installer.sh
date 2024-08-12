@@ -9,9 +9,6 @@ set -e
 # install
 mkdir GINKGO
 cd GINKGO
-mkdir include
-mkdir src
-cd src
 # download
 wget https://github.com/ginkgo-project/ginkgo/archive/refs/tags/v1.8.0.tar.gz
 tar -xvf $ginkgo_download_name
@@ -20,6 +17,5 @@ rm $ginkgo_download_name
 cd ginkgo-$ginkgo_version
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=/Users/ben/Desktop/BA/dependencies/GINKGO/include ..
-make
-
+cmake -DCMAKE_INSTALL_PREFIX=/Users/ben/Desktop/BA/dependencies/GINKGO/install_dir ..
+make -j8

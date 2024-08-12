@@ -7,11 +7,11 @@
 
 # here you may manually define command names
 # comment out these definitions to overwrite the default from your system
-export F77=gfortran-14
+#export F77=gfortran-14
 #export CC=gcc-14
 #export CXX=g++-14
-export CC=clang
-export CXX=clang++
+#export CC=clang
+#export CXX=clang++
 export CXXFLAGS='-O3 -DNDEBUG'
 export MPICC=mpicc
 export MPICXX=mpicxx

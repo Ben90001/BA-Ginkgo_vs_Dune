@@ -1,5 +1,4 @@
 #include<ginkgo/ginkgo.hpp>
-
 #include<iostream>
 #include<chrono>
 

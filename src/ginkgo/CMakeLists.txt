@@ -28,10 +28,17 @@ add_executable(
 	gko-evaluate-solvers.cc
 )
 
-target_link_libraries(
-	gko-evaluate-solvers
-	Ginkgo::ginkgo
-)
+target_link_libraries(	gko-evaluate-solvers	Ginkgo::ginkgo)
+
+#include_directories(
+#	/home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/include
+#	/home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/build/include
+#)
+#target_link_libraries(gko-evaluate-solvers 
+#	/home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/build/lib/libginkgo.so
+#	/home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/build/lib/libginkgo.so.1.8.0
+#)
+
 
 #include(Ginkgo)
 #gtest_discover_tests(main)
