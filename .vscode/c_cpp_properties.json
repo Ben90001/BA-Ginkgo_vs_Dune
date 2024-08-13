@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/spack-build/spack/opt/spack/linux-debian11-zen2/gcc-11.2.0/openmpi-4.1.1-hbh5tjmrhwzadsca6qwbvvp7kfiifwii/include/**"
+            ],
+            "defines": [],
+            "cStandard": "c17",
+            "cppStandard": "gnu++11",
+            "intelliSenseMode": "linux-gcc-x64"
+        },
+        {
+            "name": "Linux-Milan-opemMPI",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/spack-build/spack/opt/spack/linux-debian11-zen2/gcc-11.2.0/openmpi-4.1.1-hbh5tjmrhwzadsca6qwbvvp7kfiifwii/include/**"
+            ],
+            "defines": [],
+            "cStandard": "c17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "linux-gcc-x86",
+            "compilerPath": "/usr/bin/g++"
+        }
+    ],
+    "version": 4
+}

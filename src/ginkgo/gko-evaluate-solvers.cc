@@ -4,11 +4,11 @@
 
 
  // implementation using matrix_data -> uses AoS
-template <class MatrixType,typename CoefficientFunction, typename BoundaryTypeFunction>
+template <class MatrixType,typename CoefficientFunction, typename BoundaryTypeFunction, class ExecutorType>
 std::unique_ptr<MatrixType> diffusion_matrix1 (const size_t n, const size_t d,
     CoefficientFunction diffusion_coefficient,
     BoundaryTypeFunction dirichlet_boundary,
-    std::shared_ptr<gko::ReferenceExecutor> exec)
+    ExecutorType exec)
 {
   // relevant types
   //using MatrixEntry = double;
@@ -105,11 +105,11 @@ std::unique_ptr<MatrixType> diffusion_matrix1 (const size_t n, const size_t d,
 }
 
 // implementation using matrix_assembly_data -> uses unordered_map
-template <class MatrixType,typename CoefficientFunction, typename BoundaryTypeFunction>
+template <class MatrixType,typename CoefficientFunction, typename BoundaryTypeFunction, class ExecutorType>
 std::unique_ptr<MatrixType> diffusion_matrix (const size_t n, const size_t d,
     CoefficientFunction diffusion_coefficient,
     BoundaryTypeFunction dirichlet_boundary,
-    std::shared_ptr<gko::ReferenceExecutor> exec)
+    ExecutorType exec)
 {
   // relevant types
   //using MatrixEntry = double;
@@ -226,8 +226,10 @@ int main() {
     for(int i=0; i<d;i++) N*=n;
 
     //defining executer
-    const auto exec = gko::ReferenceExecutor::create();                                 //? parameters needed? @optimize
-
+    //const auto exec = gko::ReferenceExecutor::create();                                 //? parameters needed? @optimize1
+    const auto exec = gko::OmpExecutor::create();
+    //const auto exec = gko::CudaExecutor::create(0,gko::OmpExecutor::create());	
+    std::cout<<"-------------------------------Executer created---------------------------------------"<<std::endl;
     //create sparse matrix
     auto diffusion_coefficient = [](const std::vector<double>& x) { return 1.0; };
     auto dirichlet_boundary = [](const std::vector<double>& x) { return true; };
