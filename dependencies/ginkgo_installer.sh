@@ -17,5 +17,6 @@ rm $ginkgo_download_name
 cd ginkgo-$ginkgo_version
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=/Users/ben/Desktop/BA/dependencies/GINKGO/install_dir ..
-make -j8
+cmake -DGINKGO_BUILD_CUDA=OFF \
+        ..
+make -j16
