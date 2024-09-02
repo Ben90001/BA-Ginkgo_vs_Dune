@@ -8,7 +8,7 @@
             ],
             "defines": [],
             "cStandard": "c17",
-            "cppStandard": "gnu++11",
+            "cppStandard": "gnu++17",
             "intelliSenseMode": "linux-gcc-x64",
             "mergeConfigurations": false,
             "compilerPath": "/usr/bin/gcc",
