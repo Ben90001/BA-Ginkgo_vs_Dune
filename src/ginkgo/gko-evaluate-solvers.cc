@@ -1,64 +1,66 @@
 #include<ginkgo/ginkgo.hpp>
+
 #include<iostream>
 #include<chrono>
+#include<map>
+#include<fstream>
 
-
- // implementation using matrix_data -> uses AoS
-template <class MatrixType,typename CoefficientFunction, typename BoundaryTypeFunction, class ExecutorType>
-std::unique_ptr<MatrixType> diffusion_matrix1 (const size_t n, const size_t d,
-    CoefficientFunction diffusion_coefficient,
-    BoundaryTypeFunction dirichlet_boundary,
-    ExecutorType exec)
+// implementation using matrix_data -> uses AoS
+template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction, class ExecutorType>
+std::unique_ptr<MatrixType> diffusion_matrix1(const size_t n, const size_t d,
+                                              CoefficientFunction diffusion_coefficient,
+                                              BoundaryTypeFunction dirichlet_boundary,
+                                              ExecutorType exec)
 {
   // relevant types
-  //using MatrixEntry = double;
+  // using MatrixEntry = double;
   using mtx = MatrixType;
 
-
   // prepare grid information
-  std::vector<std::size_t> sizes(d+1,1);
-  for (int i=1; i<=d; ++i) sizes[i] = sizes[i-1]*n;         /// sizes={1,n,n^2,n^3,...,n^d} => time needed for total concentration equilibirum distance^d
-  double mesh_size = 1.0/n;
+  std::vector<std::size_t> sizes(d + 1, 1);
+  for (int i = 1; i <= d; ++i)
+    sizes[i] = sizes[i - 1] * n; /// sizes={1,n,n^2,n^3,...,n^d} => time needed for total concentration equilibirum distance^d
+  double mesh_size = 1.0 / n;
   int N = sizes[d];
 
   // create matrix entries
-  //gko::matrix_data<double,size_t> mtx_data{gko::dim<2,size_t>(N,N)};     //temporary COO representation (!might be unefficient) @changed
-  gko::matrix_data<> mtx_data{gko::dim<2>(N)};              ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
-  for (std::size_t index=0; index<sizes[d]; index++)        ///each grid cell
+  // gko::matrix_data<double,size_t> mtx_data{gko::dim<2,size_t>(N,N)};     //temporary COO representation (!might be unefficient) @changed
+  gko::matrix_data<> mtx_data{gko::dim<2>(N)};           ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
+  for (std::size_t index = 0; index < sizes[d]; index++) /// each grid cell
   {
     // create multiindex from row number                    ///fancy way of doing 3 for loops over n -> more powerful: works for all d
-    std::vector<std::size_t> multiindex(d,0);
-    auto copiedindex=index;
-    for (int i=d-1; i>=0; i--)
-    {                                                       ///start from the back!
-      multiindex[i] = copiedindex/sizes[i];                 ///implicit size_t cast? Yes: returns only how ofter size fites into cindex
-      copiedindex = copiedindex%sizes[i];                   ///basically returns the (missing) rest of the checking above 
+    std::vector<std::size_t> multiindex(d, 0);
+    auto copiedindex = index;
+    for (int i = d - 1; i >= 0; i--)
+    {                                         /// start from the back!
+      multiindex[i] = copiedindex / sizes[i]; /// implicit size_t cast? Yes: returns only how ofter size fites into cindex
+      copiedindex = copiedindex % sizes[i];   /// basically returns the (missing) rest of the checking above
     }
-    
-    //std::cout << "index=" << index;
-    //for (int i=0; i<d; ++i) std::cout << " " << multiindex[i];
-    //std::cout << std::endl;
+
+    // std::cout << "index=" << index;
+    // for (int i=0; i<d; ++i) std::cout << " " << multiindex[i];
+    // std::cout << std::endl;
 
     // the current cell
-    std::vector<double> center_position(d);                 ///scaled up multigrid/cell-position
-    for (int i=0; i<d; ++i) 
-      center_position[i] = multiindex[i]*mesh_size;
+    std::vector<double> center_position(d); /// scaled up multigrid/cell-position
+    for (int i = 0; i < d; ++i)
+      center_position[i] = multiindex[i] * mesh_size;
     double center_coefficient = diffusion_coefficient(center_position);
     double center_matrix_entry = 0.0;
 
     // loop over all neighbors
-    for (int i=0; i<d; i++)
+    for (int i = 0; i < d; i++)
     {
       // down neighbor
-      if (multiindex[i]>0)
+      if (multiindex[i] > 0)
       {
         // we have a neighbor cell
         std::vector<double> neighbor_position(center_position);
         neighbor_position[i] -= mesh_size;
         double neighbor_coefficient = diffusion_coefficient(neighbor_position);
-        double harmonic_average = 2.0/( (1.0/neighbor_coefficient) + (1.0/center_coefficient) );
-        //pA->entry(index,index-sizes[i]) = -harmonic_average;
-        mtx_data.nonzeros.emplace_back(index,index-sizes[i], -harmonic_average);                ///@changed
+        double harmonic_average = 2.0 / ((1.0 / neighbor_coefficient) + (1.0 / center_coefficient));
+        // pA->entry(index,index-sizes[i]) = -harmonic_average;
+        mtx_data.nonzeros.emplace_back(index, index - sizes[i], -harmonic_average); ///@changed
         center_matrix_entry += harmonic_average;
       }
       else
@@ -67,19 +69,19 @@ std::unique_ptr<MatrixType> diffusion_matrix1 (const size_t n, const size_t d,
         std::vector<double> neighbor_position(center_position);
         neighbor_position[i] = 0.0;
         if (dirichlet_boundary(neighbor_position))
-          center_matrix_entry += center_coefficient*2.0;
+          center_matrix_entry += center_coefficient * 2.0;
       }
 
       // up neighbor
-      if (multiindex[i]<n-1)
+      if (multiindex[i] < n - 1)
       {
         // we have a neighbor cell
         std::vector<double> neighbor_position(center_position);
         neighbor_position[i] += mesh_size;
         double neighbor_coefficient = diffusion_coefficient(neighbor_position);
-        double harmonic_average = 2.0/( (1.0/neighbor_coefficient) + (1.0/center_coefficient) );
-        //pA->entry(index,index+sizes[i]) = -harmonic_average;                                    
-        mtx_data.nonzeros.emplace_back(index,index+sizes[i], -harmonic_average);                ///@changed
+        double harmonic_average = 2.0 / ((1.0 / neighbor_coefficient) + (1.0 / center_coefficient));
+        // pA->entry(index,index+sizes[i]) = -harmonic_average;
+        mtx_data.nonzeros.emplace_back(index, index + sizes[i], -harmonic_average); ///@changed
         center_matrix_entry += harmonic_average;
       }
       else
@@ -88,79 +90,79 @@ std::unique_ptr<MatrixType> diffusion_matrix1 (const size_t n, const size_t d,
         std::vector<double> neighbor_position(center_position);
         neighbor_position[i] = 1.0;
         if (dirichlet_boundary(neighbor_position))
-          center_matrix_entry += center_coefficient*2.0;
+          center_matrix_entry += center_coefficient * 2.0;
       }
     }
 
     // finally the diagonal entry
-    //pA->entry(index,index) = center_matrix_entry;     //# easyer if more positive, time would be added here
-    mtx_data.nonzeros.emplace_back(index,index, center_matrix_entry);                           ///@changed
+    // pA->entry(index,index) = center_matrix_entry;     //# easyer if more positive, time would be added here
+    mtx_data.nonzeros.emplace_back(index, index, center_matrix_entry); ///@changed
   }
-  //create matrix from data
-  //auto stats = pA->compress();
-  auto pA = mtx::create(exec);                          ///@optimize (line below included)
+  // create matrix from data
+  // auto stats = pA->compress();
+  auto pA = mtx::create(exec); ///@optimize (line below included)
   pA->read(mtx_data);
 
   return pA;
 }
 
 // implementation using matrix_assembly_data -> uses unordered_map
-template <class MatrixType,typename CoefficientFunction, typename BoundaryTypeFunction, class ExecutorType>
-std::unique_ptr<MatrixType> diffusion_matrix (const size_t n, const size_t d,
-    CoefficientFunction diffusion_coefficient,
-    BoundaryTypeFunction dirichlet_boundary,
-    ExecutorType exec)
+template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction, class ExecutorType>
+std::unique_ptr<MatrixType> diffusion_matrix(const size_t n, const size_t d,
+                                             CoefficientFunction diffusion_coefficient,
+                                             BoundaryTypeFunction dirichlet_boundary,
+                                             ExecutorType exec)
 {
   // relevant types
-  //using MatrixEntry = double;
+  // using MatrixEntry = double;
   using mtx = MatrixType;
 
-
   // prepare grid information
-  std::vector<std::size_t> sizes(d+1,1);
-  for (int i=1; i<=d; ++i) sizes[i] = sizes[i-1]*n;
-  double mesh_size = 1.0/n;
+  std::vector<std::size_t> sizes(d + 1, 1);
+  for (int i = 1; i <= d; ++i)
+    sizes[i] = sizes[i - 1] * n;
+  double mesh_size = 1.0 / n;
   int N = sizes[d];
 
   // create matrix entries
-  //gko::matrix_assembly_data<> mtx_assembly_data{gko::dim<2>{N}};              ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
+  // gko::matrix_assembly_data<> mtx_assembly_data{gko::dim<2>{N}};              ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
   auto mtx_assembly_data = gko::matrix_assembly_data<>{gko::dim<2>(N)};
-  for (std::size_t index=0; index<sizes[d]; index++)
+  for (std::size_t index = 0; index < sizes[d]; index++)
   {
     // create multiindex from row number
-    std::vector<std::size_t> multiindex(d,0);
-    auto copiedindex=index;
-    for (int i=d-1; i>=0; i--)
+    std::vector<std::size_t> multiindex(d, 0);
+    auto copiedindex = index;
+    for (int i = d - 1; i >= 0; i--)
     {
-      multiindex[i] = copiedindex/sizes[i];
-      copiedindex = copiedindex%sizes[i];
+      multiindex[i] = copiedindex / sizes[i];
+      copiedindex = copiedindex % sizes[i];
     }
-    
-    //std::cout << "index=" << index;
-    //for (int i=0; i<d; ++i) std::cout << " " << multiindex[i];
-    //std::cout << std::endl;
+
+    // std::cout << "index=" << index;
+    // for (int i=0; i<d; ++i) std::cout << " " << multiindex[i];
+    // std::cout << std::endl;
 
     // the current cell
     std::vector<double> center_position(d);
-    for (int i=0; i<d; ++i) 
-      center_position[i] = multiindex[i]*mesh_size;
+    for (int i = 0; i < d; ++i)
+      center_position[i] = multiindex[i] * mesh_size;
     double center_coefficient = diffusion_coefficient(center_position);
     double center_matrix_entry = 0.0;
 
     // loop over all neighbors
-    for (int i=0; i<d; i++)
+    for (int i = 0; i < d; i++)
     {
       // down neighbor
-      if (multiindex[i]>0)
+      if (multiindex[i] > 0)
       {
         // we have a neighbor cell
         std::vector<double> neighbor_position(center_position);
         neighbor_position[i] -= mesh_size;
         double neighbor_coefficient = diffusion_coefficient(neighbor_position);
-        double harmonic_average = 2.0/( (1.0/neighbor_coefficient) + (1.0/center_coefficient) );
-        //pA->entry(index,index-sizes[i]) = -harmonic_average;
-        //mtx_data.nonzeros.emplace_back(index,index-sizes[i], -harmonic_average);                ///@changed
-        mtx_assembly_data.add_value(index, index-sizes[i], -harmonic_average);
+        double harmonic_average = 2.0 / ((1.0 / neighbor_coefficient) + (1.0 / center_coefficient));
+        // pA->entry(index,index-sizes[i]) = -harmonic_average;
+        // mtx_data.nonzeros.emplace_back(index,index-sizes[i], -harmonic_average);                ///@changed
+        mtx_assembly_data.add_value(index, index - sizes[i], -harmonic_average);
         center_matrix_entry += harmonic_average;
       }
       else
@@ -169,20 +171,20 @@ std::unique_ptr<MatrixType> diffusion_matrix (const size_t n, const size_t d,
         std::vector<double> neighbor_position(center_position);
         neighbor_position[i] = 0.0;
         if (dirichlet_boundary(neighbor_position))
-          center_matrix_entry += center_coefficient*2.0;
+          center_matrix_entry += center_coefficient * 2.0;
       }
 
       // up neighbor
-      if (multiindex[i]<n-1)
+      if (multiindex[i] < n - 1)
       {
         // we have a neighbor cell
         std::vector<double> neighbor_position(center_position);
         neighbor_position[i] += mesh_size;
         double neighbor_coefficient = diffusion_coefficient(neighbor_position);
-        double harmonic_average = 2.0/( (1.0/neighbor_coefficient) + (1.0/center_coefficient) );
-        //pA->entry(index,index+sizes[i]) = -harmonic_average;                                    
-        //mtx_data.nonzeros.emplace_back(index,index+sizes[i], -harmonic_average);                ///@changed
-        mtx_assembly_data.add_value(index, index+sizes[i], -harmonic_average);
+        double harmonic_average = 2.0 / ((1.0 / neighbor_coefficient) + (1.0 / center_coefficient));
+        // pA->entry(index,index+sizes[i]) = -harmonic_average;
+        // mtx_data.nonzeros.emplace_back(index,index+sizes[i], -harmonic_average);                ///@changed
+        mtx_assembly_data.add_value(index, index + sizes[i], -harmonic_average);
 
         center_matrix_entry += harmonic_average;
       }
@@ -192,83 +194,132 @@ std::unique_ptr<MatrixType> diffusion_matrix (const size_t n, const size_t d,
         std::vector<double> neighbor_position(center_position);
         neighbor_position[i] = 1.0;
         if (dirichlet_boundary(neighbor_position))
-          center_matrix_entry += center_coefficient*2.0;
+          center_matrix_entry += center_coefficient * 2.0;
       }
     }
 
     // finally the diagonal entry
-    //mtx_data.nonzeros.emplace_back(index,index, center_matrix_entry);                           ///@changed
+    // mtx_data.nonzeros.emplace_back(index,index, center_matrix_entry);                           ///@changed
     mtx_assembly_data.set_value(index, index, center_matrix_entry);
   }
-  //create matrix from data
-  //size_t nnz = (2*d+1)*N;
-  auto pA = mtx::create(exec);                          ///@optimize (line below included)
+  // create matrix from data
+  // size_t nnz = (2*d+1)*N;
+  auto pA = mtx::create(exec); ///@optimize (line below included)
   pA->read(mtx_assembly_data.get_ordered_data());
 
   return pA;
 }
 
 
+// returns time_to_generate and time_to_SpMV
+template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction>
+std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const size_t n, const size_t d,
+                                             CoefficientFunction diffusion_coefficient,
+                                             BoundaryTypeFunction dirichlet_boundary,
+                                             std::string exec_string,
+                                             std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>& exec_map)
+{
+  // set up
+  using vec = gko::matrix::Dense<double>;
+
+  const auto exec = exec_map.at(exec_string)();
+  size_t N = 1;
+  for (int i = 0; i < d; i++) N *= n;
+
+// assembl matrix
+  // synchronize before timing
+  exec->synchronize();
+  auto time_start = std::chrono::steady_clock::now();
+  auto pA = gko::share(diffusion_matrix<MatrixType>(n, d, diffusion_coefficient, dirichlet_boundary, exec));
+  // synchronize before timing
+  exec->synchronize();
+  auto time_stop = std::chrono::steady_clock::now();
+  auto time_to_generate = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
+  std::cout << "Generation Time n="<<n<<",d="<<d<<" : " << time_to_generate.count() / 1000000 << "." << time_to_generate.count() % 1000000 << "ms" << std::endl;
+
+// Calculate SpMV
+  // initialize vectors
+  auto x = vec::create(exec, gko::dim<2, size_t>(N, 1));
+  auto result = vec::create(exec, gko::dim<2, size_t>(N, 1));
+
+  gko::matrix_data<> vec_data{gko::dim<2>(N, 1)};
+  //for(size_t i=0; i<N;i++) vec_data.nonzeros.emplace_back(i,1UL,1.0);
+  x->read(vec_data);
+
+  // synchronize before timing
+  exec->synchronize();
+  time_start = std::chrono::steady_clock::now();
+  pA->apply(x, result);
+  // synchronize before timing
+  exec->synchronize();
+  time_stop = std::chrono::steady_clock::now();
+  auto time_to_SpMV = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
+  std::cout << "Time it took to apply A on x:  " << time_to_SpMV.count() / 1000000 << "." << time_to_SpMV.count() % 1000000 << "ms" << std::endl;
+  //std::cout << "result:  " << std::endl;
+  //gko::write(std::cout, result);
+
+  return std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds>(time_to_generate,time_to_SpMV);
+}
+
+int main(int argc, char* argv[])
+{
+  // handle input
+  if (argc!=3) {
+    std::cout<<argv[0]<< ": Wrong number of Arguments."<<std::endl;
+    std::cout<<"please give arguements: executor matrixformat n d"<<std::endl;
+    return 1;
+  }
+  const size_t n_max = std::stoi(argv[1]);
+  std::cout<<argv[0]<< ": Computing all matrixes with d=2 and d=3, with n=1 to "<<n_max<<std::endl;
+  const size_t rounds = std::stoi(argv[2]);
+  std::cout<<argv[0]<< ": Computing every variation  "<<rounds<<" times"<<std::endl;
+ 
+  std::cout << "-------------------------------STARTING:gko-evaluate-solvers---------------------------------------" << std::endl;
+  std::cout << "-------------------------------setting up Experiment-----------------------------------------------" << std::endl;
+  // set up experiment
+  //using mtx_entry = double;
+  using mtx_csr = gko::matrix::Csr<>;
 
 
-int main() {
+  auto diffusion_coefficient = [](const std::vector<double> &x) { return 1.0; };
+  auto dirichlet_boundary = [](const std::vector<double> &x) { return true; };
 
-    std::cout<<"-------------------------------STARTING:gko-evaluate-solvers---------------------------------------"<<std::endl;
+  std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>
+        exec_map{
+            {"omp", [] { return gko::OmpExecutor::create(); }},
+            {"cuda",[] { return gko::CudaExecutor::create(0,gko::OmpExecutor::create()); }},
+            {"hip",[] { return gko::HipExecutor::create(0, gko::OmpExecutor::create()); }},
+            {"dpcpp",[] { return gko::DpcppExecutor::create(0,gko::OmpExecutor::create()); }},
+            {"reference", [] { return gko::ReferenceExecutor::create(); }}};
 
-
-    //using mtx_entry = double;
-    using mtx = gko::matrix::Csr<>;
-    using vec = gko::matrix::Dense<double>;
-
-    const size_t n = 20;
-    const size_t d = 3;
-    size_t N = 1;
-    for(int i=0; i<d;i++) N*=n;
-
-    //defining executer
-    //const auto exec = gko::ReferenceExecutor::create();                                 //? parameters needed? @optimize1
-    const auto exec = gko::OmpExecutor::create();
-    //const auto exec = gko::CudaExecutor::create(0,gko::OmpExecutor::create());	
-    std::cout<<"-------------------------------Executer created---------------------------------------"<<std::endl;
-    //create sparse matrix
-    auto diffusion_coefficient = [](const std::vector<double>& x) { return 1.0; };
-    auto dirichlet_boundary = [](const std::vector<double>& x) { return true; };
-    //synchronize before timing
-    exec->synchronize();
-    auto time_start = std::chrono::steady_clock::now();
-    auto pA = gko::share(diffusion_matrix<mtx>(n,d,diffusion_coefficient,dirichlet_boundary,exec));
-    //synchronize before timing
-    exec->synchronize();
-    auto time_stop = std::chrono::steady_clock::now();
-    auto time_to_generate = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
-    std::cout << "Time it took to generate the matrix:  " << time_to_generate.count()/1000000 << "."<< time_to_generate.count()%1000000 << "ms" << std::endl; 
+  std::cout << "-------------------------------running Experiment--------------------------------------------------" << std::endl;
 
 
-    //initialize vectors
-    auto x = vec::create(exec,gko::dim<2,size_t>(N,1));
-    auto result = vec::create(exec,gko::dim<2,size_t>(N,1));
+/*
+  TODO: 
+    different executors
+    differnet matrix formats
+    different mtx_data versions (matrix_assembly_data vs. matrix_data)
+*/
+std::ofstream outfile("ginkgo_results.txt");
+for (size_t d=2; d<=3; d++){
+  for(size_t n=1; n<=n_max; n++){
+    for(size_t round_id =1; round_id<=rounds; round_id++){
+      auto gen_and_SpMV_times = executeRound<mtx_csr>(n,d,diffusion_coefficient,dirichlet_boundary,"reference",exec_map);
+      //export results to file
+      outfile << "reference" << " "
+              << "csr" << " "
+              << n << " "
+              << d << " "
+              << round_id<< " "
+              << gen_and_SpMV_times.first.count() << " "
+              << gen_and_SpMV_times.second.count() << "\n";
+    }
+  }
+}
 
-    gko::matrix_data<> vec_data{gko::dim<2>(N,1)}; 
-    /*for(size_t i=0; i<N;i++){
-        vec_data.nonzeros.emplace_back(i,1UL,1.0);
-    };*/
-    x->read(vec_data);
-    
-   
-    //synchronize before timing
-    exec->synchronize();
-    time_start = std::chrono::steady_clock::now();
-    pA->apply(x, result);
-    //synchronize before timing
-    exec->synchronize();
-    time_stop = std::chrono::steady_clock::now();
-    time_to_generate = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
-    std::cout << "Time it took to apply A on x:  " << time_to_generate.count()/1000000 <<"."<< time_to_generate.count()%1000000<< "ms" << std::endl;
-    std::cout << "result:  "<< std::endl;
-    //gko::write(std::cout, result);
-
-    std::cout<<"-------------------------------FINISHED:gko-evaluate-solvers---------------------------------------"<<std::endl;
-    return 0;
+  std::cout << "-------------------------------FINISHED:gko-evaluate-solvers---------------------------------------" << std::endl;
+  return 0;
 }
 
 /*// Ginkgo Hello World
@@ -302,7 +353,3 @@ int main() {
     mtx->apply(x, y);
     gko::write(std::cout, y);
 */
-
-
-
- 

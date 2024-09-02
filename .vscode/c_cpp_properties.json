@@ -3,25 +3,36 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**",
+                "/home/benh/BA-Ginkgo_vs_Dune/**",
                 "/opt/spack-build/spack/opt/spack/linux-debian11-zen2/gcc-11.2.0/openmpi-4.1.1-hbh5tjmrhwzadsca6qwbvvp7kfiifwii/include/**"
             ],
             "defines": [],
             "cStandard": "c17",
             "cppStandard": "gnu++11",
-            "intelliSenseMode": "linux-gcc-x64"
+            "intelliSenseMode": "linux-gcc-x64",
+            "mergeConfigurations": false,
+            "compilerPath": "/usr/bin/gcc",
+            "browse": {
+                "path": [
+                    "/home/benh/BA-Ginkgo_vs_Dune/**",
+                    "/opt/spack-build/spack/opt/spack/linux-debian11-zen2/gcc-11.2.0/openmpi-4.1.1-hbh5tjmrhwzadsca6qwbvvp7kfiifwii/include/**",
+                    "/home/benh/BA-Ginkgo_vs_Dune"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "compilerPathInCppPropertiesJson": ""
         },
         {
-            "name": "Linux-Milan-opemMPI",
+            "name": "Linux-Milan-MPI",
             "includePath": [
                 "${workspaceFolder}/**",
                 "/opt/spack-build/spack/opt/spack/linux-debian11-zen2/gcc-11.2.0/openmpi-4.1.1-hbh5tjmrhwzadsca6qwbvvp7kfiifwii/include/**"
             ],
             "defines": [],
             "cStandard": "c17",
-            "cppStandard": "gnu++14",
+            "cppStandard": "gnu++11",
             "intelliSenseMode": "linux-gcc-x86",
-            "compilerPath": "/usr/bin/g++"
+            "compilerPath": "/usr/bin/mpicc"
         }
     ],
     "version": 4
