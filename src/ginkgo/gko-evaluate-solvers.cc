@@ -25,7 +25,8 @@ std::unique_ptr<MatrixType> diffusion_matrix1(const size_t n, const size_t d,
 
   // create matrix entries
   // gko::matrix_data<double,size_t> mtx_data{gko::dim<2,size_t>(N,N)};     //temporary COO representation (!might be unefficient) @changed
-  gko::matrix_data<> mtx_data{gko::dim<2>(N)};           ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
+  //gko::matrix_data<> mtx_data{gko::dim<2>(N)};           ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
+  gko::matrix_data<> mtx_data = gko::matrix_data<>();
   for (std::size_t index = 0; index < sizes[d]; index++) /// each grid cell
   {
     // create multiindex from row number                    ///fancy way of doing 3 for loops over n -> more powerful: works for all d
@@ -235,7 +236,7 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const 
   exec->synchronize();
   auto time_stop = std::chrono::steady_clock::now();
   auto time_to_generate = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
-  std::cout << "Generation Time n="<<n<<",d="<<d<<" : " << time_to_generate.count() / 1000000 << "." << time_to_generate.count() % 1000000 << "ms" << std::endl;
+  std::cout << "(Ginkgo-"+exec_string+")Generation Time n="<<n<<",d="<<d<<" : " << time_to_generate.count() / 1000000 << "." << time_to_generate.count() % 1000000 << "ms" << std::endl;
 
 // Calculate SpMV
   // initialize vectors
@@ -263,10 +264,11 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const 
 
 int main(int argc, char* argv[])
 {
+  std::cout << "-------------------------------STARTING:gko-evaluate-solvers---------------------------------------" << std::endl;
   // handle input
   if (argc!=3) {
     std::cout<<argv[0]<< ": Wrong number of Arguments."<<std::endl;
-    std::cout<<"please give arguements: executor matrixformat n d"<<std::endl;
+    std::cout<<"please give arguements: n_max numberOfRounds"<<std::endl;
     return 1;
   }
   const size_t n_max = std::stoi(argv[1]);
@@ -274,7 +276,6 @@ int main(int argc, char* argv[])
   const size_t rounds = std::stoi(argv[2]);
   std::cout<<argv[0]<< ": Computing every variation  "<<rounds<<" times"<<std::endl;
  
-  std::cout << "-------------------------------STARTING:gko-evaluate-solvers---------------------------------------" << std::endl;
   std::cout << "-------------------------------setting up Experiment-----------------------------------------------" << std::endl;
   // set up experiment
   //using mtx_entry = double;
@@ -301,22 +302,21 @@ int main(int argc, char* argv[])
     differnet matrix formats
     different mtx_data versions (matrix_assembly_data vs. matrix_data)
 */
-std::ofstream outfile("ginkgo_results.txt");
-for (size_t d=2; d<=3; d++){
-  for(size_t n=1; n<=n_max; n++){
-    for(size_t round_id =1; round_id<=rounds; round_id++){
-      auto gen_and_SpMV_times = executeRound<mtx_csr>(n,d,diffusion_coefficient,dirichlet_boundary,"reference",exec_map);
-      //export results to file
-      outfile << "reference" << " "
-              << "csr" << " "
-              << n << " "
-              << d << " "
-              << round_id<< " "
-              << gen_and_SpMV_times.first.count() << " "
-              << gen_and_SpMV_times.second.count() << "\n";
+  std::ofstream outfile("results_ginkgo_reference_csr.txt");
+  for (size_t d=2; d<=3; d++){
+    for(size_t n=1; n<=n_max; n++){
+      for(size_t round_id =1; round_id<=rounds; round_id++){
+        auto gen_and_SpMV_times = executeRound<mtx_csr>(n,d,diffusion_coefficient,dirichlet_boundary,"reference",exec_map);
+        //export results to file
+        outfile << n << " "
+                << d << " "
+                << round_id<< " "
+                << gen_and_SpMV_times.first.count() << " "
+                << gen_and_SpMV_times.second.count() << "\n";
+      }
+      outfile.flush();
     }
   }
-}
 
   std::cout << "-------------------------------FINISHED:gko-evaluate-solvers---------------------------------------" << std::endl;
   return 0;

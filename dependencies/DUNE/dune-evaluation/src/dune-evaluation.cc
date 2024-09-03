@@ -6,6 +6,7 @@
 #endif
 #include <iostream>
 #include <memory>
+#include<fstream>
 
 #include <dune/common/parallel/mpihelper.hh> // An initializer of MPI   
 #include <dune/common/exceptions.hh> // We use exceptions 
@@ -112,27 +113,25 @@ std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matri
   return pA;
 }
 
-int main(int argc, char** argv)
+
+std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound (int n, int d)
 {
   try{
-    // gridsize in each dimension
-    int n = 20;
-    // #dimensions
-    int d = 3;
-
-
-
-    // initialize MPI if present
-    Dune::MPIHelper& helper = Dune::MPIHelper::instance(argc, argv);
+    // n= gridsize in each dimension
+    // d= #dimensions
 
     // create a sparse matrix
     auto diffusion_coefficient = [](const std::vector<double>& x) { return 1.0; };
     auto dirichlet_boundary = [](const std::vector<double>& x) { return true; };
-    Dune::Timer watch;
-    watch.reset();
+    // Dune::Timer watch;
+    // watch.reset();
+    auto time_start = std::chrono::steady_clock::now();
     auto pA = diffusion_matrix(n,d,diffusion_coefficient,dirichlet_boundary);
-    auto duration = watch.elapsed();
-    std::cout << "created matrix of size " << pA->N() << " times " << pA->M() << " duration " << duration*1000 << " ms" << std::endl;
+    auto time_stop = std::chrono::steady_clock::now();
+    auto time_to_generate = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
+  std::cout << "(DUNE) Generation Time n="<<n<<",d="<<d<<" : " << time_to_generate.count() / 1000000 << "." << time_to_generate.count() % 1000000 << "ms" << std::endl;
+    // auto duration = watch.elapsed();
+    // std::cout << "created matrix of size " << pA->N() << " times " << pA->M() << " duration " << duration*1000 << " ms" << std::endl;
     //print Matrix
     //size_t N = 1;
     //for(int i=0; i<d; i++) N*=n;
@@ -151,10 +150,16 @@ int main(int argc, char** argv)
     x = 1.0;                                        /// sets all elements to 1
 
     // time matrix vector product
-    watch.reset();
+    // watch.reset();
+    time_start = std::chrono::steady_clock::now();
     pA->mv(x, y);
-    duration = watch.elapsed();
-    std::cout << "duration of matrix vector product was " << duration*1000 << " ms" << std::endl;
+    time_stop = std::chrono::steady_clock::now();
+    auto time_to_SpMV = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
+    std::cout << "Time it took to apply A on x:  " << time_to_SpMV.count() / 1000000 << "." << time_to_SpMV.count() % 1000000 << "ms" << std::endl;
+    // duration = watch.elapsed();
+    // std::cout << "duration of matrix vector product was " << duration*1000 << " ms" << std::endl;
+
+    return std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds>(time_to_generate,time_to_SpMV);
   }
   catch (Dune::Exception &e){
     std::cerr << "Dune reported error: " << e << std::endl;
@@ -162,5 +167,45 @@ int main(int argc, char** argv)
   catch (...){                                                      // is this overloading the other catch, or is it just taking in the rest of the thrown errors?
     std::cerr << "Unknown exception thrown!" << std::endl;
   }
+}
+
+
+int main(int argc, char** argv)
+{
+  std::cout << "-------------------------------STARTING:dune-evaluation--------------------------------------------" << std::endl;
+  // handle input
+  if (argc!=3) {
+    std::cout<<argv[0]<< ": Wrong number of Arguments."<<std::endl;
+    std::cout<<"please give arguements: n_max numberOfRounds"<<std::endl;
+    return 1;
+  }
+  const size_t n_max = std::stoi(argv[1]);
+  std::cout<<argv[0]<< ": Computing all matrixes with d=2 and d=3, with n=1 to "<<n_max<<std::endl;
+  // number of repititions per n,d variation
+  const size_t rounds = std::stoi(argv[2]);
+  std::cout<<argv[0]<< ": Computing every variation  "<<rounds<<" times"<<std::endl;
+
+  // initialize MPI if present
+    Dune::MPIHelper& helper = Dune::MPIHelper::instance(argc, argv);
+ 
+  std::cout << "-------------------------------running Experiment--------------------------------------------------" << std::endl;
+
+  std::ofstream outfile("results_ISTL.txt");
+  for (size_t d=2; d<=3; d++){
+    for(size_t n=1; n<=n_max; n++){
+      for(size_t round_id =1; round_id<=rounds; round_id++){
+        auto gen_and_SpMV_times = executeRound(n,d);
+        //export results to file
+        outfile << n << " "
+                << d << " "
+                << round_id<< " "
+                << gen_and_SpMV_times.first.count() << " "
+                << gen_and_SpMV_times.second.count() << "\n";
+      }
+      outfile.flush();
+    }
+  }
+  std::cout << "-------------------------------FINISHED:dune-evaluation---------------------------------------" << std::endl;
+  
   return 0;
 }
