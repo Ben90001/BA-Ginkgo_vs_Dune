@@ -25,8 +25,7 @@ std::unique_ptr<MatrixType> diffusion_matrix1(const size_t n, const size_t d,
 
   // create matrix entries
   // gko::matrix_data<double,size_t> mtx_data{gko::dim<2,size_t>(N,N)};     //temporary COO representation (!might be unefficient) @changed
-  //gko::matrix_data<> mtx_data{gko::dim<2>(N)};           ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
-  gko::matrix_data<> mtx_data = gko::matrix_data<>();
+  gko::matrix_data<> mtx_data{gko::dim<2>(N)};           ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
   for (std::size_t index = 0; index < sizes[d]; index++) /// each grid cell
   {
     // create multiindex from row number                    ///fancy way of doing 3 for loops over n -> more powerful: works for all d
@@ -128,6 +127,7 @@ std::unique_ptr<MatrixType> diffusion_matrix(const size_t n, const size_t d,
   // create matrix entries
   // gko::matrix_assembly_data<> mtx_assembly_data{gko::dim<2>{N}};              ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
   auto mtx_assembly_data = gko::matrix_assembly_data<>{gko::dim<2>(N)};
+  // auto mtx_assembly_data = gko::matrix_assembly_data<>{};
   for (std::size_t index = 0; index < sizes[d]; index++)
   {
     // create multiindex from row number
@@ -163,7 +163,7 @@ std::unique_ptr<MatrixType> diffusion_matrix(const size_t n, const size_t d,
         double harmonic_average = 2.0 / ((1.0 / neighbor_coefficient) + (1.0 / center_coefficient));
         // pA->entry(index,index-sizes[i]) = -harmonic_average;
         // mtx_data.nonzeros.emplace_back(index,index-sizes[i], -harmonic_average);                ///@changed
-        mtx_assembly_data.add_value(index, index - sizes[i], -harmonic_average);
+        mtx_assembly_data.set_value(index, index - sizes[i], -harmonic_average);
         center_matrix_entry += harmonic_average;
       }
       else
@@ -185,7 +185,7 @@ std::unique_ptr<MatrixType> diffusion_matrix(const size_t n, const size_t d,
         double harmonic_average = 2.0 / ((1.0 / neighbor_coefficient) + (1.0 / center_coefficient));
         // pA->entry(index,index+sizes[i]) = -harmonic_average;
         // mtx_data.nonzeros.emplace_back(index,index+sizes[i], -harmonic_average);                ///@changed
-        mtx_assembly_data.add_value(index, index + sizes[i], -harmonic_average);
+        mtx_assembly_data.set_value(index, index + sizes[i], -harmonic_average);
 
         center_matrix_entry += harmonic_average;
       }
@@ -231,7 +231,8 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const 
   // synchronize before timing
   exec->synchronize();
   auto time_start = std::chrono::steady_clock::now();
-  auto pA = gko::share(diffusion_matrix<MatrixType>(n, d, diffusion_coefficient, dirichlet_boundary, exec));
+  auto pA = gko::share(diffusion_matrix1<MatrixType>(n, d, diffusion_coefficient, dirichlet_boundary, exec));
+  
   // synchronize before timing
   exec->synchronize();
   auto time_stop = std::chrono::steady_clock::now();
@@ -262,6 +263,8 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const 
   return std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds>(time_to_generate,time_to_SpMV);
 }
 
+
+
 int main(int argc, char* argv[])
 {
   std::cout << "-------------------------------STARTING:gko-evaluate-solvers---------------------------------------" << std::endl;
@@ -276,11 +279,10 @@ int main(int argc, char* argv[])
   const size_t rounds = std::stoi(argv[2]);
   std::cout<<argv[0]<< ": Computing every variation  "<<rounds<<" times"<<std::endl;
  
-  std::cout << "-------------------------------setting up Experiment-----------------------------------------------" << std::endl;
   // set up experiment
   //using mtx_entry = double;
   using mtx_csr = gko::matrix::Csr<>;
-
+  using mtx_ell = gko::matrix::Ell<>;
 
   auto diffusion_coefficient = [](const std::vector<double> &x) { return 1.0; };
   auto dirichlet_boundary = [](const std::vector<double> &x) { return true; };
@@ -293,6 +295,19 @@ int main(int argc, char* argv[])
             {"dpcpp",[] { return gko::DpcppExecutor::create(0,gko::OmpExecutor::create()); }},
             {"reference", [] { return gko::ReferenceExecutor::create(); }}};
 
+  std::cout << "-------------------------------configuring Experiment-----------------------------------------------" << std::endl;
+
+  //n_max from input
+  //rounds from input
+
+  using mtx = mtx_csr;
+  std::string exec_string = "reference";
+  //matrix_data vs matrix_assembly_data -> adjust called function in executeRound
+
+  std::string output_filename = "results_gko_mtx-data_ref_csr_1200_5.txt";
+
+
+
   std::cout << "-------------------------------running Experiment--------------------------------------------------" << std::endl;
 
 
@@ -302,11 +317,11 @@ int main(int argc, char* argv[])
     differnet matrix formats
     different mtx_data versions (matrix_assembly_data vs. matrix_data)
 */
-  std::ofstream outfile("results_ginkgo_reference_csr.txt");
+  std::ofstream outfile(output_filename);
   for (size_t d=2; d<=3; d++){
     for(size_t n=1; n<=n_max; n++){
       for(size_t round_id =1; round_id<=rounds; round_id++){
-        auto gen_and_SpMV_times = executeRound<mtx_csr>(n,d,diffusion_coefficient,dirichlet_boundary,"reference",exec_map);
+        auto gen_and_SpMV_times = executeRound<mtx>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map);
         //export results to file
         outfile << n << " "
                 << d << " "
