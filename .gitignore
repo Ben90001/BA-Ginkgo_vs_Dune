@@ -3,7 +3,8 @@
 
 
 # not including Dune, install via dune_installer
-dependencies/DUNE/release-build/
+dependencies/DUNE/
+#release-build/
 dependencies/GINKGO/
 
 src/ginkgo/build/
