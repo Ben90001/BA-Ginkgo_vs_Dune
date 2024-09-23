@@ -219,21 +219,20 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const 
                                              BoundaryTypeFunction dirichlet_boundary,
                                              std::string exec_string,
                                              std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>& exec_map,
-                                             std::string assembly_datastructure_string)
+                                             std::string device_string)
 {
   // set up
   using vec = gko::matrix::Dense<double>;
-
   const auto exec = exec_map.at(exec_string)();
   size_t N = 1;
   for (int i = 0; i < d; i++) N *= n;
-
   // set function to generate with
   using GeneratingFunction = std::unique_ptr<MatrixType>(*)(size_t, size_t, CoefficientFunction, BoundaryTypeFunction, decltype(exec));
   GeneratingFunction generate_matrix = nullptr;
-  if(assembly_datastructure_string=="cpu") generate_matrix = diffusion_matrix_cpu<MatrixType>;
-  else if (assembly_datastructure_string=="gpu") generate_matrix = diffusion_matrix_gpu<MatrixType>;
-  else throw std::invalid_argument("Invalid argument for assembly_datastructure_string");
+  if(device_string=="cpu") generate_matrix = diffusion_matrix_cpu<MatrixType>;
+  else if (device_string=="gpu") generate_matrix = diffusion_matrix_gpu<MatrixType>;
+  else throw std::invalid_argument("Invalid argument for device_string");
+
 // assembl matrix
   // synchronize before timing
   exec->synchronize();
@@ -276,24 +275,31 @@ int main(int argc, char* argv[])
 {
   std::cout << "-------------------------------STARTING:ginkgo-evaluation-------------------------------------------" << std::endl;
   // input handling
-  if (argc!=3) {
-    std::cout<<argv[0]<< ": Wrong number of Arguments."<<std::endl;
-    std::cout<<"please give arguements: n_max numberOfRounds"<<std::endl;
+  if (argc!=8) {
+    std::cout<<argv[0]<< ": Wrong number of Arguments: "<<argc<<std::endl;
+    std::cout<<"please give arguements: n_lowerBound n_upperBound rounds interval device executor format"<<std::endl;
+    std::cout<<"\n n_lowerBound:    evaluate starting with this n "
+              <<"\n n_upperBound:   evaluate up to this n "
+              <<"\n rounds:         repeat every variation this often "
+              <<"\n interval:       =i only evaluate every i-th value for n "
+              <<"\n device:         for usage of matrix_data or matrix_assembly_data (cpu,gpu) "
+              <<"\n executor:       what ginkgo executor to use (ref,omp,cuda,dpcpp,hip) "
+              <<"\n format:         what matrix format to use (csr,ell,coo,sellp,hybrid,sparsitycsr,dense) \n "<<std::endl;
+
     return 1;
   }
-  const size_t n_max = std::stoi(argv[1]);
-  std::cout<<argv[0]<< ": Computing all matrixes with d=2 and d=3, with n=1 to "<<n_max<<std::endl;
-  const size_t rounds = std::stoi(argv[2]);
-  std::cout<<argv[0]<< ": Computing every variation  "<<rounds<<" times"<<std::endl;
- 
-  // set up experiment
-  //using mtx_entry = double;
-  using mtx_csr = gko::matrix::Csr<>;
-  using mtx_ell = gko::matrix::Ell<>;
-  using mtx_coo = gko::matrix::Coo<>;
 
-  auto diffusion_coefficient = [](const std::vector<double> &x) { return 1.0; };
-  auto dirichlet_boundary = [](const std::vector<double> &x) { return true; };
+  // set up experiment
+  const size_t        n_lowerBound = std::stoi(argv[1]);
+  const size_t        n_upperBound = std::stoi(argv[2]);
+  const size_t        rounds = std::stoi(argv[3]);
+  const size_t        evaluation_interval = std::stoi(argv[4]);
+  const std::string   device_string = argv[5];
+  const std::string   exec_string = argv[6];
+  const std::string   mtx_string = argv[7];
+  std::string         output_filename = "gko_"+device_string+"_"+exec_string+"_"+mtx_string+"_" \
+                                        +std::to_string(n_lowerBound)+"-"+std::to_string(n_upperBound)+"n_" \
+                                        +std::to_string(evaluation_interval)+"i_"+std::to_string(rounds)+"r.txt";
 
   std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>
         exec_map{
@@ -301,41 +307,36 @@ int main(int argc, char* argv[])
             {"cuda",[] { return gko::CudaExecutor::create(0,gko::OmpExecutor::create()); }},
             {"hip",[] { return gko::HipExecutor::create(0, gko::OmpExecutor::create()); }},
             {"dpcpp",[] { return gko::DpcppExecutor::create(0,gko::OmpExecutor::create()); }},
-            {"reference", [] { return gko::ReferenceExecutor::create(); }}};
+            {"ref", [] { return gko::ReferenceExecutor::create(); }}};
 
-  std::cout << "-------------------------------configuring Experiment-----------------------------------------------" << std::endl;
+  auto diffusion_coefficient = [](const std::vector<double> &x) { return 1.0; };
+  auto dirichlet_boundary = [](const std::vector<double> &x) { return true; };
+  std::map<std::string, std::function<std::pair<std::chrono::nanoseconds, std::chrono::nanoseconds>(size_t, size_t)>>
+    execute_round_map{
+      {"csr", [&] (size_t n, size_t d){ return executeRound<gko::matrix::Csr<>>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
+      {"ell", [&] (size_t n, size_t d){ return executeRound<gko::matrix::Ell<>>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
+      {"coo", [&] (size_t n, size_t d){ return executeRound<gko::matrix::Coo<>>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }}};
 
-  //n_max from input
-  //rounds from input
-
-  using mtx = mtx_csr;
-  std::string exec_string = "reference";
-  std::string assembly_datastructure_string = "cpu"; // "cpu" or "gpu" (for matrix_data or matrix_assembly_data)
 
 
-  std::string output_filename = "results_gko_mtx-data_ref_csr_1200_5.txt";
+  std::cout<<argv[0]<< ": Computing all matrixes with d=2 and d=3, with n="<<n_lowerBound<<" to "<<n_upperBound<<std::endl;
+  std::cout<<argv[0]<< ": Computing every variation  "<<rounds<<" times"<<std::endl;
+  std::cout<<argv[0]<< ": Interval of evaluated values is "<<evaluation_interval<<" (1 equals evaluating every value of n in bounds)"<<std::endl;
+  std::cout<<argv[0]<< ": Configuration: "<<device_string<<" "<< exec_string<< " "<< mtx_string<<std::endl;
+  std::cout<<argv[0]<< ": Outputting to: "<< output_filename<<std::endl;
 
 
   std::cout << "-------------------------------running Experiment---------------------------------------------------" << std::endl;
 
-
-/*
-  TODO: 
-    different executors
-    differnet matrix formats
-    different mtx_data versions (matrix_assembly_data vs. matrix_data)
-*/
   std::ofstream outfile(output_filename);
   for (size_t d=2; d<=3; d++){
-    for(size_t n=1; n<=n_max; n++){
+    for(size_t n=n_lowerBound; n<=n_upperBound; n++){
+      if(n%evaluation_interval!=0) continue;    //skip condition
       for(size_t round_id =1; round_id<=rounds; round_id++){
-        auto gen_and_SpMV_times = executeRound<mtx>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assembly_datastructure_string);
+        // generate data
+        auto gen_and_SpMV_times = execute_round_map.at(mtx_string)(n,d);
         //export results to file
-        outfile << n << " "
-                << d << " "
-                << round_id<< " "
-                << gen_and_SpMV_times.first.count() << " "
-                << gen_and_SpMV_times.second.count() << "\n";
+        outfile << n << " " << d << " " << round_id<< " " << gen_and_SpMV_times.first.count() << " " << gen_and_SpMV_times.second.count() << "\n";
       }
       outfile.flush();
     }
