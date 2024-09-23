@@ -1,0 +1,8 @@
+CMAKE_FLAGS="
+-DCMAKE_C_COMPILER='/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/gcc'
+-DCMAKE_CXX_COMPILER='/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/g++'
+-DCMAKE_Fortran_COMPILER='/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/gfortran'
+-DCMAKE_CXX_FLAGS_RELEASE='-O3 -DNDEBUG -g0 -funroll-loops -ftemplate-depth=5120 -march=native'
+-DCMAKE_BUILD_TYPE=Release
+-DDUNE_SYMLINK_TO_SOURCE_TREE=1
+"
