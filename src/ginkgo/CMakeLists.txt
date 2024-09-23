@@ -24,12 +24,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 enable_testing()
 
 add_executable(
-	gko-evaluate-solvers
-	gko-evaluate-solvers.cc
+	ginkgo-evaluation
+	ginkgo-evaluation.cc
 )
 
 target_link_libraries(
-	gko-evaluate-solvers
+	ginkgo-evaluation
 	Ginkgo::ginkgo
 )
 

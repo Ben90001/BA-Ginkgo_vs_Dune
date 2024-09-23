@@ -11,5 +11,5 @@ rm -rf results
 mkdir results
 cd results
 ./../../dependencies/DUNE/release-build/dune-evaluation/src/dune-evaluation $n_max $rounds
-./../ginkgo/build/gko-evaluate-solvers $n_max $rounds
+./../ginkgo/build/ginkgo-evaluation $n_max $rounds
 
