@@ -7,7 +7,7 @@
 
 // implementation using matrix_data -> uses AoS
 template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction, class ExecutorType>
-std::unique_ptr<MatrixType> diffusion_matrix1(const size_t n, const size_t d,
+std::unique_ptr<MatrixType> diffusion_matrix_cpu(const size_t n, const size_t d,
                                               CoefficientFunction diffusion_coefficient,
                                               BoundaryTypeFunction dirichlet_boundary,
                                               ExecutorType exec)
@@ -108,7 +108,7 @@ std::unique_ptr<MatrixType> diffusion_matrix1(const size_t n, const size_t d,
 
 // implementation using matrix_assembly_data -> uses unordered_map
 template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction, class ExecutorType>
-std::unique_ptr<MatrixType> diffusion_matrix(const size_t n, const size_t d,
+std::unique_ptr<MatrixType> diffusion_matrix_gpu(const size_t n, const size_t d,
                                              CoefficientFunction diffusion_coefficient,
                                              BoundaryTypeFunction dirichlet_boundary,
                                              ExecutorType exec)
@@ -218,7 +218,8 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const 
                                              CoefficientFunction diffusion_coefficient,
                                              BoundaryTypeFunction dirichlet_boundary,
                                              std::string exec_string,
-                                             std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>& exec_map)
+                                             std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>& exec_map,
+                                             std::string assembly_datastructure_string)
 {
   // set up
   using vec = gko::matrix::Dense<double>;
@@ -227,11 +228,17 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const 
   size_t N = 1;
   for (int i = 0; i < d; i++) N *= n;
 
+  // set function to generate with
+  using GeneratingFunction = std::unique_ptr<MatrixType>(*)(size_t, size_t, CoefficientFunction, BoundaryTypeFunction, decltype(exec));
+  GeneratingFunction generate_matrix = nullptr;
+  if(assembly_datastructure_string=="cpu") generate_matrix = diffusion_matrix_cpu<MatrixType>;
+  else if (assembly_datastructure_string=="gpu") generate_matrix = diffusion_matrix_gpu<MatrixType>;
+  else throw std::invalid_argument("Invalid argument for assembly_datastructure_string");
 // assembl matrix
   // synchronize before timing
   exec->synchronize();
   auto time_start = std::chrono::steady_clock::now();
-  auto pA = gko::share(diffusion_matrix1<MatrixType>(n, d, diffusion_coefficient, dirichlet_boundary, exec));
+  auto pA = gko::share(generate_matrix(n, d, diffusion_coefficient, dirichlet_boundary, exec));
   
   // synchronize before timing
   exec->synchronize();
@@ -267,8 +274,8 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const 
 
 int main(int argc, char* argv[])
 {
-  std::cout << "-------------------------------STARTING:gko-evaluate-solvers---------------------------------------" << std::endl;
-  // handle input
+  std::cout << "-------------------------------STARTING:ginkgo-evaluation-------------------------------------------" << std::endl;
+  // input handling
   if (argc!=3) {
     std::cout<<argv[0]<< ": Wrong number of Arguments."<<std::endl;
     std::cout<<"please give arguements: n_max numberOfRounds"<<std::endl;
@@ -283,6 +290,7 @@ int main(int argc, char* argv[])
   //using mtx_entry = double;
   using mtx_csr = gko::matrix::Csr<>;
   using mtx_ell = gko::matrix::Ell<>;
+  using mtx_coo = gko::matrix::Coo<>;
 
   auto diffusion_coefficient = [](const std::vector<double> &x) { return 1.0; };
   auto dirichlet_boundary = [](const std::vector<double> &x) { return true; };
@@ -302,13 +310,13 @@ int main(int argc, char* argv[])
 
   using mtx = mtx_csr;
   std::string exec_string = "reference";
-  //matrix_data vs matrix_assembly_data -> adjust called function in executeRound
+  std::string assembly_datastructure_string = "cpu"; // "cpu" or "gpu" (for matrix_data or matrix_assembly_data)
+
 
   std::string output_filename = "results_gko_mtx-data_ref_csr_1200_5.txt";
 
 
-
-  std::cout << "-------------------------------running Experiment--------------------------------------------------" << std::endl;
+  std::cout << "-------------------------------running Experiment---------------------------------------------------" << std::endl;
 
 
 /*
@@ -321,7 +329,7 @@ int main(int argc, char* argv[])
   for (size_t d=2; d<=3; d++){
     for(size_t n=1; n<=n_max; n++){
       for(size_t round_id =1; round_id<=rounds; round_id++){
-        auto gen_and_SpMV_times = executeRound<mtx>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map);
+        auto gen_and_SpMV_times = executeRound<mtx>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assembly_datastructure_string);
         //export results to file
         outfile << n << " "
                 << d << " "
@@ -333,7 +341,7 @@ int main(int argc, char* argv[])
     }
   }
 
-  std::cout << "-------------------------------FINISHED:gko-evaluate-solvers---------------------------------------" << std::endl;
+  std::cout << "-------------------------------FINISHED:ginkgo-evaluation-------------------------------------------" << std::endl;
   return 0;
 }
 
