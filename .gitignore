@@ -7,6 +7,7 @@ dependencies/DUNE/release-build/
 dependencies/GINKGO/
 
 src/ginkgo/build/
+src/results
 
 
 

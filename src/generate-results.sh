@@ -3,7 +3,7 @@
 # bash setup
 set -x
 set -e
-
+#Notes for current run: yet to generate: all gpu data
 n_lowerBound="1"
 n_upperBound="400"
 rounds="4"
