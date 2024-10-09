@@ -22,12 +22,12 @@ echo "Script execution started at: $(date)" > $log_file
 # generate data -------------------------------------------------------------------------------------------------------
 ./../../dependencies/DUNE/release-build/dune-evaluation/src/dune-evaluation $n_max $rounds
 echo "Finished ISTL at         $(date)" >> $log_file
-for executor in "${executors[@]}"; do
-    for mtx_format in "${mtx_formats[@]}"; do
-        ./../ginkgo/build/ginkgo-evaluation $n_lowerBound $n_upperBound $rounds $interval $device $executor $mtx_format
-        echo "Finished with executor: $executor, matrix format: $mtx_format at      $(date)" >> $log_file
-    done
-done
+#for executor in "${executors[@]}"; do
+#    for mtx_format in "${mtx_formats[@]}"; do
+#        ./../ginkgo/build/ginkgo-evaluation $n_lowerBound $n_upperBound $rounds $interval $device $executor $mtx_format
+#        echo "Finished with executor: $executor, matrix format: $mtx_format at      $(date)" >> $log_file
+#    done
+#done
 # ---------------------------------------------------------------------------------------------------------------------
 
 echo "Script execution ended at: $(date)" >> $log_file
