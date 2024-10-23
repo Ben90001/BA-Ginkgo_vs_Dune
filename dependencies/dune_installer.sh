@@ -141,6 +141,8 @@ generate_custom_project ()
     $maintainers_email
     y
 EOF
+rm ./dune-evaluation/src/dune-evaluation.cc
+cp ../..//resources/dune-evaluation.cc ./dune-evaluation/src/
 }
 
 # create build script
