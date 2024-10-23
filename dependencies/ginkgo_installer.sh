@@ -6,6 +6,8 @@ ginkgo_download_name="v$ginkgo_version.tar.gz"
 set -x
 set -e
 
+spack env activate gcc-13
+
 # install
 mkdir GINKGO
 cd GINKGO

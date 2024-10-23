@@ -5,6 +5,8 @@
 # Currently UG, HDF5 and FFTW3 are supported.
 # If no argument is given it prints a list of software required for the build.
 
+spack env activate gcc-13
+
 # here you may manually define command names
 # comment out these definitions to overwrite the default from your system
 #export F77=gfortran-14
