@@ -8,10 +8,11 @@ n_lowerBound="1"
 n_upperBound="400"
 rounds="4"
 interval="1"
-devices=("gpu" "cpu")
-#executors=("ref" "omp")
-executors=("cuda")
-mtx_formats=("csr")
+#devices=("gpu" "cpu")
+devices=("cpu")
+executors=("ref" "cuda")
+#executors=("ref")
+mtx_formats=("sellp")
 #mtx_formats=("csr" "coo" "ell")
 
 rm -rf results

@@ -315,6 +315,7 @@ int main(int argc, char* argv[])
     execute_round_map{
       {"csr", [&] (size_t n, size_t d){ return executeRound<gko::matrix::Csr<>>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
       {"ell", [&] (size_t n, size_t d){ return executeRound<gko::matrix::Ell<>>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
+      {"sellp", [&] (size_t n, size_t d){ return executeRound<gko::matrix::Sellp<>>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
       {"coo", [&] (size_t n, size_t d){ return executeRound<gko::matrix::Coo<>>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }}};
 
 
