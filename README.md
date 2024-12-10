@@ -21,5 +21,17 @@ To install Ginkgo simply run:
 ```
 ./dependencies/ginkgo_installer.sh
 ```
-NOTE: This fully builds Ginkgo, compilation takes about 2h.  
+NOTE: This fully builds Ginkgo, compilation is set to use 64 cores. 
+The Spacke environment activation probably needs deactivation on other machines.
+
 The script builds into `dependencies/GINKGO/include`.  
+
+### Run Ginkgo
+To run the Ginkgo experiments install Ginkgo, run the following:    
+````
+cd src/ginkgo
+./rebuild.sh
+cd ..
+````
+From here modify the `src/generate-results.sh` script to run with only the needed input. Simply comment out the ISTL runs within the execution loop if those aren't needed.
+Results are outputed into `src/results/`.
