@@ -27,11 +27,13 @@ The Spacke environment activation probably needs deactivation on other machines.
 The script builds into `dependencies/GINKGO/include`.  
 
 ### Run Ginkgo
-To run the Ginkgo experiments install Ginkgo, run the following:    
+To run the Ginkgo experiments **install** Ginkgo as described above.    
+Afterwards **compile** the experiment as follows:    
 ````
 cd src/ginkgo
 ./rebuild.sh
 cd ..
 ````
-From here modify the `src/generate-results.sh` script to run with only the needed input. Simply comment out the ISTL runs within the execution loop if those aren't needed.
+To **run** with only the needed input modify `src/generate-results.sh` accordingly. Simply comment out the ISTL runs within the execution loop if those aren't needed.  
+NOTE: The `cpu`/`gpu` flag indicates not whether cpu or gpu is used but whethere `matrix_data` or `matrix_assembly_data` is used.
 Results are outputed into `src/results/`.
