@@ -19,7 +19,6 @@ rm $ginkgo_download_name
 cd ginkgo-$ginkgo_version
 mkdir build
 cd build
-#cmake -DGINKGO_CUDA_ARCHITECTURES=Turing\;75 ..
-# cmake -DGINKGO_BUILD_CUDA=OFF ..
+
 cmake ..
 make -j64

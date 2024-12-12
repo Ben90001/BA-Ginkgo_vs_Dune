@@ -26,6 +26,7 @@ std::unique_ptr<MatrixType> diffusion_matrix_cpu(const size_t n, const size_t d,
   // create matrix entries
   // gko::matrix_data<double,size_t> mtx_data{gko::dim<2,size_t>(N,N)};     //temporary COO representation (!might be unefficient) @changed
   gko::matrix_data<> mtx_data{gko::dim<2>(N)};           ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
+  //gko::matrix_data<> mtx_data{gko::dim<2>{N}}; //tested in 400-4 dataset
   for (std::size_t index = 0; index < sizes[d]; index++) /// each grid cell
   {
     // create multiindex from row number                    ///fancy way of doing 3 for loops over n -> more powerful: works for all d

@@ -7,6 +7,7 @@
 #include <iostream>
 #include <memory>
 #include<fstream>
+#include<cmath>
 
 #include <dune/common/parallel/mpihelper.hh> // An initializer of MPI   
 #include <dune/common/exceptions.hh> // We use exceptions 
@@ -17,6 +18,14 @@
 #include <dune/istl/bvector.hh> 
 #include <dune/istl/bcrsmatrix.hh>
 
+size_t getNNZ(int n, int dim){
+  if(dim==2) return 5*n*n - 4*n;
+  if(dim==3) return 7*n*n*n - 6*n*n;
+  for(int i=0; i<10000; i++){
+    std::cout<< "This shold not have happend, no applicable n for getNNZ in dune-evaluation.cc"<<"\n";
+  }
+  }
+
 /*
 * A function that produces a sparse matrix discretizing the
 * diffusion operator -\nabla \cdot (c(x) \nabla ... )
@@ -24,12 +33,13 @@
 * cells per direction.
 */
 template <typename CoefficientFunction, typename BoundaryTypeFunction>
-std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matrix (int n, int d, 
+std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matrix (int n, int d, std::string buildMode,
    CoefficientFunction diffusion_coefficient, BoundaryTypeFunction dirichlet_boundary)
 {
   // relevant types
   using MatrixEntry = Dune::FieldMatrix<double,1,1>;
   using Matrix = Dune::BCRSMatrix<MatrixEntry>;
+  //using BuildMode = Matrix::implicit
 
   // prepare grid information
   std::vector<std::size_t> sizes(d+1,1);
@@ -38,7 +48,14 @@ std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matri
   int N = sizes[d];
 
   // create sparse matrix
-  std::shared_ptr<Matrix> pA = std::make_shared<Matrix>(N,N,2*d+1,0.02,Matrix::implicit); /// n,m,average#nonzeros per row,compressionBufferSize,buildmode (bcrsmatrix.hh line784) //?-> 2% of n(=N here) memory as buffer
+  std::shared_ptr<Matrix> pA = nullptr;
+  if(buildMode == "implicit"){
+    pA= std::make_shared<Matrix>(N,N,2*d+1,0.02,Matrix::implicit); /// n,m,average#nonzeros per row,compressionBufferSize,buildmode (bcrsmatrix.hh line784) //?-> 2% of n(=N here) memory as buffer
+  }
+  if(buildMode == "row_wise"){
+    pA= std::make_shared<Matrix>(N,N,getNNZ(n,d),Matrix::row_wise);
+  }
+
   for (std::size_t index=0; index<sizes[d]; index++)  ///each grid cell
   {
     // create multiindex from row number          ///fancy way of doing 3 for loops over n -> more general, works for all d
@@ -107,14 +124,16 @@ std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matri
     }
 
     // finally the diagonal entry
-    pA->entry(index,index) = center_matrix_entry;     //# easyer if more positive, time would be added here <-????? wtf did I mean by that?
+    pA->entry(index,index) = center_matrix_entry;
   }
-  auto stats = pA->compress();
+  if(buildMode == "implicit"){
+    auto stats = pA->compress();
+  }
   return pA;
 }
 
 
-std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound (int n, int d)
+std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound (int n, int d, std::string buildMode)
 {
   try{
     // n= gridsize in each dimension
@@ -126,10 +145,10 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound (int n
     // Dune::Timer watch;
     // watch.reset();
     auto time_start = std::chrono::steady_clock::now();
-    auto pA = diffusion_matrix(n,d,diffusion_coefficient,dirichlet_boundary);
+    auto pA = diffusion_matrix(n,d,buildMode,diffusion_coefficient,dirichlet_boundary);
     auto time_stop = std::chrono::steady_clock::now();
     auto time_to_generate = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
-  std::cout << "(DUNE) Generation Time n="<<n<<",d="<<d<<" : " << time_to_generate.count() / 1000000 << "." << time_to_generate.count() % 1000000 << "ms" << std::endl;
+    std::cout << "(DUNE) Generation Time n="<<n<<",d="<<d<<" : " << time_to_generate.count() / 1000000 << "." << time_to_generate.count() % 1000000 << "ms" << std::endl;
     // auto duration = watch.elapsed();
     // std::cout << "created matrix of size " << pA->N() << " times " << pA->M() << " duration " << duration*1000 << " ms" << std::endl;
     //print Matrix
@@ -174,27 +193,29 @@ int main(int argc, char** argv)
 {
   std::cout << "-------------------------------STARTING:dune-evaluation--------------------------------------------" << std::endl;
   // handle input
-  if (argc!=3) {
+  if (argc!=4) {
     std::cout<<argv[0]<< ": Wrong number of Arguments."<<std::endl;
-    std::cout<<"please give arguements: n_max numberOfRounds"<<std::endl;
+    std::cout<<"please give arguements: n_max numberOfRounds buildMode"<<std::endl;
     return 1;
   }
   const size_t n_max = std::stoi(argv[1]);
-  std::cout<<argv[0]<< ": Computing all matrixes with d=2 and d=3, with n=1 to "<<n_max<<std::endl;
+  std::cout<<argv[0]<< ": Computing all matrices with d=2 and d=3, with n=1 to "<<n_max<<std::endl;
   // number of repititions per n,d variation
   const size_t rounds = std::stoi(argv[2]);
   std::cout<<argv[0]<< ": Computing every variation  "<<rounds<<" times"<<std::endl;
+  const std::string buildMode = argv[3];
+  std::cout<<argv[0]<< ": Computing with BuildMode:  "<<buildMode<<" "<<std::endl;
 
   // initialize MPI if present
     Dune::MPIHelper& helper = Dune::MPIHelper::instance(argc, argv);
  
   std::cout << "-------------------------------running Experiment--------------------------------------------------" << std::endl;
 
-  std::ofstream outfile("results_ISTL.txt");
+  std::ofstream outfile("ISTL_"+buildMode+".txt");
   for (size_t d=2; d<=3; d++){
     for(size_t n=1; n<=n_max; n++){
       for(size_t round_id =1; round_id<=rounds; round_id++){
-        auto gen_and_SpMV_times = executeRound(n,d);
+        auto gen_and_SpMV_times = executeRound(n,d,buildMode);
         //export results to file
         outfile << n << " "
                 << d << " "
