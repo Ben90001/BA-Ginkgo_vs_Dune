@@ -7,6 +7,7 @@
 #include <iostream>
 #include <memory>
 #include<fstream>
+#include <filesystem>
 #include<cmath>
 
 #include <dune/common/parallel/mpihelper.hh> // An initializer of MPI   
@@ -17,14 +18,15 @@
 
 #include <dune/istl/bvector.hh> 
 #include <dune/istl/bcrsmatrix.hh>
+#include <dune/istl/matrixmarket.hh>
 
 size_t getNNZ(int n, int dim){
   if(dim==2) return 5*n*n - 4*n;
   if(dim==3) return 7*n*n*n - 6*n*n;
   for(int i=0; i<10000; i++){
-    std::cout<< "This shold not have happend, no applicable n for getNNZ in dune-evaluation.cc"<<"\n";
+    std::cout<< "This should not have happend, no applicable n for getNNZ in dune-evaluation.cc"<<"\n";
   }
-  }
+}
 
 /*
 * A function that produces a sparse matrix discretizing the
@@ -33,28 +35,23 @@ size_t getNNZ(int n, int dim){
 * cells per direction.
 */
 template <typename CoefficientFunction, typename BoundaryTypeFunction>
-std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matrix (int n, int d, std::string buildMode,
+std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matrix_implicit (int n, int d,
    CoefficientFunction diffusion_coefficient, BoundaryTypeFunction dirichlet_boundary)
 {
   // relevant types
   using MatrixEntry = Dune::FieldMatrix<double,1,1>;
   using Matrix = Dune::BCRSMatrix<MatrixEntry>;
-  //using BuildMode = Matrix::implicit
 
   // prepare grid information
   std::vector<std::size_t> sizes(d+1,1);
-  for (int i=1; i<=d; ++i) sizes[i] = sizes[i-1]*n;     /// sizes={1,n,n^2,n^3,...,n^d} => time needed for total concentration equilibirum distance^d
+  for (int i=1; i<=d; ++i) sizes[i] = sizes[i-1]*n;
   double mesh_size = 1.0/n;
   int N = sizes[d];
 
   // create sparse matrix
   std::shared_ptr<Matrix> pA = nullptr;
-  if(buildMode == "implicit"){
-    pA= std::make_shared<Matrix>(N,N,2*d+1,0.02,Matrix::implicit); /// n,m,average#nonzeros per row,compressionBufferSize,buildmode (bcrsmatrix.hh line784) //?-> 2% of n(=N here) memory as buffer
-  }
-  if(buildMode == "row_wise"){
-    pA= std::make_shared<Matrix>(N,N,getNNZ(n,d),Matrix::row_wise);
-  }
+  pA= std::make_shared<Matrix>(N,N,2*d+1,0.02,Matrix::implicit); /// n,m,average#nonzeros per row,compressionBufferSize,buildmode (bcrsmatrix.hh line784) //?-> 2% of n(=N here) memory as buffer
+//pA= std::make_shared<Matrix>(N,N,getNNZ(n,d),Matrix::row_wise);
 
   for (std::size_t index=0; index<sizes[d]; index++)  ///each grid cell
   {
@@ -62,14 +59,10 @@ std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matri
     std::vector<std::size_t> multiindex(d,0);
     auto copiedindex=index;
     for (int i=d-1; i>=0; i--)
-    {                                             ///start from the back!
-      multiindex[i] = copiedindex/sizes[i];       ///implicit size_t cast? Yes: returns only how ofter size fites into cindex
-      copiedindex = copiedindex%sizes[i];         ///basically returns the (missing) rest of the checking above 
+    {
+      multiindex[i] = copiedindex/sizes[i];
+      copiedindex = copiedindex%sizes[i];
     }
-    
-    //std::cout << "index=" << index;
-    //for (int i=0; i<d; ++i) std::cout << " " << multiindex[i];
-    //std::cout << std::endl;
 
     // the current cell
     std::vector<double> center_position(d);       ///scaled up multigrid/cell-position
@@ -89,8 +82,7 @@ std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matri
         neighbor_position[i] -= mesh_size;
         double neighbor_coefficient = diffusion_coefficient(neighbor_position);
         double harmonic_average = 2.0/( (1.0/neighbor_coefficient) + (1.0/center_coefficient) );
-        //! This is a different(much bigger) Matrix, than the imagined multiindex matrix (=actual grid)
-        pA->entry(index,index-sizes[i]) = -harmonic_average;          /// row is same as center, but column in grid -1 on i-axis //? -size is index shift??
+        pA->entry(index,index-sizes[i]) = -harmonic_average;          /// row is same as center, but column in grid -1 on i-axis
         center_matrix_entry += harmonic_average;
       }
       else
@@ -124,16 +116,140 @@ std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matri
     }
 
     // finally the diagonal entry
-    pA->entry(index,index) = center_matrix_entry;     //# easyer if more positive, time would be added here <-????? wtf did I mean by that?
+    pA->entry(index,index) = center_matrix_entry;
   }
-  if(buildMode == "implicit"){
-    auto stats = pA->compress();
-  }
+  auto stats = pA->compress();
+
   return pA;
 }
 
+template <typename CoefficientFunction, typename BoundaryTypeFunction>
+std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matrix_row_wise (int n, int d,
+   CoefficientFunction diffusion_coefficient, BoundaryTypeFunction dirichlet_boundary)
+{
+  // relevant types
+  using MatrixEntry = Dune::FieldMatrix<double,1,1>;
+  using Matrix = Dune::BCRSMatrix<MatrixEntry>;
 
-std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound (int n, int d, std::string buildMode)
+  // prepare grid information
+  std::vector<std::size_t> sizes(d+1,1);
+  for (int i=1; i<=d; ++i) sizes[i] = sizes[i-1]*n;
+  double mesh_size = 1.0/n;
+  int N = sizes[d];
+
+  // create sparse matrix
+  std::shared_ptr<Matrix> pA = nullptr;
+    // third parameter is an optional upper bound for the number
+    // of nonzeros. If given the matrix will use one array for all values
+    // as opposed to one for each row.
+  pA= std::make_shared<Matrix>(N,N,getNNZ(n,d),Matrix::row_wise);
+
+  // create sparsity pattern
+  typedef Matrix::CreateIterator Iter;
+  for(Iter row=(*pA).createbegin(); row!=(*pA).createend(); ++row)  ///each grid cell (=row)
+  {
+std::cout<<"Sparsity Pattern generation: row.index()" << row.index()<< std::endl;
+    // create multiindex from row number
+    std::vector<std::size_t> multiindex(d,0);
+    auto copiedindex=row.index();
+    for (int i=d-1; i>=0; i--)
+    {
+      multiindex[i] = copiedindex/sizes[i];
+      copiedindex = copiedindex%sizes[i];
+    }
+
+    // loop over all neighbors
+    for (int i=0; i<d; i++)
+    {
+      // down neighbor
+      if (multiindex[i]>0)
+      {
+        // we have a neighbor cell
+        row.insert(row.index()-sizes[i]);
+      }// else: cell is on boundary
+
+      // up neighbor
+      if (multiindex[i]<n-1)
+      {
+        // we have a neighbor cell
+        row.insert(row.index()+sizes[i]);
+      }// else: cell is on boundary
+    }
+    // finally the diagonal entry
+    row.insert(row.index());
+  }
+
+  // fill in nnz values
+  for (std::size_t index=0; index<sizes[d]; index++)  ///each grid cell
+  {
+    // create multiindex from row number          ///fancy way of doing 3 for loops over n -> more general, works for all d
+    std::vector<std::size_t> multiindex(d,0);
+    auto copiedindex=index;
+    for (int i=d-1; i>=0; i--)
+    {
+      multiindex[i] = copiedindex/sizes[i];
+      copiedindex = copiedindex%sizes[i];
+    }
+std::cout<<"Fill in iteration: index=" << index<< std::endl;
+    // the current cell
+    std::vector<double> center_position(d);       ///scaled up multigrid/cell-position
+    for (int i=0; i<d; ++i) 
+      center_position[i] = multiindex[i]*mesh_size;
+    double center_coefficient = diffusion_coefficient(center_position);
+    double center_matrix_entry = 0.0;
+
+    // loop over all neighbors
+    for (int i=0; i<d; i++)
+    {
+      // down neighbor
+      if (multiindex[i]>0)
+      {
+        // we have a neighbor cell
+        std::vector<double> neighbor_position(center_position);
+        neighbor_position[i] -= mesh_size;
+        double neighbor_coefficient = diffusion_coefficient(neighbor_position);
+        double harmonic_average = 2.0/( (1.0/neighbor_coefficient) + (1.0/center_coefficient) );
+        (*pA)[index][index-sizes[i]] = -harmonic_average;          /// row is same as center, but column in grid -1 on i-axis
+        center_matrix_entry += harmonic_average;
+      }
+      else
+      {
+        // current cell is on the boundary in this direction
+        std::vector<double> neighbor_position(center_position);
+        neighbor_position[i] = 0.0;
+        if (dirichlet_boundary(neighbor_position))
+          center_matrix_entry += center_coefficient*2.0;
+      }
+
+      // up neighbor
+      if (multiindex[i]<n-1)
+      {
+        // we have a neighbor cell
+        std::vector<double> neighbor_position(center_position);
+        neighbor_position[i] += mesh_size;
+        double neighbor_coefficient = diffusion_coefficient(neighbor_position);
+        double harmonic_average = 2.0/( (1.0/neighbor_coefficient) + (1.0/center_coefficient) );
+        (*pA)[index][index+sizes[i]] = -harmonic_average;
+        center_matrix_entry += harmonic_average;
+      }
+      else
+      {
+        // current cell is on the boundary in this direction
+        std::vector<double> neighbor_position(center_position);
+        neighbor_position[i] = 1.0;
+        if (dirichlet_boundary(neighbor_position))
+          center_matrix_entry += center_coefficient*2.0;
+      }
+    }
+
+    // finally the diagonal entry
+    (*pA)[index][index] = center_matrix_entry;
+  }
+
+  return pA;
+}
+
+std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound (int n, int d, size_t round,std::string filename, std::string buildMode)
 {
   try{
     // n= gridsize in each dimension
@@ -142,13 +258,39 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound (int n
     // create a sparse matrix
     auto diffusion_coefficient = [](const std::vector<double>& x) { return 1.0; };
     auto dirichlet_boundary = [](const std::vector<double>& x) { return true; };
+    using MatrixEntry = Dune::FieldMatrix<double,1,1>;
+    using Matrix = Dune::BCRSMatrix<MatrixEntry>;
+    std::shared_ptr<Matrix> pA = nullptr;
     // Dune::Timer watch;
     // watch.reset();
     auto time_start = std::chrono::steady_clock::now();
-    auto pA = diffusion_matrix(n,d,buildMode,diffusion_coefficient,dirichlet_boundary);
     auto time_stop = std::chrono::steady_clock::now();
+    if(buildMode == "implicit"){
+      std::cout<< "Generating with BuildMode implicit"<<std::endl;
+      auto time_start = std::chrono::steady_clock::now();
+      pA = diffusion_matrix_implicit(n,d,diffusion_coefficient,dirichlet_boundary);
+      auto time_stop = std::chrono::steady_clock::now();
+    }
+    else if(buildMode == "row_wise"){
+      std::cout<< "Generating with BuildMode row_wise"<<std::endl;
+      auto time_start = std::chrono::steady_clock::now();
+      pA = diffusion_matrix_row_wise(n,d,diffusion_coefficient,dirichlet_boundary);
+      auto time_stop = std::chrono::steady_clock::now();
+    }
+    else{ std::cout<< "Oh no, unknown BuildMode"<<std::endl;}
+ 
     auto time_to_generate = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
     std::cout << "(DUNE) Generation Time n="<<n<<",d="<<d<<" : " << time_to_generate.count() / 1000000 << "." << time_to_generate.count() % 1000000 << "ms" << std::endl;
+    std::cout << "created matrix of size " << pA->N() << " times " << pA->M() << std::endl;
+    if(round == 1){
+      // store matrix
+      std::string foldername = "result-verification/A/";
+      std::filesystem::create_directories(foldername);
+      std::string filename_A = foldername+std::to_string(n)+"_"+std::to_string(d)+"_A_"+filename+".mtx";
+      Dune::storeMatrixMarket(*pA,filename_A);
+      std::cout<< "stored matrix to "+filename_A<<std::endl;
+    }
+
     // auto duration = watch.elapsed();
     // std::cout << "created matrix of size " << pA->N() << " times " << pA->M() << " duration " << duration*1000 << " ms" << std::endl;
     //print Matrix
@@ -175,6 +317,14 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound (int n
     time_stop = std::chrono::steady_clock::now();
     auto time_to_SpMV = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
     std::cout << "Time it took to apply A on x:  " << time_to_SpMV.count() / 1000000 << "." << time_to_SpMV.count() % 1000000 << "ms" << std::endl;
+    if(round == 1){
+      // store SpMV result y
+      std::string foldername = "result-verification/y/";
+      std::filesystem::create_directories(foldername);
+      std::string filename_y = foldername+std::to_string(n)+"_"+std::to_string(d)+"_y_"+filename+".mtx";
+      Dune::storeMatrixMarket(y,filename_y);
+      std::cout<< "stored result y to "+filename_y<<std::endl;
+    }
     // duration = watch.elapsed();
     // std::cout << "duration of matrix vector product was " << duration*1000 << " ms" << std::endl;
 
@@ -210,12 +360,12 @@ int main(int argc, char** argv)
     Dune::MPIHelper& helper = Dune::MPIHelper::instance(argc, argv);
  
   std::cout << "-------------------------------running Experiment--------------------------------------------------" << std::endl;
-
-  std::ofstream outfile("ISTL_"+buildMode+".txt");
+  std::string filename = "ISTL_"+buildMode;
+  std::ofstream outfile(filename +".txt");
   for (size_t d=2; d<=3; d++){
     for(size_t n=1; n<=n_max; n++){
       for(size_t round_id =1; round_id<=rounds; round_id++){
-        auto gen_and_SpMV_times = executeRound(n,d,buildMode);
+        auto gen_and_SpMV_times = executeRound(n,d,round_id,filename,buildMode);
         //export results to file
         outfile << n << " "
                 << d << " "
@@ -230,3 +380,14 @@ int main(int argc, char** argv)
   
   return 0;
 }
+
+
+
+    // print Non Zeros
+    /*
+    for (std::size_t i = 0; i < pA->N(); ++i) { // Loop over all rows
+        for (auto it = (*pA)[i].begin(); it != (*pA)[i].end(); ++it) { // Loop over non-zero entries in the row
+            std::cout << "Entry (" << i << ", " << it.index() << ") = " << *it << std::endl;
+        }
+    }
+    */

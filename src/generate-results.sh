@@ -37,7 +37,7 @@ done
 for executor in "${executors[@]}"; do
     for device in "${devices[@]}"; do
         for mtx_format in "${mtx_formats[@]}"; do
-            ./../ginkgo/build/ginkgo-evaluation $n_lowerBound $n_upperBound $rounds $interval $device $executor $mtx_format
+            #./../ginkgo/build/ginkgo-evaluation $n_lowerBound $n_upperBound $rounds $interval $device $executor $mtx_format
             echo "Finished with executor: $executor, matrix format: $mtx_format at      $(date)" >> $log_file
         done
     done
