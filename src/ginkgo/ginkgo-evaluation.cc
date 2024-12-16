@@ -216,7 +216,9 @@ std::unique_ptr<MatrixType> diffusion_matrix_gpu(const size_t n, const size_t d,
 
 // returns time_to_generate and time_to_SpMV
 template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction>
-std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const size_t n, const size_t d, size_t round, std::string filename,
+std::vector<std::chrono::nanoseconds> executeRound(
+                                             const size_t n, const size_t d, const size_t max_iters, 
+                                             const size_t round, std::string filename,
                                              CoefficientFunction diffusion_coefficient,
                                              BoundaryTypeFunction dirichlet_boundary,
                                              std::string exec_string,
@@ -235,7 +237,7 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const 
   else if (device_string=="gpu") generate_matrix = diffusion_matrix_gpu<MatrixType>;
   else throw std::invalid_argument("Invalid argument for device_string");
 
-// assembl matrix
+// assembl matrix A
   // synchronize before timing
   exec->synchronize();
   auto time_start = std::chrono::steady_clock::now();
@@ -243,8 +245,8 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const 
   // synchronize before timing
   exec->synchronize();
   auto time_stop = std::chrono::steady_clock::now();
-  auto time_to_generate = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
-  std::cout << "(Ginkgo-"+exec_string+")Generation Time n="<<n<<",d="<<d<<" : " << time_to_generate.count() / 1000000 << "." << time_to_generate.count() % 1000000 << "ms" << std::endl;
+  auto time_to_generate_A = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
+  std::cout << "(Ginkgo-"+exec_string+")Generation Time of A n="<<n<<",d="<<d<<" : " << time_to_generate_A.count() / 1000000 << "." << time_to_generate_A.count() % 1000000 << "ms" << std::endl;
   
   // store matrix
   if(round == 1){
@@ -289,7 +291,63 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const 
       std::cout<< "stored SpMV result y to "+filename_y<<std::endl;
   }
 
-  return std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds>(time_to_generate,time_to_SpMV);
+// generate CG preconditioned solver with Jacobi
+  using cg = gko::solver::Cg<>;
+  using bj = gko::preconditioner::Jacobi<>;
+  auto solver_factory = cg::build()
+                             .with_criteria(gko::stop::Iteration::build()
+                                                .with_max_iters(max_iters)
+                                                .on(exec))
+                             .with_preconditioner(bj::build()
+                                                .with_max_block_size(1u)
+                                                .on(exec))
+                             .on(exec);
+  // build Solver
+  exec->synchronize();
+  time_start = std::chrono::steady_clock::now();
+  auto solver = solver_factory->generate(pA);
+  exec->synchronize();
+  time_stop = std::chrono::steady_clock::now();
+  auto time_to_generate_solver = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
+  std::cout << "(Ginkgo-"+exec_string+")Generation Time of solver n="<<n<<",d="<<d<<" : " << time_to_generate_solver.count() / 1000000 << "." << time_to_generate_solver.count() % 1000000 << "ms" << std::endl;
+  
+/*
+  // store preconditioned CG solver S
+  if(round == 1){
+      std::string foldername = "result-verification/S/";
+      std::filesystem::create_directories(foldername);
+      std::string filename_S = foldername+std::to_string(n)+"_"+std::to_string(d)+"_S_"+filename+".mtx";
+      std::ofstream outfilestream(filename_S);
+      gko::write(outfilestream,S);
+      std::cout<< "stored preconditioned CG solver S to "+filename_S<<std::endl;
+  }
+*/
+
+// apply CG solver
+  // set both rhs and initial iterate x_k to 1
+  auto rhs = gko::clone(x);
+  auto x_k = gko::clone(x);
+  exec->synchronize();
+  time_start = std::chrono::steady_clock::now();
+  solver->apply(rhs, x_k);
+  exec->synchronize();
+  time_stop = std::chrono::steady_clock::now();
+  auto time_to_CG = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
+  std::cout << "Time it took to run CG solver with "<<std::to_string(max_iters)<<" iterations:  " 
+            << time_to_CG.count() / 1000000 << "." << time_to_CG.count() % 1000000 << "ms" << std::endl;
+  
+  // store CG result after max_iters iterations
+  if(round == 1){
+      std::string foldername = "result-verification/x_k/";
+      std::filesystem::create_directories(foldername);
+      std::string filename_x_k = foldername+std::to_string(n)+"_"+std::to_string(d)+"_x_k_"+filename+".mtx";
+      std::ofstream outfilestream(filename_x_k);
+      gko::write(outfilestream,x_k);
+      std::cout<< "CG result x_k after "+std::to_string(max_iters)+" iterations to "+filename_x_k<<std::endl;
+  }
+
+  //return std::vector<std::chrono::nanoseconds>{time_to_generate_A,time_to_SpMV,time_to_generate_S,time_to_CG};
+  return std::vector<std::chrono::nanoseconds>{time_to_generate_A,time_to_SpMV,time_to_CG};
 }
 
 
@@ -298,13 +356,14 @@ int main(int argc, char* argv[])
 {
   std::cout << "-------------------------------STARTING:ginkgo-evaluation-------------------------------------------" << std::endl;
   // input handling
-  if (argc!=8) {
+  if (argc!=9) {
     std::cout<<argv[0]<< ": Wrong number of Arguments: "<<argc<<std::endl;
-    std::cout<<"please give arguements: n_lowerBound n_upperBound rounds interval device executor format"<<std::endl;
+    std::cout<<"please give arguements: n_lowerBound n_upperBound rounds interval max_iters device executor format"<<std::endl;
     std::cout<<"\n n_lowerBound:    evaluate starting with this n "
               <<"\n n_upperBound:   evaluate up to this n "
               <<"\n rounds:         repeat every variation this often "
               <<"\n interval:       =i only evaluate every i-th value for n "
+              <<"\n max_iters:      stoping criterion for CG - stopping after max_iters iterations "
               <<"\n device:         for usage of matrix_data or matrix_assembly_data (cpu,gpu) "
               <<"\n executor:       what ginkgo executor to use (ref,omp,cuda,dpcpp,hip) "
               <<"\n format:         what matrix format to use (csr,ell,coo,sellp,hybrid,sparsitycsr,dense) \n "<<std::endl;
@@ -317,11 +376,12 @@ int main(int argc, char* argv[])
   const size_t        n_upperBound = std::stoi(argv[2]);
   const size_t        rounds = std::stoi(argv[3]);
   const size_t        evaluation_interval = std::stoi(argv[4]);
-  const std::string   device_string = argv[5];
-  const std::string   exec_string = argv[6];
-  const std::string   mtx_string = argv[7];
+  const size_t        max_iters = std::stoi(argv[5]);
+  const std::string   device_string = argv[6];
+  const std::string   exec_string = argv[7];
+  const std::string   mtx_string = argv[8];
   std::string         output_filename = "gko_"+device_string+"_"+exec_string+"_"+mtx_string+"_" \
-                                        +std::to_string(n_lowerBound)+"-"+std::to_string(n_upperBound)+"n_" \
+                                        +std::to_string(n_lowerBound)+"-"+std::to_string(n_upperBound)+"n_CG"+std::to_string(max_iters)+"_" \
                                         +std::to_string(evaluation_interval)+"i_"+std::to_string(rounds)+"r.txt";
 
   std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>
@@ -334,12 +394,15 @@ int main(int argc, char* argv[])
 
   auto diffusion_coefficient = [](const std::vector<double> &x) { return 1.0; };
   auto dirichlet_boundary = [](const std::vector<double> &x) { return true; };
-  std::map<std::string, std::function<std::pair<std::chrono::nanoseconds, std::chrono::nanoseconds>(size_t, size_t, size_t, std::string)>>
+  std::map<
+    std::string, 
+    std::function<std::vector<std::chrono::nanoseconds>
+                  (size_t, size_t, size_t, size_t, std::string)>>
     execute_round_map{
-      {"csr", [&] (size_t n, size_t d, size_t round,std::string filename){ return executeRound<gko::matrix::Csr<>>(n,d,round,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
-      {"ell", [&] (size_t n, size_t d, size_t round,std::string filename){ return executeRound<gko::matrix::Ell<>>(n,d,round,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
-      {"sellp", [&] (size_t n, size_t d, size_t round,std::string filename){ return executeRound<gko::matrix::Sellp<>>(n,d,round,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
-      {"coo", [&] (size_t n, size_t d, size_t round,std::string filename){ return executeRound<gko::matrix::Coo<>>(n,d,round,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }}};
+      {"csr", [&] (size_t n, size_t d, size_t max_iters, size_t round,std::string filename){ return executeRound<gko::matrix::Csr<>>(n,d,max_iters,round,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
+      {"ell", [&] (size_t n, size_t d, size_t max_iters, size_t round,std::string filename){ return executeRound<gko::matrix::Ell<>>(n,d,max_iters,round,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
+      {"sellp", [&] (size_t n, size_t d, size_t max_iters, size_t round,std::string filename){ return executeRound<gko::matrix::Sellp<>>(n,d,max_iters,round,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
+      {"coo", [&] (size_t n, size_t d, size_t max_iters, size_t round,std::string filename){ return executeRound<gko::matrix::Coo<>>(n,d,max_iters,round,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }}};
 
 
 
@@ -358,9 +421,9 @@ int main(int argc, char* argv[])
       if(n%evaluation_interval!=0) continue;    //skip condition
       for(size_t round_id =1; round_id<=rounds; round_id++){
         // generate data
-        auto gen_and_SpMV_times = execute_round_map.at(mtx_string)(n,d,round_id,output_filename);
+        auto round_results = execute_round_map.at(mtx_string)(n,d,max_iters,round_id,output_filename);
         //export results to file
-        outfile << n << " " << d << " " << round_id<< " " << gen_and_SpMV_times.first.count() << " " << gen_and_SpMV_times.second.count() << "\n";
+        outfile << n << " " << d << " " << round_id<< " " << round_results[0].count() << " " << round_results[1].count() << round_results[2].count()<< "\n";
       }
       outfile.flush();
     }

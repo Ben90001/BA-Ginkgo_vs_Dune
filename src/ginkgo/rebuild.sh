@@ -16,4 +16,5 @@ cmake \
 make
 
 # test immediately
-./ginkgo-evaluation 1 5 1 1 cpu ref csr
+# n_min n_max rounds interval max_iters assemblyStructure executor format
+./ginkgo-evaluation 1 5 1 1 5 cpu ref csr
