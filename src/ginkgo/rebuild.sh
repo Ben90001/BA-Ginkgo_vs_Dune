@@ -14,3 +14,6 @@ cmake \
 	-DGinkgo_DIR=/home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/build \
 	..
 make
+
+# test immediately
+./ginkgo-evaluation 1 5 1 1 cpu ref csr

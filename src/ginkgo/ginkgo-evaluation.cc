@@ -4,6 +4,7 @@
 #include<chrono>
 #include<map>
 #include<fstream>
+#include<filesystem> //requires cpp17
 
 // implementation using matrix_data -> uses AoS
 template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction, class ExecutorType>
@@ -215,7 +216,7 @@ std::unique_ptr<MatrixType> diffusion_matrix_gpu(const size_t n, const size_t d,
 
 // returns time_to_generate and time_to_SpMV
 template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction>
-std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const size_t n, const size_t d,
+std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const size_t n, const size_t d, size_t round, std::string filename,
                                              CoefficientFunction diffusion_coefficient,
                                              BoundaryTypeFunction dirichlet_boundary,
                                              std::string exec_string,
@@ -239,33 +240,54 @@ std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound(const 
   exec->synchronize();
   auto time_start = std::chrono::steady_clock::now();
   auto pA = gko::share(generate_matrix(n, d, diffusion_coefficient, dirichlet_boundary, exec));
-  
   // synchronize before timing
   exec->synchronize();
   auto time_stop = std::chrono::steady_clock::now();
   auto time_to_generate = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
   std::cout << "(Ginkgo-"+exec_string+")Generation Time n="<<n<<",d="<<d<<" : " << time_to_generate.count() / 1000000 << "." << time_to_generate.count() % 1000000 << "ms" << std::endl;
+  
+  // store matrix
+  if(round == 1){
+      std::string foldername = "result-verification/A/";
+      std::filesystem::create_directories(foldername);
+      std::string filename_A = foldername+std::to_string(n)+"_"+std::to_string(d)+"_A_"+filename+".mtx";
+      std::ofstream outfilestream(filename_A);
+      gko::write(outfilestream,pA);
+      std::cout<< "stored matrix to "+filename_A<<std::endl;
+  }
 
 // Calculate SpMV
   // initialize vectors
   auto x = vec::create(exec, gko::dim<2, size_t>(N, 1));
-  auto result = vec::create(exec, gko::dim<2, size_t>(N, 1));
+  auto y = vec::create(exec, gko::dim<2, size_t>(N, 1));
 
   gko::matrix_data<> vec_data{gko::dim<2>(N, 1)};
-  //for(size_t i=0; i<N;i++) vec_data.nonzeros.emplace_back(i,1UL,1.0);
+  for(size_t i=0; i<N;i++) vec_data.nonzeros.emplace_back(i,0,1.0);
   x->read(vec_data);
+  //std::cout<<"x upon reading its non defined but declared input data:"<<std::endl;
+  //gko::write(std::cout,x);
 
   // synchronize before timing
   exec->synchronize();
   time_start = std::chrono::steady_clock::now();
-  pA->apply(x, result);
+  pA->apply(x, y);
   // synchronize before timing
   exec->synchronize();
   time_stop = std::chrono::steady_clock::now();
   auto time_to_SpMV = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
   std::cout << "Time it took to apply A on x:  " << time_to_SpMV.count() / 1000000 << "." << time_to_SpMV.count() % 1000000 << "ms" << std::endl;
-  //std::cout << "result:  " << std::endl;
-  //gko::write(std::cout, result);
+  //std::cout << "y:  " << std::endl;
+  //gko::write(std::cout, y);
+
+  // store SpMV result y
+  if(round == 1){
+      std::string foldername = "result-verification/y/";
+      std::filesystem::create_directories(foldername);
+      std::string filename_y = foldername+std::to_string(n)+"_"+std::to_string(d)+"_y_"+filename+".mtx";
+      std::ofstream outfilestream(filename_y);
+      gko::write(outfilestream,y);
+      std::cout<< "stored SpMV result y to "+filename_y<<std::endl;
+  }
 
   return std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds>(time_to_generate,time_to_SpMV);
 }
@@ -312,12 +334,12 @@ int main(int argc, char* argv[])
 
   auto diffusion_coefficient = [](const std::vector<double> &x) { return 1.0; };
   auto dirichlet_boundary = [](const std::vector<double> &x) { return true; };
-  std::map<std::string, std::function<std::pair<std::chrono::nanoseconds, std::chrono::nanoseconds>(size_t, size_t)>>
+  std::map<std::string, std::function<std::pair<std::chrono::nanoseconds, std::chrono::nanoseconds>(size_t, size_t, size_t, std::string)>>
     execute_round_map{
-      {"csr", [&] (size_t n, size_t d){ return executeRound<gko::matrix::Csr<>>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
-      {"ell", [&] (size_t n, size_t d){ return executeRound<gko::matrix::Ell<>>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
-      {"sellp", [&] (size_t n, size_t d){ return executeRound<gko::matrix::Sellp<>>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
-      {"coo", [&] (size_t n, size_t d){ return executeRound<gko::matrix::Coo<>>(n,d,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }}};
+      {"csr", [&] (size_t n, size_t d, size_t round,std::string filename){ return executeRound<gko::matrix::Csr<>>(n,d,round,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
+      {"ell", [&] (size_t n, size_t d, size_t round,std::string filename){ return executeRound<gko::matrix::Ell<>>(n,d,round,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
+      {"sellp", [&] (size_t n, size_t d, size_t round,std::string filename){ return executeRound<gko::matrix::Sellp<>>(n,d,round,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
+      {"coo", [&] (size_t n, size_t d, size_t round,std::string filename){ return executeRound<gko::matrix::Coo<>>(n,d,round,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }}};
 
 
 
@@ -336,7 +358,7 @@ int main(int argc, char* argv[])
       if(n%evaluation_interval!=0) continue;    //skip condition
       for(size_t round_id =1; round_id<=rounds; round_id++){
         // generate data
-        auto gen_and_SpMV_times = execute_round_map.at(mtx_string)(n,d);
+        auto gen_and_SpMV_times = execute_round_map.at(mtx_string)(n,d,round_id,output_filename);
         //export results to file
         outfile << n << " " << d << " " << round_id<< " " << gen_and_SpMV_times.first.count() << " " << gen_and_SpMV_times.second.count() << "\n";
       }
