@@ -6,9 +6,9 @@
 #endif
 #include <iostream>
 #include <memory>
-#include<fstream>
+#include <fstream>
 #include <filesystem>
-#include<cmath>
+#include <cmath>
 
 #include <dune/common/parallel/mpihelper.hh> // An initializer of MPI   
 #include <dune/common/exceptions.hh> // We use exceptions 
@@ -19,6 +19,9 @@
 #include <dune/istl/bvector.hh> 
 #include <dune/istl/bcrsmatrix.hh>
 #include <dune/istl/matrixmarket.hh>
+#include <dune/istl/preconditioners.hh>
+#include <dune/istl/solvers.hh>
+#include <dune/istl/operators.hh>
 
 size_t getNNZ(int n, int dim){
   if(dim==2) return 5*n*n - 4*n;
@@ -51,7 +54,6 @@ std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matri
   // create sparse matrix
   std::shared_ptr<Matrix> pA = nullptr;
   pA= std::make_shared<Matrix>(N,N,2*d+1,0.02,Matrix::implicit); /// n,m,average#nonzeros per row,compressionBufferSize,buildmode (bcrsmatrix.hh line784) //?-> 2% of n(=N here) memory as buffer
-//pA= std::make_shared<Matrix>(N,N,getNNZ(n,d),Matrix::row_wise);
 
   for (std::size_t index=0; index<sizes[d]; index++)  ///each grid cell
   {
@@ -148,7 +150,7 @@ std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matri
   typedef Matrix::CreateIterator Iter;
   for(Iter row=(*pA).createbegin(); row!=(*pA).createend(); ++row)  ///each grid cell (=row)
   {
-std::cout<<"Sparsity Pattern generation: row.index()" << row.index()<< std::endl;
+    //std::cout<<"Sparsity Pattern generation: row.index()" << row.index()<< std::endl;             //debug
     // create multiindex from row number
     std::vector<std::size_t> multiindex(d,0);
     auto copiedindex=row.index();
@@ -190,7 +192,7 @@ std::cout<<"Sparsity Pattern generation: row.index()" << row.index()<< std::endl
       multiindex[i] = copiedindex/sizes[i];
       copiedindex = copiedindex%sizes[i];
     }
-std::cout<<"Fill in iteration: index=" << index<< std::endl;
+    //std::cout<<"Fill in iteration: index=" << index<< std::endl;            //debug
     // the current cell
     std::vector<double> center_position(d);       ///scaled up multigrid/cell-position
     for (int i=0; i<d; ++i) 
@@ -249,86 +251,212 @@ std::cout<<"Fill in iteration: index=" << index<< std::endl;
   return pA;
 }
 
-std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds> executeRound (int n, int d, size_t round,std::string filename, std::string buildMode)
+void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_time,\
+                                                    std::string filename, std::string buildMode)
 {
   try{
-    // n= gridsize in each dimension
-    // d= #dimensions
+    // n = gridsize in each dimension
+    // dim = #dimensions
+    std::cout<< "---------------------"<<"(DUNE) n="<<n<<" dim="<<dim<<"---------------------"<<std::endl;
 
-    // create a sparse matrix
+  // create a sparse matrix
     auto diffusion_coefficient = [](const std::vector<double>& x) { return 1.0; };
     auto dirichlet_boundary = [](const std::vector<double>& x) { return true; };
     using MatrixEntry = Dune::FieldMatrix<double,1,1>;
     using Matrix = Dune::BCRSMatrix<MatrixEntry>;
     std::shared_ptr<Matrix> pA = nullptr;
-    // Dune::Timer watch;
-    // watch.reset();
-    auto time_start = std::chrono::steady_clock::now();
-    auto time_stop = std::chrono::steady_clock::now();
+
+    auto time_start = std::chrono::high_resolution_clock::now();
+    auto time_stop = std::chrono::high_resolution_clock::now();
+
     if(buildMode == "implicit"){
       std::cout<< "Generating with BuildMode implicit"<<std::endl;
-      auto time_start = std::chrono::steady_clock::now();
-      pA = diffusion_matrix_implicit(n,d,diffusion_coefficient,dirichlet_boundary);
-      auto time_stop = std::chrono::steady_clock::now();
+      time_start = std::chrono::high_resolution_clock::now();
+      time_stop = time_start;
+      auto duration = time_stop - time_start;
+      auto duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+      auto duration_sum = duration_cast;
+      long rep = min_reps;
+      long finished_reps = 0;
+      std::string foldername = "gen/";
+      std::filesystem::create_directories(foldername);
+      std::ofstream outfile_gen(foldername+"gen_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+      while (duration_sum < min_time && rep < 1000000000)
+      {
+        for (long k = 0; k < rep; k++){
+          time_start = std::chrono::high_resolution_clock::now();
+          pA = diffusion_matrix_implicit(n,dim,diffusion_coefficient,dirichlet_boundary);
+          time_stop = std::chrono::high_resolution_clock::now();
+          duration = time_stop - time_start;
+          duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+          outfile_gen 
+            << n << " "
+            << dim << " "
+            << finished_reps + k << " "
+            << duration_cast << "\n";
+          duration_sum += duration_cast;
+        }
+        outfile_gen.flush();
+        std::cout << "(DUNE) Gen: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
+        finished_reps +=rep;
+        rep *= 2;
+      }
+      outfile_gen.close();
     }
     else if(buildMode == "row_wise"){
       std::cout<< "Generating with BuildMode row_wise"<<std::endl;
-      auto time_start = std::chrono::steady_clock::now();
-      pA = diffusion_matrix_row_wise(n,d,diffusion_coefficient,dirichlet_boundary);
-      auto time_stop = std::chrono::steady_clock::now();
+      time_start = std::chrono::high_resolution_clock::now();
+      time_stop = time_start;
+      auto duration = time_stop - time_start;
+      auto duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+      auto duration_sum = duration_cast;
+      long rep = min_reps;
+      long finished_reps = 0;
+      std::string foldername = "gen/";
+      std::filesystem::create_directories(foldername);
+      std::ofstream outfile_gen(foldername+"gen_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+      while (duration_sum < min_time && rep < 1000000000)
+      {
+        for (long k = 0; k < rep; k++){
+          time_start = std::chrono::high_resolution_clock::now();
+          pA = diffusion_matrix_row_wise(n,dim,diffusion_coefficient,dirichlet_boundary);
+          time_stop = std::chrono::high_resolution_clock::now();
+          duration = time_stop - time_start;
+          duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+          outfile_gen 
+            << n << " "
+            << dim << " "
+            << k+finished_reps << " "
+            << duration_cast << "\n";
+          duration_sum += duration_cast;
+        }
+        outfile_gen.flush();
+        std::cout << "(DUNE) Gen: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
+        finished_reps +=rep;
+        rep *= 2;
+      }
+        outfile_gen.close();
     }
     else{ std::cout<< "Oh no, unknown BuildMode"<<std::endl;}
- 
-    auto time_to_generate = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
-    std::cout << "(DUNE) Generation Time n="<<n<<",d="<<d<<" : " << time_to_generate.count() / 1000000 << "." << time_to_generate.count() % 1000000 << "ms" << std::endl;
-    std::cout << "created matrix of size " << pA->N() << " times " << pA->M() << std::endl;
-    if(round == 1){
+
+    if(n<=30){
       // store matrix
       std::string foldername = "result-verification/A/";
       std::filesystem::create_directories(foldername);
-      std::string filename_A = foldername+std::to_string(n)+"_"+std::to_string(d)+"_A_"+filename+".mtx";
+      std::string filename_A = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_A_"+filename+".mtx";
       Dune::storeMatrixMarket(*pA,filename_A);
       std::cout<< "stored matrix to "+filename_A<<std::endl;
     }
 
-    // auto duration = watch.elapsed();
-    // std::cout << "created matrix of size " << pA->N() << " times " << pA->M() << " duration " << duration*1000 << " ms" << std::endl;
-    //print Matrix
-    //size_t N = 1;
-    //for(int i=0; i<d; i++) N*=n;
-    
 
-
-
+  //calculate SpMV
     // vector type
     using VectorEntry = Dune::FieldVector<double,1>;
     using Vector = Dune::BlockVector<VectorEntry>;
-
     // create two vectors of appropriate length
     Vector x(pA->N()), y(pA->N());
-
     // matrix vector product
     x = 1.0;                                        /// sets all elements to 1
 
-    // time matrix vector product
-    // watch.reset();
-    time_start = std::chrono::steady_clock::now();
-    pA->mv(x, y);
-    time_stop = std::chrono::steady_clock::now();
-    auto time_to_SpMV = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_start);
-    std::cout << "Time it took to apply A on x:  " << time_to_SpMV.count() / 1000000 << "." << time_to_SpMV.count() % 1000000 << "ms" << std::endl;
-    if(round == 1){
+    std::cout<< "SpMV calculating ..."<<std::endl;
+    time_start = std::chrono::high_resolution_clock::now();
+    time_stop = time_start;
+    auto duration = time_stop - time_start;
+    auto duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+    auto duration_sum = duration_cast;
+    long rep = min_reps;
+    long finished_reps = 0;
+    std::string foldername = "spmv/";
+    std::filesystem::create_directories(foldername);
+    std::ofstream outfile_SpMV(foldername+"SpMV_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+    while (duration_sum < min_time && rep < 1000000000)
+    {
+      for (long k = 0; k < rep; k++){
+        time_start = std::chrono::high_resolution_clock::now();
+        pA->mv(x, y);
+        time_stop = std::chrono::high_resolution_clock::now();
+        duration = time_stop - time_start;
+        duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+        outfile_SpMV 
+          << n << " "
+          << dim << " "
+          << k+finished_reps << " "
+          << duration_cast << "\n";
+        duration_sum += duration_cast;
+      }
+      outfile_SpMV.flush();
+        std::cout << "(DUNE) SpMV: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
+      finished_reps +=rep;
+      rep *= 2;
+    }
+    outfile_SpMV.close();
+    if(n<=30){
       // store SpMV result y
       std::string foldername = "result-verification/y/";
       std::filesystem::create_directories(foldername);
-      std::string filename_y = foldername+std::to_string(n)+"_"+std::to_string(d)+"_y_"+filename+".mtx";
+      std::string filename_y = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_y_"+filename+".mtx";
       Dune::storeMatrixMarket(y,filename_y);
       std::cout<< "stored result y to "+filename_y<<std::endl;
     }
-    // duration = watch.elapsed();
-    // std::cout << "duration of matrix vector product was " << duration*1000 << " ms" << std::endl;
 
-    return std::pair<std::chrono::nanoseconds,std::chrono::nanoseconds>(time_to_generate,time_to_SpMV);
+  // Create CG
+    MatrixEntry w = 1.0; // scales inverse D 
+    //A, "The number of iterations to perform.", The relaxation factor.
+    Dune::SeqJac<Matrix,Vector,Vector> preconditioner(*pA,1, w); 
+    //make pA into Linear Operator
+    Dune::MatrixAdapter<Matrix,Vector,Vector> linOp_A{pA};
+
+    //linOp, precond, reduction, maxIt, verbose, condition_estimate(missing? (bool))
+    Dune::CGSolver<Vector> solver(linOp_A, preconditioner, 0.0, max_iters,1);
+
+  // apply CG
+    Vector x_k(pA->N()),b(pA->N());
+    Dune::InverseOperatorResult results;
+    
+    //experiment
+    std::cout<< "CGjac calculating ..."<<std::endl;
+    time_start = std::chrono::high_resolution_clock::now();
+    time_stop = time_start;
+    duration = time_stop - time_start;
+    duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+    duration_sum = duration_cast;
+    rep = min_reps;
+    finished_reps = 0;
+    foldername = "CGjac/";
+    std::filesystem::create_directories(foldername);
+    std::ofstream outfile_CGjac(foldername+"CGjac_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+    while (duration_sum < min_time && rep < 1000000000)
+    {
+      for (long k = 0; k < rep; k++){
+        // different from ginkgo, dune modifies rhs(b) during solving, needs resetting
+        x_k,b = 1.0;
+        time_start = std::chrono::high_resolution_clock::now();
+        solver.apply(x_k,b,results);
+        time_stop = std::chrono::high_resolution_clock::now();
+        duration = time_stop - time_start;
+        duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+        outfile_CGjac 
+          << n << " "
+          << dim << " "
+          << k+finished_reps << " "
+          << duration_cast << "\n";
+        duration_sum += duration_cast;
+      }
+      outfile_CGjac.flush();
+        std::cout << "(DUNE) CGjac: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
+      finished_reps +=rep;
+      rep *= 2;
+    }
+    outfile_CGjac.close();
+
+    if(n<=30){
+      // store CG solution x_k after max_iters iterations
+      std::string foldername = "result-verification/x_k/";
+      std::filesystem::create_directories(foldername);
+      std::string filename_x_k = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_x_k_"+filename+".mtx";
+      Dune::storeMatrixMarket(x_k,filename_x_k);
+      std::cout<< "stored result x_k to "+filename_x_k<<std::endl;
+    }
   }
   catch (Dune::Exception &e){
     std::cerr << "Dune reported error: " << e << std::endl;
@@ -343,39 +471,34 @@ int main(int argc, char** argv)
 {
   std::cout << "-------------------------------STARTING:dune-evaluation--------------------------------------------" << std::endl;
   // handle input
-  if (argc!=4) {
+  if (argc!=7) {
     std::cout<<argv[0]<< ": Wrong number of Arguments."<<std::endl;
-    std::cout<<"please give arguements: n_max numberOfRounds buildMode"<<std::endl;
+    std::cout<<"please give arguements: n_max dim max_iters min_reps min_time buildMode"<<std::endl;
     return 1;
   }
   const size_t n_max = std::stoi(argv[1]);
-  std::cout<<argv[0]<< ": Computing all matrices with d=2 and d=3, with n=1 to "<<n_max<<std::endl;
-  // number of repititions per n,d variation
-  const size_t rounds = std::stoi(argv[2]);
-  std::cout<<argv[0]<< ": Computing every variation  "<<rounds<<" times"<<std::endl;
-  const std::string buildMode = argv[3];
+  std::cout<<argv[0]<< ": Computing all matrices from n=1 to n="<<n_max<<std::endl;
+  const int dim = std::stoi(argv[2]);
+  std::cout<<argv[0]<< ": Computing all matrices with dim= "<<dim<<std::endl;
+  const size_t max_iters = std::stoi(argv[3]);
+  std::cout<<argv[0]<< ": Computing CG with  "<<max_iters<<" iterations"<<std::endl;
+  // minimum number of repititions per n
+  const size_t min_reps = std::stoi(argv[4]);
+  // minimum number of nanoseconds per experiment(gen,spmv,cg_jac) 
+  const size_t min_time = std::stoi(argv[5]);
+  std::cout<<argv[0]<< ": Computing every variation  "<<min_reps<<" times"<<std::endl;
+  const std::string buildMode = argv[6];
   std::cout<<argv[0]<< ": Computing with BuildMode:  "<<buildMode<<" "<<std::endl;
 
   // initialize MPI if present
     Dune::MPIHelper& helper = Dune::MPIHelper::instance(argc, argv);
  
   std::cout << "-------------------------------running Experiment--------------------------------------------------" << std::endl;
-  std::string filename = "ISTL_"+buildMode;
+  std::string filename = "ISTL_"+buildMode+std::to_string(dim);
   std::ofstream outfile(filename +".txt");
-  for (size_t d=2; d<=3; d++){
-    for(size_t n=1; n<=n_max; n++){
-      for(size_t round_id =1; round_id<=rounds; round_id++){
-        auto gen_and_SpMV_times = executeRound(n,d,round_id,filename,buildMode);
-        //export results to file
-        outfile << n << " "
-                << d << " "
-                << round_id<< " "
-                << gen_and_SpMV_times.first.count() << " "
-                << gen_and_SpMV_times.second.count() << "\n";
-      }
-      outfile.flush();
-    }
-  }
+  for(size_t n=1; n<=n_max; n++)
+      executeRound(n,dim,max_iters,min_reps,min_time,filename,buildMode);
+
   std::cout << "-------------------------------FINISHED:dune-evaluation---------------------------------------" << std::endl;
   
   return 0;

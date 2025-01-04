@@ -17,3 +17,4 @@ done
 
 #echo "testing with 3 1 row_wise"
 #./release-build/dune-evaluation/src/dune-evaluation 3 1 row_wise
+
