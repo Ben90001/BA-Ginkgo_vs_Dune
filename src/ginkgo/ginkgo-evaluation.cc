@@ -332,7 +332,7 @@ void executeRound(
                                              BoundaryTypeFunction dirichlet_boundary,
                                              std::string exec_string,
                                              std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>& exec_map,
-                                             std::string device_string)
+                                             std::string assebly_structure_string)
 {
   // set up
   using vec = gko::matrix::Dense<double>;
@@ -342,10 +342,10 @@ void executeRound(
   // set function to generate with
   using GeneratingFunction = std::unique_ptr<MatrixType>(*)(size_t, size_t, CoefficientFunction, BoundaryTypeFunction, decltype(exec));
   GeneratingFunction generate_matrix = nullptr;
-  if(device_string=="md") generate_matrix = diffusion_matrix_md<MatrixType>;
-  else if (device_string=="mad") generate_matrix = diffusion_matrix_mad<MatrixType>;
-  else if (device_string=="optimizedCSR") generate_matrix=diffusion_matrix_optimizedCSR<MatrixType>;
-  else throw std::invalid_argument("Invalid argument for device_string");
+  if(assebly_structure_string=="md") generate_matrix = diffusion_matrix_md<MatrixType>;
+  else if (assebly_structure_string=="mad") generate_matrix = diffusion_matrix_mad<MatrixType>;
+  else if (assebly_structure_string=="optimizedCSR") generate_matrix=diffusion_matrix_optimizedCSR<MatrixType>;
+  else throw std::invalid_argument("Invalid argument for assebly_structure_string");
 
 
 // assembl matrix A
@@ -620,13 +620,13 @@ int main(int argc, char* argv[])
   const size_t        min_time = std::stoi(argv[5]);
   const size_t        evaluation_interval = std::stoi(argv[6]);
   const size_t        max_iters = std::stoi(argv[7]);
-  const std::string   device_string = argv[8];
+  const std::string   assebly_structure_string = argv[8];
   const std::string   exec_string = argv[9];
   const std::string   mtx_string = argv[10];
  
-  std::string         output_filename = "gko_"+device_string+"_"+exec_string+"_"+mtx_string+"_" \
+  std::string         output_filename = "gko_"+assebly_structure_string+"_"+exec_string+"_"+mtx_string+"_" \
                                         +std::to_string(n_lowerBound)+"-"+std::to_string(n_upperBound)+"n_CG"+std::to_string(max_iters)+"_" \
-                                        +std::to_string(evaluation_interval)+"i_"+std::to_string(min_reps)+"r.txt";
+                                        +std::to_string(evaluation_interval)+"i_"+std::to_string(min_reps)+"r";
  
 
   std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>
@@ -645,22 +645,22 @@ int main(int argc, char* argv[])
     std::function<void(size_t, size_t, size_t, size_t, size_t, std::string)>>
     execute_round_map{
       {"csr", [&] (size_t n, size_t dim, size_t max_iters, size_t min_reps, size_t min_time, std::string filename)
-        { return executeRound<gko::matrix::Csr<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
+        { return executeRound<gko::matrix::Csr<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }},
       {"ell", [&] (size_t n, size_t dim, size_t max_iters, size_t min_reps, size_t min_time, std::string filename)
-        { return executeRound<gko::matrix::Ell<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
+        { return executeRound<gko::matrix::Ell<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }},
       {"sellp", [&] (size_t n, size_t dim, size_t max_iters, size_t min_reps, size_t min_time, std::string filename)
-        { return executeRound<gko::matrix::Sellp<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
+        { return executeRound<gko::matrix::Sellp<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }},
       {"hybrid", [&] (size_t n, size_t dim, size_t max_iters, size_t min_reps, size_t min_time, std::string filename)
-        { return executeRound<gko::matrix::Hybrid<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }},
+        { return executeRound<gko::matrix::Hybrid<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }},
       {"coo", [&] (size_t n, size_t dim, size_t max_iters, size_t min_reps, size_t min_time, std::string filename)
-        { return executeRound<gko::matrix::Coo<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,device_string); }}};
+        { return executeRound<gko::matrix::Coo<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }}};
 
 
 
   std::cout<<argv[0]<< ": Computing all matrixes with d=2 and d=3, with n="<<n_lowerBound<<" to "<<n_upperBound<<std::endl;
   std::cout<<argv[0]<< ": Computing every variation at least "<<min_reps<<" times"<<std::endl;
   std::cout<<argv[0]<< ": Interval of evaluated values is "<<evaluation_interval<<" (1 equals evaluating every value of n in bounds)"<<std::endl;
-  std::cout<<argv[0]<< ": Configuration: "<<device_string<<" "<< exec_string<< " "<< mtx_string<<std::endl;
+  std::cout<<argv[0]<< ": Configuration: "<<assebly_structure_string<<" "<< exec_string<< " "<< mtx_string<<std::endl;
   //std::cout<<argv[0]<< ": Outputting to: "<< output_filename<<std::endl;
 
 

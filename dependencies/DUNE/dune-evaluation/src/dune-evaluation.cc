@@ -451,11 +451,11 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
 
     if(n<=30){
       // store CG solution x_k after max_iters iterations
-      std::string foldername = "result-verification/x_k/";
+      std::string foldername = "result-verification/x_k_jac/";
       std::filesystem::create_directories(foldername);
-      std::string filename_x_k = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_x_k_"+filename+".mtx";
-      Dune::storeMatrixMarket(x_k,filename_x_k);
-      std::cout<< "stored result x_k to "+filename_x_k<<std::endl;
+      std::string filename_x_k_jac = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_x_k_jac_"+filename+".mtx";
+      Dune::storeMatrixMarket(x_k,filename_x_k_jac);
+      std::cout<< "stored result x_k to "+filename_x_k_jac<<std::endl;
     }
   
   //create CG_ILU (ILU0)
@@ -503,6 +503,14 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     }
     outfile_CG_ILU.close();
 
+    if(n<=30){
+    // store CG solution x_k after max_iters iterations
+    std::string foldername = "result-verification/x_k_ilu/";
+    std::filesystem::create_directories(foldername);
+    std::string filename_x_k_ilu = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_x_k_ilu_"+filename+".mtx";
+    Dune::storeMatrixMarket(x_k,filename_x_k_ilu);
+    std::cout<< "stored result x_k to "+filename_x_k_ilu<<std::endl;
+  }
 
 
   }
@@ -542,8 +550,8 @@ int main(int argc, char** argv)
     Dune::MPIHelper& helper = Dune::MPIHelper::instance(argc, argv);
  
   std::cout << "-------------------------------running Experiment--------------------------------------------------" << std::endl;
-  std::string filename = "ISTL_"+buildMode+std::to_string(dim);
-  std::ofstream outfile(filename +".txt");
+  
+  std::string filename = "ISTL_"+buildMode;
   for(size_t n=1; n<=n_max; n++)
       executeRound(n,dim,max_iters,min_reps,min_time,filename,buildMode);
 

@@ -5,22 +5,23 @@ set -x
 set -e
 
 n_lowerBound="1"
-n_upperBound="5"
-min_reps="4"
-# minimal time each experiment is ran for in nanoseconds
-min_time="250000000"
 interval="1"
+
+n_upperBound="110"
+min_reps="4"
+min_time="250000000"
 max_iters="10"
 dims=("3")
+
 #ISTL
-#buildModes=("implicit" "row_wise")
-buildModes=("row_wise")
+buildModes=("implicit" "row_wise")
+#buildModes=("row_wise")
 
 #GINKGO
-#assembly_structures=("md" "mad")
-assembly_structures=("md")
+assembly_structures=("md" "mad")
+#assembly_structures=("md")
 #executors=("1omp" "cuda")
-executors=("ref")
+executors=("ref" "1omp")
 mtx_formats=("csr")
 #mtx_formats=("csr" "coo" "ell")
 
@@ -34,7 +35,7 @@ echo "Script execution started at: $(date)" > $log_file
 # generate data -------------------------------------------------------------------------------------------------------
 for buildMode in "${buildModes[@]}"; do
     for dim in "${dims[@]}"; do
-        #./../../dependencies/DUNE/release-build/dune-evaluation/src/dune-evaluation $n_upperBound $dim $max_iters $min_reps $min_time $buildMode
+        ./../../dependencies/DUNE/release-build/dune-evaluation/src/dune-evaluation $n_upperBound $dim $max_iters $min_reps $min_time $buildMode
         echo "Finished ISTL with buildMode $buildMode at       $(date)" >> $log_file
     done
 done
