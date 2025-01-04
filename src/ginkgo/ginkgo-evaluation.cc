@@ -516,12 +516,12 @@ void executeRound(
   
   // store CG result after max_iters iterations
   if(n<=30){
-      std::string foldername = "result-verification/x_k/";
+      std::string foldername = "result-verification/x_k_jac/";
       std::filesystem::create_directories(foldername);
-      std::string filename_x_k = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_x_k_"+filename+".mtx";
-      std::ofstream outfilestream(filename_x_k);
+      std::string filename_x_k_jac = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_x_k_jac_"+filename+".mtx";
+      std::ofstream outfilestream(filename_x_k_jac);
       gko::write(outfilestream,x_k);
-      std::cout<< "CG result x_k after "+std::to_string(max_iters)+" iterations to "+filename_x_k<<std::endl;
+      std::cout<< "CG result x_k after "+std::to_string(max_iters)+" iterations to "+filename_x_k_jac<<std::endl;
   }
 
 // build CG_ILU
@@ -578,6 +578,15 @@ void executeRound(
   }
   outfile_CG_ILU.close();
 
+  // store CG result after max_iters iterations
+  if(n<=30){
+    std::string foldername = "result-verification/x_k_ilu/";
+    std::filesystem::create_directories(foldername);
+    std::string filename_x_k_ilu = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_x_k_ilu_"+filename+".mtx";
+    std::ofstream outfilestream(filename_x_k_ilu);
+    gko::write(outfilestream,x_k);
+    std::cout<< "CG result x_k after "+std::to_string(max_iters)+" iterations to "+filename_x_k_ilu<<std::endl;
+  }
 
 }
 
