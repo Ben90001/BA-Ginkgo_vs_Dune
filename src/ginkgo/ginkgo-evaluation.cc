@@ -457,10 +457,10 @@ void executeRound(
 
   auto time_to_CG = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_stop);
 
-// generate CG preconditioned solver with Jacobi
+// build CG_jac
   using cg = gko::solver::Cg<>;
   using bj = gko::preconditioner::Jacobi<>;
-  auto solver_factory = cg::build()
+  auto solver_factory_CG_jac = cg::build()
                              .with_criteria(gko::stop::Iteration::build()
                                                 .with_max_iters(max_iters)
                                                 .on(exec))
@@ -469,7 +469,7 @@ void executeRound(
                                                 .on(exec))
                              .on(exec);
   // build Solver
-  auto solver = solver_factory->generate(pA);
+  auto solver_CG_jac = solver_factory_CG_jac->generate(pA);
 
 // apply CG solver
   // set both rhs and initial iterate x_k to 1
@@ -477,7 +477,7 @@ void executeRound(
   auto x_k = gko::clone(x);
   
   //experiment
-  std::cout<< "CGjac calculating ..."<<std::endl;
+  std::cout<< "CG_jac calculating ..."<<std::endl;
   time_start = std::chrono::high_resolution_clock::now();
   time_stop = time_start;
   duration = time_stop - time_start;
@@ -485,7 +485,7 @@ void executeRound(
   duration_sum = duration_cast;
   rep = min_reps;
   finished_reps = 0;
-  foldername = "CGjac/";
+  foldername = "CG_jac/";
   std::filesystem::create_directories(foldername);
   std::ofstream outfile_CGjac(foldername+"CGjac_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
   while (duration_sum < min_time && rep < 1000000000)
@@ -495,7 +495,7 @@ void executeRound(
       auto x_k = gko::clone(x);
       exec->synchronize();
       time_start = std::chrono::high_resolution_clock::now();
-      solver->apply(rhs, x_k);
+      solver_CG_jac->apply(rhs, x_k);
       exec->synchronize();
       time_stop = std::chrono::high_resolution_clock::now();
       duration = time_stop - time_start;
@@ -508,7 +508,7 @@ void executeRound(
       duration_sum += duration_cast;
     }
     outfile_CGjac.flush();
-      std::cout << "(Ginkgo) CGjac: n="<<n<<" dim="<<dim<< " duration_sum in ms=" << duration_sum/1000000 << std::endl;
+      std::cout << "(Ginkgo) CG_jac: n="<<n<<" dim="<<dim<< " duration_sum in ms=" << duration_sum/1000000 << std::endl;
     finished_reps +=rep;
     rep *= 2;
   }
@@ -523,6 +523,62 @@ void executeRound(
       gko::write(outfilestream,x_k);
       std::cout<< "CG result x_k after "+std::to_string(max_iters)+" iterations to "+filename_x_k<<std::endl;
   }
+
+// build CG_ILU
+  using ilu = gko::preconditioner::Ilu<>;
+  auto solver_factory_CG_ILU = cg::build()
+                             .with_criteria(gko::stop::Iteration::build()
+                                                .with_max_iters(max_iters)
+                                                .on(exec))
+                             .with_preconditioner(ilu::build()
+                                                .on(exec))
+                             .on(exec);
+  auto solver_CG_ILU = solver_factory_CG_ILU->generate(pA);
+
+// apply CG-ILU
+  // set both rhs and initial iterate x_k to 1
+  rhs = gko::clone(x);
+  x_k = gko::clone(x);
+  
+  //experiment
+  std::cout<< "CG_ILU calculating ..."<<std::endl;
+  time_start = std::chrono::high_resolution_clock::now();
+  time_stop = time_start;
+  duration = time_stop - time_start;
+  duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+  duration_sum = duration_cast;
+  rep = min_reps;
+  finished_reps = 0;
+  foldername = "CG_ILU/";
+  std::filesystem::create_directories(foldername);
+  std::ofstream outfile_CG_ILU(foldername+"CGilu_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+  while (duration_sum < min_time && rep < 1000000000)
+  {
+    for (long k = 0; k < rep; k++){
+      //auto rhs = gko::clone(x); //unlike with DUNE not necessary 
+      auto x_k = gko::clone(x);
+      exec->synchronize();
+      time_start = std::chrono::high_resolution_clock::now();
+      solver_CG_ILU->apply(rhs, x_k);
+      exec->synchronize();
+      time_stop = std::chrono::high_resolution_clock::now();
+      duration = time_stop - time_start;
+      duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+      outfile_CG_ILU 
+        << n << " "
+        << dim << " "
+        << k+finished_reps << " "
+        << duration_cast << "\n";
+      duration_sum += duration_cast;
+    }
+    outfile_CG_ILU.flush();
+      std::cout << "(Ginkgo) CG_ILU: n="<<n<<" dim="<<dim<< " duration_sum in ms=" << duration_sum/1000000 << std::endl;
+    finished_reps +=rep;
+    rep *= 2;
+  }
+  outfile_CG_ILU.close();
+
+
 }
 
 

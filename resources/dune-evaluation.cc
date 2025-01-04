@@ -399,22 +399,22 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
       std::cout<< "stored result y to "+filename_y<<std::endl;
     }
 
-  // Create CG
+  // Create CG_jac
     MatrixEntry w = 1.0; // scales inverse D 
     //A, "The number of iterations to perform.", The relaxation factor.
-    Dune::SeqJac<Matrix,Vector,Vector> preconditioner(*pA,1, w); 
+    Dune::SeqJac<Matrix,Vector,Vector> preconditioner_jac(*pA,1, w); 
     //make pA into Linear Operator
     Dune::MatrixAdapter<Matrix,Vector,Vector> linOp_A{pA};
 
     //linOp, precond, reduction, maxIt, verbose, condition_estimate(missing? (bool))
-    Dune::CGSolver<Vector> solver(linOp_A, preconditioner, 0.0, max_iters,1);
+    Dune::CGSolver<Vector> solver_jac(linOp_A, preconditioner_jac, 0.0, max_iters,1);
 
-  // apply CG
+  // apply CG_jac
     Vector x_k(pA->N()),b(pA->N());
     Dune::InverseOperatorResult results;
     
     //experiment
-    std::cout<< "CGjac calculating ..."<<std::endl;
+    std::cout<< "CG_jac calculating ..."<<std::endl;
     time_start = std::chrono::high_resolution_clock::now();
     time_stop = time_start;
     duration = time_stop - time_start;
@@ -422,7 +422,7 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     duration_sum = duration_cast;
     rep = min_reps;
     finished_reps = 0;
-    foldername = "CGjac/";
+    foldername = "CG_jac/";
     std::filesystem::create_directories(foldername);
     std::ofstream outfile_CGjac(foldername+"CGjac_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
     while (duration_sum < min_time && rep < 1000000000)
@@ -431,7 +431,7 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
         // different from ginkgo, dune modifies rhs(b) during solving, needs resetting
         x_k,b = 1.0;
         time_start = std::chrono::high_resolution_clock::now();
-        solver.apply(x_k,b,results);
+        solver_jac.apply(x_k,b,results);
         time_stop = std::chrono::high_resolution_clock::now();
         duration = time_stop - time_start;
         duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
@@ -443,7 +443,7 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
         duration_sum += duration_cast;
       }
       outfile_CGjac.flush();
-        std::cout << "(DUNE) CGjac: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
+        std::cout << "(DUNE) CG_jac: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
       finished_reps +=rep;
       rep *= 2;
     }
@@ -457,6 +457,54 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
       Dune::storeMatrixMarket(x_k,filename_x_k);
       std::cout<< "stored result x_k to "+filename_x_k<<std::endl;
     }
+  
+  //create CG_ILU (ILU0)
+    w = 1.0;
+    //A, "The order of the ILU decomposition.", "The relaxation factor."
+    Dune::SeqILU<Matrix,Vector,Vector> preconditioner_ILU(*pA,0, w); 
+
+    //linOp, precond, reduction, maxIt, verbose, condition_estimate(missing? (bool))
+    Dune::CGSolver<Vector> solver_ILU(linOp_A, preconditioner_ILU, 0.0, max_iters,1);
+
+  // apply CG_ILU
+    //experiment
+    std::cout<< "CG_ILU calculating ..."<<std::endl;
+    time_start = std::chrono::high_resolution_clock::now();
+    time_stop = time_start;
+    duration = time_stop - time_start;
+    duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+    duration_sum = duration_cast;
+    rep = min_reps;
+    finished_reps = 0;
+    foldername = "CG_ILU/";
+    std::filesystem::create_directories(foldername);
+    std::ofstream outfile_CG_ILU(foldername+"CGilu_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+    while (duration_sum < min_time && rep < 1000000000)
+    {
+      for (long k = 0; k < rep; k++){
+        // different from ginkgo, dune modifies rhs(b) during solving, needs resetting
+        x_k,b = 1.0;
+        time_start = std::chrono::high_resolution_clock::now();
+        solver_ILU.apply(x_k,b,results);
+        time_stop = std::chrono::high_resolution_clock::now();
+        duration = time_stop - time_start;
+        duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+        outfile_CG_ILU
+          << n << " "
+          << dim << " "
+          << k+finished_reps << " "
+          << duration_cast << "\n";
+        duration_sum += duration_cast;
+      }
+      outfile_CG_ILU.flush();
+        std::cout << "(DUNE) CG_ILU: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
+      finished_reps +=rep;
+      rep *= 2;
+    }
+    outfile_CG_ILU.close();
+
+
+
   }
   catch (Dune::Exception &e){
     std::cerr << "Dune reported error: " << e << std::endl;

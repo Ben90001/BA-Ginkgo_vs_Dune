@@ -34,7 +34,7 @@ echo "Script execution started at: $(date)" > $log_file
 # generate data -------------------------------------------------------------------------------------------------------
 for buildMode in "${buildModes[@]}"; do
     for dim in "${dims[@]}"; do
-        ./../../dependencies/DUNE/release-build/dune-evaluation/src/dune-evaluation $n_upperBound $dim $max_iters $min_reps $min_time $buildMode
+        #./../../dependencies/DUNE/release-build/dune-evaluation/src/dune-evaluation $n_upperBound $dim $max_iters $min_reps $min_time $buildMode
         echo "Finished ISTL with buildMode $buildMode at       $(date)" >> $log_file
     done
 done
