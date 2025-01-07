@@ -7,27 +7,27 @@ set -e
 n_lowerBound="1"
 interval="1"
 
-n_upperBound="110"
+n_upperBound="5"
 min_reps="4"
 min_time="250000000"
 max_iters="10"
 dims=("3")
 
 #ISTL
-buildModes=("implicit" "row_wise")
+buildModes=("implicit")
 #buildModes=("row_wise")
 
 #GINKGO
-assembly_structures=("md" "mad")
-#assembly_structures=("md")
-#executors=("1omp" "cuda")
-executors=("ref" "1omp")
+#assembly_structures=("md" "mad")
+assembly_structures=("md")
+#executors=("1omp" "ref" "cuda")
+executors=("1omp" "ref")
 mtx_formats=("csr")
 #mtx_formats=("csr" "coo" "ell")
 
-rm -rf results
-mkdir results
-cd results
+rm -rf results-b
+mkdir results-b
+cd results-b
 # Create a log file
 log_file="execution_log.txt"
 echo "Script execution started at: $(date)" > $log_file

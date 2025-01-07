@@ -358,7 +358,7 @@ void executeRound(
   auto duration_sum = duration_cast;
   long rep = min_reps;
   long finished_reps = 0;
-  std::string foldername = "gen/";
+  std::string foldername = "data/gen/";
   std::filesystem::create_directories(foldername);
   std::ofstream outfile_gen(foldername+"gen_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
   while (duration_sum < min_time && rep < 1000000000)
@@ -414,7 +414,7 @@ void executeRound(
   duration_sum = duration_cast;
   rep = min_reps;
   finished_reps = 0;
-  foldername = "spmv/";
+  foldername = "data/SpMV/";
   std::filesystem::create_directories(foldername);
   std::ofstream outfile_SpMV(foldername+"SpMV_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
   while (duration_sum < min_time && rep < 1000000000)
@@ -437,7 +437,7 @@ void executeRound(
       duration_sum += duration_cast;
     }
     outfile_SpMV.flush();
-      std::cout << "(DUNE) SpMV: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
+      std::cout << "(Ginkgo) SpMV: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
     finished_reps +=rep;
     rep *= 2;
   }
@@ -485,7 +485,7 @@ void executeRound(
   duration_sum = duration_cast;
   rep = min_reps;
   finished_reps = 0;
-  foldername = "CG_jac/";
+  foldername = "data/CGjac/";
   std::filesystem::create_directories(foldername);
   std::ofstream outfile_CGjac(foldername+"CGjac_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
   while (duration_sum < min_time && rep < 1000000000)
@@ -508,7 +508,7 @@ void executeRound(
       duration_sum += duration_cast;
     }
     outfile_CGjac.flush();
-      std::cout << "(Ginkgo) CG_jac: n="<<n<<" dim="<<dim<< " duration_sum in ms=" << duration_sum/1000000 << std::endl;
+    std::cout << "(Ginkgo) CG_jac: n="<<n<<" dim="<<dim<< " duration_sum in ms=" << duration_sum/1000000 << std::endl;
     finished_reps +=rep;
     rep *= 2;
   }
@@ -549,7 +549,7 @@ void executeRound(
   duration_sum = duration_cast;
   rep = min_reps;
   finished_reps = 0;
-  foldername = "CG_ILU/";
+  foldername = "data/CGilu/";
   std::filesystem::create_directories(foldername);
   std::ofstream outfile_CG_ILU(foldername+"CGilu_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
   while (duration_sum < min_time && rep < 1000000000)
@@ -572,7 +572,7 @@ void executeRound(
       duration_sum += duration_cast;
     }
     outfile_CG_ILU.flush();
-      std::cout << "(Ginkgo) CG_ILU: n="<<n<<" dim="<<dim<< " duration_sum in ms=" << duration_sum/1000000 << std::endl;
+    std::cout << "(Ginkgo) CG_ILU: n="<<n<<" dim="<<dim<< " duration_sum in ms=" << duration_sum/1000000 << std::endl;
     finished_reps +=rep;
     rep *= 2;
   }

@@ -278,7 +278,7 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
       auto duration_sum = duration_cast;
       long rep = min_reps;
       long finished_reps = 0;
-      std::string foldername = "gen/";
+      std::string foldername = "data/gen/";
       std::filesystem::create_directories(foldername);
       std::ofstream outfile_gen(foldername+"gen_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
       while (duration_sum < min_time && rep < 1000000000)
@@ -312,7 +312,7 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
       auto duration_sum = duration_cast;
       long rep = min_reps;
       long finished_reps = 0;
-      std::string foldername = "gen/";
+      std::string foldername = "data/gen/";
       std::filesystem::create_directories(foldername);
       std::ofstream outfile_gen(foldername+"gen_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
       while (duration_sum < min_time && rep < 1000000000)
@@ -366,7 +366,7 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     auto duration_sum = duration_cast;
     long rep = min_reps;
     long finished_reps = 0;
-    std::string foldername = "spmv/";
+    std::string foldername = "data/SpMV/";
     std::filesystem::create_directories(foldername);
     std::ofstream outfile_SpMV(foldername+"SpMV_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
     while (duration_sum < min_time && rep < 1000000000)
@@ -422,7 +422,7 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     duration_sum = duration_cast;
     rep = min_reps;
     finished_reps = 0;
-    foldername = "CG_jac/";
+    foldername = "data/CGjac/";
     std::filesystem::create_directories(foldername);
     std::ofstream outfile_CGjac(foldername+"CGjac_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
     while (duration_sum < min_time && rep < 1000000000)
@@ -476,7 +476,7 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     duration_sum = duration_cast;
     rep = min_reps;
     finished_reps = 0;
-    foldername = "CG_ILU/";
+    foldername = "data/CGilu/";
     std::filesystem::create_directories(foldername);
     std::ofstream outfile_CG_ILU(foldername+"CGilu_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
     while (duration_sum < min_time && rep < 1000000000)
