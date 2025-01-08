@@ -381,8 +381,8 @@ void executeRound(
       duration_sum += duration_cast;
     }
     outfile_gen.flush();
-    std::cout << "(Ginkgo) Gen: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
     finished_reps +=rep;
+    std::cout << "(Ginkgo) Gen: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
     rep *= 2;
   }
   outfile_gen.close();
@@ -437,8 +437,8 @@ void executeRound(
       duration_sum += duration_cast;
     }
     outfile_SpMV.flush();
-      std::cout << "(Ginkgo) SpMV: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
     finished_reps +=rep;
+    std::cout << "(Ginkgo) SpMV: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
     rep *= 2;
   }
     outfile_SpMV.close();
@@ -492,7 +492,7 @@ void executeRound(
   {
     for (long k = 0; k < rep; k++){
       //auto rhs = gko::clone(x); //unlike with DUNE not necessary 
-      auto x_k = gko::clone(x);
+      x_k = gko::clone(x);
       exec->synchronize();
       time_start = std::chrono::high_resolution_clock::now();
       solver_CG_jac->apply(rhs, x_k);
@@ -508,8 +508,8 @@ void executeRound(
       duration_sum += duration_cast;
     }
     outfile_CGjac.flush();
-    std::cout << "(Ginkgo) CG_jac: n="<<n<<" dim="<<dim<< " duration_sum in ms=" << duration_sum/1000000 << std::endl;
     finished_reps +=rep;
+    std::cout << "(Ginkgo) CG_jac: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps <<" duration_sum in ms=" << duration_sum/1000000 << std::endl;
     rep *= 2;
   }
   outfile_CGjac.close();
@@ -556,7 +556,7 @@ void executeRound(
   {
     for (long k = 0; k < rep; k++){
       //auto rhs = gko::clone(x); //unlike with DUNE not necessary 
-      auto x_k = gko::clone(x);
+      x_k = gko::clone(x);
       exec->synchronize();
       time_start = std::chrono::high_resolution_clock::now();
       solver_CG_ILU->apply(rhs, x_k);
@@ -572,8 +572,8 @@ void executeRound(
       duration_sum += duration_cast;
     }
     outfile_CG_ILU.flush();
-    std::cout << "(Ginkgo) CG_ILU: n="<<n<<" dim="<<dim<< " duration_sum in ms=" << duration_sum/1000000 << std::endl;
     finished_reps +=rep;
+    std::cout << "(Ginkgo) CG_ILU: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps <<" duration_sum in ms=" << duration_sum/1000000 << std::endl;
     rep *= 2;
   }
   outfile_CG_ILU.close();
@@ -632,7 +632,7 @@ int main(int argc, char* argv[])
   std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>
         exec_map{
             {"omp", [] { return gko::OmpExecutor::create(); }},
-            {"1omp", [] { /*putenv((char*)"OMP_NUM_THREADS=1");*/ setenv((char*)"OMP_NUM_THREADS", (char*)"1",1); return gko::OmpExecutor::create(); }},
+            {"1omp", [] { putenv((char*)"OMP_NUM_THREADS=1"); /*setenv((char*)"OMP_NUM_THREADS", (char*)"1",1);*/ return gko::OmpExecutor::create(); }},
             {"cuda",[] { return gko::CudaExecutor::create(0,gko::OmpExecutor::create()); }},
             {"hip",[] { return gko::HipExecutor::create(0, gko::OmpExecutor::create()); }},
             {"dpcpp",[] { return gko::DpcppExecutor::create(0,gko::OmpExecutor::create()); }},

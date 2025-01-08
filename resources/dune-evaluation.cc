@@ -297,8 +297,8 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
           duration_sum += duration_cast;
         }
         outfile_gen.flush();
-        std::cout << "(DUNE) Gen: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
         finished_reps +=rep;
+        std::cout << "(DUNE) Gen: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
         rep *= 2;
       }
       outfile_gen.close();
@@ -331,8 +331,8 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
           duration_sum += duration_cast;
         }
         outfile_gen.flush();
-        std::cout << "(DUNE) Gen: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
         finished_reps +=rep;
+        std::cout << "(DUNE) Gen: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
         rep *= 2;
       }
         outfile_gen.close();
@@ -385,8 +385,8 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
         duration_sum += duration_cast;
       }
       outfile_SpMV.flush();
-        std::cout << "(DUNE) SpMV: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
       finished_reps +=rep;
+      std::cout << "(DUNE) SpMV: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
       rep *= 2;
     }
     outfile_SpMV.close();
@@ -443,8 +443,8 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
         duration_sum += duration_cast;
       }
       outfile_CGjac.flush();
-        std::cout << "(DUNE) CG_jac: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
       finished_reps +=rep;
+      std::cout << "(DUNE) CG_jac: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
       rep *= 2;
     }
     outfile_CGjac.close();
@@ -497,8 +497,8 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
         duration_sum += duration_cast;
       }
       outfile_CG_ILU.flush();
-        std::cout << "(DUNE) CG_ILU: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
       finished_reps +=rep;
+      std::cout << "(DUNE) CG_ILU: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
       rep *= 2;
     }
     outfile_CG_ILU.close();

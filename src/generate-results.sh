@@ -7,7 +7,7 @@ set -e
 n_lowerBound="1"
 interval="1"
 
-n_upperBound="5"
+n_upperBound="110"
 min_reps="4"
 min_time="250000000"
 max_iters="10"
@@ -21,13 +21,13 @@ buildModes=("implicit")
 #assembly_structures=("md" "mad")
 assembly_structures=("md")
 #executors=("1omp" "ref" "cuda")
-executors=("1omp" "ref")
+executors=("1omp")
 mtx_formats=("csr")
 #mtx_formats=("csr" "coo" "ell")
 
-rm -rf results-b
-mkdir results-b
-cd results-b
+rm -rf results
+mkdir results
+cd results
 # Create a log file
 log_file="execution_log.txt"
 echo "Script execution started at: $(date)" > $log_file
@@ -35,7 +35,7 @@ echo "Script execution started at: $(date)" > $log_file
 # generate data -------------------------------------------------------------------------------------------------------
 for buildMode in "${buildModes[@]}"; do
     for dim in "${dims[@]}"; do
-        ./../../dependencies/DUNE/release-build/dune-evaluation/src/dune-evaluation $n_upperBound $dim $max_iters $min_reps $min_time $buildMode
+        #./../../dependencies/DUNE/release-build/dune-evaluation/src/dune-evaluation $n_upperBound $dim $max_iters $min_reps $min_time $buildMode
         echo "Finished ISTL with buildMode $buildMode at       $(date)" >> $log_file
     done
 done

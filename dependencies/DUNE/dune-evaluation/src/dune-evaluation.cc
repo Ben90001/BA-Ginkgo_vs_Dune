@@ -278,7 +278,7 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
       auto duration_sum = duration_cast;
       long rep = min_reps;
       long finished_reps = 0;
-      std::string foldername = "gen/";
+      std::string foldername = "data/gen/";
       std::filesystem::create_directories(foldername);
       std::ofstream outfile_gen(foldername+"gen_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
       while (duration_sum < min_time && rep < 1000000000)
@@ -297,8 +297,8 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
           duration_sum += duration_cast;
         }
         outfile_gen.flush();
-        std::cout << "(DUNE) Gen: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
         finished_reps +=rep;
+        std::cout << "(DUNE) Gen: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
         rep *= 2;
       }
       outfile_gen.close();
@@ -312,7 +312,7 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
       auto duration_sum = duration_cast;
       long rep = min_reps;
       long finished_reps = 0;
-      std::string foldername = "gen/";
+      std::string foldername = "data/gen/";
       std::filesystem::create_directories(foldername);
       std::ofstream outfile_gen(foldername+"gen_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
       while (duration_sum < min_time && rep < 1000000000)
@@ -331,8 +331,8 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
           duration_sum += duration_cast;
         }
         outfile_gen.flush();
-        std::cout << "(DUNE) Gen: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
         finished_reps +=rep;
+        std::cout << "(DUNE) Gen: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
         rep *= 2;
       }
         outfile_gen.close();
@@ -366,7 +366,7 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     auto duration_sum = duration_cast;
     long rep = min_reps;
     long finished_reps = 0;
-    std::string foldername = "spmv/";
+    std::string foldername = "data/SpMV/";
     std::filesystem::create_directories(foldername);
     std::ofstream outfile_SpMV(foldername+"SpMV_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
     while (duration_sum < min_time && rep < 1000000000)
@@ -385,8 +385,8 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
         duration_sum += duration_cast;
       }
       outfile_SpMV.flush();
-        std::cout << "(DUNE) SpMV: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
       finished_reps +=rep;
+      std::cout << "(DUNE) SpMV: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
       rep *= 2;
     }
     outfile_SpMV.close();
@@ -422,7 +422,7 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     duration_sum = duration_cast;
     rep = min_reps;
     finished_reps = 0;
-    foldername = "CG_jac/";
+    foldername = "data/CGjac/";
     std::filesystem::create_directories(foldername);
     std::ofstream outfile_CGjac(foldername+"CGjac_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
     while (duration_sum < min_time && rep < 1000000000)
@@ -443,8 +443,8 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
         duration_sum += duration_cast;
       }
       outfile_CGjac.flush();
-        std::cout << "(DUNE) CG_jac: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
       finished_reps +=rep;
+      std::cout << "(DUNE) CG_jac: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
       rep *= 2;
     }
     outfile_CGjac.close();
@@ -476,7 +476,7 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     duration_sum = duration_cast;
     rep = min_reps;
     finished_reps = 0;
-    foldername = "CG_ILU/";
+    foldername = "data/CGilu/";
     std::filesystem::create_directories(foldername);
     std::ofstream outfile_CG_ILU(foldername+"CGilu_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
     while (duration_sum < min_time && rep < 1000000000)
@@ -497,8 +497,8 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
         duration_sum += duration_cast;
       }
       outfile_CG_ILU.flush();
-        std::cout << "(DUNE) CG_ILU: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
       finished_reps +=rep;
+      std::cout << "(DUNE) CG_ILU: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
       rep *= 2;
     }
     outfile_CG_ILU.close();
