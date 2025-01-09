@@ -358,9 +358,9 @@ void executeRound(
   auto duration_sum = duration_cast;
   long rep = min_reps;
   long finished_reps = 0;
-  std::string foldername = "data/gen/";
+  std::string foldername = "data/"+filename+"/";
   std::filesystem::create_directories(foldername);
-  std::ofstream outfile_gen(foldername+"gen_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+  std::ofstream outfile_gen(foldername+"gen.txt", std::ios::app);
   while (duration_sum < min_time && rep < 1000000000)
   {
     for (long k = 0; k < rep; k++){
@@ -414,9 +414,9 @@ void executeRound(
   duration_sum = duration_cast;
   rep = min_reps;
   finished_reps = 0;
-  foldername = "data/SpMV/";
+  foldername = "data/"+filename+"/";
   std::filesystem::create_directories(foldername);
-  std::ofstream outfile_SpMV(foldername+"SpMV_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+  std::ofstream outfile_SpMV(foldername+"SpMV.txt", std::ios::app);
   while (duration_sum < min_time && rep < 1000000000)
   {
     for (long k = 0; k < rep; k++){
@@ -485,9 +485,9 @@ void executeRound(
   duration_sum = duration_cast;
   rep = min_reps;
   finished_reps = 0;
-  foldername = "data/CGjac/";
+  foldername = "data/"+filename+"/";
   std::filesystem::create_directories(foldername);
-  std::ofstream outfile_CGjac(foldername+"CGjac_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+  std::ofstream outfile_CGjac(foldername+"CGjac.txt", std::ios::app);
   while (duration_sum < min_time && rep < 1000000000)
   {
     for (long k = 0; k < rep; k++){
@@ -549,9 +549,9 @@ void executeRound(
   duration_sum = duration_cast;
   rep = min_reps;
   finished_reps = 0;
-  foldername = "data/CGilu/";
+  foldername = "data/"+filename+"/";
   std::filesystem::create_directories(foldername);
-  std::ofstream outfile_CG_ILU(foldername+"CGilu_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+  std::ofstream outfile_CG_ILU(foldername+"CGilu.txt", std::ios::app);
   while (duration_sum < min_time && rep < 1000000000)
   {
     for (long k = 0; k < rep; k++){
@@ -595,19 +595,18 @@ int main(int argc, char* argv[])
 {
   std::cout << "-------------------------------STARTING:ginkgo-evaluation-------------------------------------------" << std::endl;
   // input handling
-  if (argc!=11) {
+  if (argc!=10) {
     std::cout<<argv[0]<< ": Wrong number of Arguments: "<<argc<<std::endl;
-    std::cout<<"please give arguements: n_lowerBound n_upperBound dim min_reps min_time interval max_iters assembly_structure executor format"<<std::endl;
-    std::cout<<"\n n_lowerBound:    evaluate starting with this n "
-              <<"\n n_upperBound:   evaluate up to this n "
-              <<"\n dim:            evaluate for this dimension "
-              <<"\n min_reps:       minimum repitions per experiment "
-              <<"\n min_time:       minimum time to run each experiment "
-              <<"\n interval:       =i only evaluate every i-th value for n "
-              <<"\n max_iters:      stoping criterion for CG - stopping after max_iters iterations "
-              <<"\n device:         for usage of matrix_data or matrix_assembly_data (md,mad,optimizedCSR) "
-              <<"\n executor:       what ginkgo executor to use (ref,omp,cuda,dpcpp,hip) "
-              <<"\n format:         what matrix format to use (csr,ell,coo,sellp,hybrid,sparsitycsr,dense) \n "<<std::endl;
+    std::cout<<"please give arguements: n_lowerBound n_upperBound dim min_reps min_time max_iters assembly_datastructure executor format"<<std::endl;
+    std::cout<<"\n n_lowerBound:            evaluate starting with this n "
+              <<"\n n_upperBound:           evaluate up to this n "
+              <<"\n dim:                    evaluate for this dimension "
+              <<"\n min_reps:               minimum repitions per experiment "
+              <<"\n min_time:               minimum time to run each experiment "
+              <<"\n max_iters:              stoping criterion for CG - stopping after max_iters iterations "
+              <<"\n assembly_datastrucure:  for usage of matrix_data or matrix_assembly_data (md,mad,optimizedCSR) "
+              <<"\n executor:               what ginkgo executor to use (ref,omp,cuda,dpcpp,hip) "
+              <<"\n format:                 what matrix format to use (csr,ell,coo,sellp,hybrid,sparsitycsr,dense) \n "<<std::endl;
 
     return 1;
   }
@@ -618,15 +617,14 @@ int main(int argc, char* argv[])
   const size_t        dim = std::stoi(argv[3]);
   const size_t        min_reps = std::stoi(argv[4]);
   const size_t        min_time = std::stoi(argv[5]);
-  const size_t        evaluation_interval = std::stoi(argv[6]);
-  const size_t        max_iters = std::stoi(argv[7]);
-  const std::string   assebly_structure_string = argv[8];
-  const std::string   exec_string = argv[9];
-  const std::string   mtx_string = argv[10];
+  const size_t        max_iters = std::stoi(argv[6]);
+  const std::string   assebly_structure_string = argv[7];
+  const std::string   exec_string = argv[8];
+  const std::string   mtx_string = argv[9];
  
   std::string         output_filename = "gko_"+assebly_structure_string+"_"+exec_string+"_"+mtx_string+"_" \
                                         +std::to_string(n_lowerBound)+"-"+std::to_string(n_upperBound)+"n_CG"+std::to_string(max_iters)+"_" \
-                                        +std::to_string(evaluation_interval)+"i_"+std::to_string(min_reps)+"r";
+                                        +std::to_string(min_reps)+"r_"+std::to_string(dim)+"d";
  
 
   std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>
@@ -659,15 +657,13 @@ int main(int argc, char* argv[])
 
   std::cout<<argv[0]<< ": Computing all matrixes with d=2 and d=3, with n="<<n_lowerBound<<" to "<<n_upperBound<<std::endl;
   std::cout<<argv[0]<< ": Computing every variation at least "<<min_reps<<" times"<<std::endl;
-  std::cout<<argv[0]<< ": Interval of evaluated values is "<<evaluation_interval<<" (1 equals evaluating every value of n in bounds)"<<std::endl;
   std::cout<<argv[0]<< ": Configuration: "<<assebly_structure_string<<" "<< exec_string<< " "<< mtx_string<<std::endl;
-  //std::cout<<argv[0]<< ": Outputting to: "<< output_filename<<std::endl;
+  std::cout<<argv[0]<< ": Outputting to: "<< output_filename<<std::endl;
 
 
   std::cout << "-------------------------------running Experiment---------------------------------------------------" << std::endl;
 
   for(size_t n=n_lowerBound; n<=n_upperBound; n++){
-    if(n%evaluation_interval!=0) continue;    //skip condition
     // generate data
     execute_round_map.at(mtx_string)(n,dim,max_iters,min_reps,min_time,output_filename);
   }

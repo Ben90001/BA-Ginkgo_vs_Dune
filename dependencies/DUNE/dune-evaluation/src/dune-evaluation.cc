@@ -278,9 +278,9 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
       auto duration_sum = duration_cast;
       long rep = min_reps;
       long finished_reps = 0;
-      std::string foldername = "data/gen/";
+      std::string foldername = "data/"+filename+"/";
       std::filesystem::create_directories(foldername);
-      std::ofstream outfile_gen(foldername+"gen_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+      std::ofstream outfile_gen(foldername+"gen.txt", std::ios::app);
       while (duration_sum < min_time && rep < 1000000000)
       {
         for (long k = 0; k < rep; k++){
@@ -312,9 +312,9 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
       auto duration_sum = duration_cast;
       long rep = min_reps;
       long finished_reps = 0;
-      std::string foldername = "data/gen/";
+      std::string foldername = "data/"+filename+"/";
       std::filesystem::create_directories(foldername);
-      std::ofstream outfile_gen(foldername+"gen_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+      std::ofstream outfile_gen(foldername+"gen.txt", std::ios::app);
       while (duration_sum < min_time && rep < 1000000000)
       {
         for (long k = 0; k < rep; k++){
@@ -366,9 +366,9 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     auto duration_sum = duration_cast;
     long rep = min_reps;
     long finished_reps = 0;
-    std::string foldername = "data/SpMV/";
+    std::string foldername = "data/"+filename+"/";
     std::filesystem::create_directories(foldername);
-    std::ofstream outfile_SpMV(foldername+"SpMV_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+    std::ofstream outfile_SpMV(foldername+"SpMV.txt", std::ios::app);
     while (duration_sum < min_time && rep < 1000000000)
     {
       for (long k = 0; k < rep; k++){
@@ -422,9 +422,9 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     duration_sum = duration_cast;
     rep = min_reps;
     finished_reps = 0;
-    foldername = "data/CGjac/";
+    foldername = "data/"+filename+"/";
     std::filesystem::create_directories(foldername);
-    std::ofstream outfile_CGjac(foldername+"CGjac_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+    std::ofstream outfile_CGjac(foldername+"CGjac.txt", std::ios::app);
     while (duration_sum < min_time && rep < 1000000000)
     {
       for (long k = 0; k < rep; k++){
@@ -476,9 +476,9 @@ void executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     duration_sum = duration_cast;
     rep = min_reps;
     finished_reps = 0;
-    foldername = "data/CGilu/";
+    foldername = "data/"+filename+"/";
     std::filesystem::create_directories(foldername);
-    std::ofstream outfile_CG_ILU(foldername+"CGilu_"+filename+"_d"+std::to_string(dim)+".txt", std::ios::app);
+    std::ofstream outfile_CG_ILU(foldername+"CGilu.txt", std::ios::app);
     while (duration_sum < min_time && rep < 1000000000)
     {
       for (long k = 0; k < rep; k++){
@@ -551,7 +551,7 @@ int main(int argc, char** argv)
  
   std::cout << "-------------------------------running Experiment--------------------------------------------------" << std::endl;
   
-  std::string filename = "ISTL_"+buildMode;
+  std::string filename = "ISTL_"+buildMode+"_"+std::to_string(dim)+"d";
   for(size_t n=1; n<=n_max; n++)
       executeRound(n,dim,max_iters,min_reps,min_time,filename,buildMode);
 
