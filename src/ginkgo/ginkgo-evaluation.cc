@@ -1,11 +1,13 @@
-#include<ginkgo/ginkgo.hpp>
-
 #include<iostream>
 #include<chrono>
 #include<map>
 #include<fstream>
 #include<filesystem> //requires cpp17
 #include <cstdlib>
+
+#include<ginkgo/ginkgo.hpp>
+
+#include </home/benh/BA-Ginkgo_vs_Dune/resources/time_experiment.hh>
 
 size_t getNNZ(int n, int dim){
   if(dim==2) return 5*n*n - 4*n;
@@ -325,7 +327,7 @@ std::unique_ptr<MatrixType> diffusion_matrix_mad(const size_t n, const size_t d,
 
 // returns time_to_generate and time_to_SpMV
 template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction>
-void executeRound(
+auto executeRound(
                                              const size_t n, const size_t dim, const size_t max_iters, 
                                              const size_t min_reps, size_t min_time, std::string filename,
                                              CoefficientFunction diffusion_coefficient,
@@ -349,49 +351,23 @@ void executeRound(
 
 
 // assembl matrix A
-  std::cout<< "Generating with "<<std::endl;
+  std::cout<< "Generating with "+ assebly_structure_string<<std::endl;
   std::shared_ptr<MatrixType> pA = nullptr;
-  auto time_start = std::chrono::high_resolution_clock::now();
-  auto time_stop = time_start;
-  auto duration = time_stop - time_start;
-  auto duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
-  auto duration_sum = duration_cast;
-  long rep = min_reps;
-  long finished_reps = 0;
-  std::string foldername = "data/"+filename+"/";
-  std::filesystem::create_directories(foldername);
-  std::ofstream outfile_gen(foldername+"gen.txt", std::ios::app);
-  while (duration_sum < min_time && rep < 1000000000)
-  {
-    for (long k = 0; k < rep; k++){
-      // synchronize before timing
-      exec->synchronize();
-      time_start = std::chrono::high_resolution_clock::now();
-      pA = generate_matrix(n, dim, diffusion_coefficient, dirichlet_boundary, exec);
-      // synchronize before timing
-      exec->synchronize();
-      time_stop = std::chrono::high_resolution_clock::now();
-      duration = time_stop - time_start;
-      duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
-      outfile_gen 
-        << n << " "
-        << dim << " "
-        << k+finished_reps << " "
-        << duration_cast << "\n";
-      duration_sum += duration_cast;
-    }
-    outfile_gen.flush();
-    finished_reps +=rep;
-    std::cout << "(Ginkgo) Gen: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
-    rep *= 2;
-  }
-  outfile_gen.close();
-  
+
+
+  auto experiment_gen = \
+        [&pA, &generate_matrix, &n, &dim, &diffusion_coefficient, &dirichlet_boundary,&exec](){
+          pA = generate_matrix(n, dim, diffusion_coefficient, dirichlet_boundary,exec);
+        };
+
+  auto result_gen = time_experiment_gko(experiment_gen, exec, min_time,min_reps);
+  std::cout << "(Ginkgo) gen: n="<<n<<" dim="<<dim<<" reps=" << result_gen.first << " in ms=" << result_gen.second/1000000 << std::endl;
+   
   // store matrix
   if(n<=30){
-      std::string foldername = "result-verification/A/";
+      std::string foldername = "result-verification/"+filename+"/A/";
       std::filesystem::create_directories(foldername);
-      std::string filename_A = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_A_"+filename+".mtx";
+      std::string filename_A = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_A.mtx";
       std::ofstream outfilestream(filename_A);
       gko::write(outfilestream,pA);
       std::cout<< "stored matrix to "+filename_A<<std::endl;
@@ -407,55 +383,26 @@ void executeRound(
   x->read(vec_data);
 
   std::cout<< "SpMV calculating ..."<<std::endl;
-  time_start = std::chrono::high_resolution_clock::now();
-  time_stop = time_start;
-  duration = time_stop - time_start;
-  duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
-  duration_sum = duration_cast;
-  rep = min_reps;
-  finished_reps = 0;
-  foldername = "data/"+filename+"/";
-  std::filesystem::create_directories(foldername);
-  std::ofstream outfile_SpMV(foldername+"SpMV.txt", std::ios::app);
-  while (duration_sum < min_time && rep < 1000000000)
-  {
-    for (long k = 0; k < rep; k++){
-      // synchronize before timing
-      exec->synchronize();
-      time_start = std::chrono::high_resolution_clock::now();
-      pA->apply(x, y);  
-      // synchronize before timing
-      exec->synchronize();
-      time_stop = std::chrono::high_resolution_clock::now();
-      duration = time_stop - time_start;
-      duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
-      outfile_SpMV 
-        << n << " "
-        << dim << " "
-        << k+finished_reps << " "
-        << duration_cast << "\n";
-      duration_sum += duration_cast;
-    }
-    outfile_SpMV.flush();
-    finished_reps +=rep;
-    std::cout << "(Ginkgo) SpMV: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps << " duration_sum in ms=" << duration_sum/1000000 << std::endl;
-    rep *= 2;
-  }
-    outfile_SpMV.close();
+  auto experiment_SpMV = \
+      [&pA,&x,&y](){
+        pA->apply(x, y);  
+      };
+  auto result_SpMV = time_experiment_gko(experiment_SpMV, exec, min_time, min_reps);
+  std::cout << "(Ginkgo) SpMV: n="<<n<<" dim="<<dim<<" reps=" << result_SpMV.first << " in ms=" << result_SpMV.second/1000000 << std::endl;
+
   //std::cout << "last y:  " << std::endl;
   //gko::write(std::cout, y);
 
-  // store SpMV result y
+  // store last SpMV result y
   if(n<=30){
-      std::string foldername = "result-verification/y/";
+      std::string foldername = "result-verification/"+filename+"/y/";
       std::filesystem::create_directories(foldername);
-      std::string filename_y = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_y_"+filename+".mtx";
+      std::string filename_y = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_y.mtx";
       std::ofstream outfilestream(filename_y);
       gko::write(outfilestream,y);
       std::cout<< "stored SpMV result y to "+filename_y<<std::endl;
   }
 
-  auto time_to_CG = std::chrono::duration_cast<std::chrono::nanoseconds>(time_stop - time_stop);
 
 // build CG_jac
   using cg = gko::solver::Cg<>;
@@ -478,47 +425,20 @@ void executeRound(
   
   //experiment
   std::cout<< "CG_jac calculating ..."<<std::endl;
-  time_start = std::chrono::high_resolution_clock::now();
-  time_stop = time_start;
-  duration = time_stop - time_start;
-  duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
-  duration_sum = duration_cast;
-  rep = min_reps;
-  finished_reps = 0;
-  foldername = "data/"+filename+"/";
-  std::filesystem::create_directories(foldername);
-  std::ofstream outfile_CGjac(foldername+"CGjac.txt", std::ios::app);
-  while (duration_sum < min_time && rep < 1000000000)
-  {
-    for (long k = 0; k < rep; k++){
-      //auto rhs = gko::clone(x); //unlike with DUNE not necessary 
-      x_k = gko::clone(x);
-      exec->synchronize();
-      time_start = std::chrono::high_resolution_clock::now();
-      solver_CG_jac->apply(rhs, x_k);
-      exec->synchronize();
-      time_stop = std::chrono::high_resolution_clock::now();
-      duration = time_stop - time_start;
-      duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
-      outfile_CGjac 
-        << n << " "
-        << dim << " "
-        << k+finished_reps << " "
-        << duration_cast << "\n";
-      duration_sum += duration_cast;
-    }
-    outfile_CGjac.flush();
-    finished_reps +=rep;
-    std::cout << "(Ginkgo) CG_jac: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps <<" duration_sum in ms=" << duration_sum/1000000 << std::endl;
-    rep *= 2;
-  }
-  outfile_CGjac.close();
-  
+    auto experiment_CGjac = \
+      [&x_k, &solver_CG_jac,&rhs](){
+        x_k->fill(1.0);
+        solver_CG_jac->apply(rhs, x_k); 
+      };
+  auto result_CGjac = time_experiment_gko(experiment_CGjac, exec, min_time, min_reps);
+  std::cout << "(Ginkgo) CGjac: n="<<n<<" dim="<<dim<<" reps=" << result_CGjac.first << " in ms=" << result_CGjac.second/1000000 << std::endl;
+
+
   // store CG result after max_iters iterations
   if(n<=30){
-      std::string foldername = "result-verification/x_k_jac/";
+      std::string foldername = "result-verification/"+filename+"/x_k_jac/";
       std::filesystem::create_directories(foldername);
-      std::string filename_x_k_jac = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_x_k_jac_"+filename+".mtx";
+      std::string filename_x_k_jac = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_x_k_jac.mtx";
       std::ofstream outfilestream(filename_x_k_jac);
       gko::write(outfilestream,x_k);
       std::cout<< "CG result x_k after "+std::to_string(max_iters)+" iterations to "+filename_x_k_jac<<std::endl;
@@ -526,14 +446,14 @@ void executeRound(
 
 // build CG_ILU
   using ilu = gko::preconditioner::Ilu<>;
-  auto solver_factory_CG_ILU = cg::build()
+  auto solver_factory_CGilu = cg::build()
                              .with_criteria(gko::stop::Iteration::build()
                                                 .with_max_iters(max_iters)
                                                 .on(exec))
                              .with_preconditioner(ilu::build()
                                                 .on(exec))
                              .on(exec);
-  auto solver_CG_ILU = solver_factory_CG_ILU->generate(pA);
+  auto solver_CGilu = solver_factory_CGilu->generate(pA);
 
 // apply CG-ILU
   // set both rhs and initial iterate x_k to 1
@@ -541,52 +461,27 @@ void executeRound(
   x_k = gko::clone(x);
   
   //experiment
-  std::cout<< "CG_ILU calculating ..."<<std::endl;
-  time_start = std::chrono::high_resolution_clock::now();
-  time_stop = time_start;
-  duration = time_stop - time_start;
-  duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
-  duration_sum = duration_cast;
-  rep = min_reps;
-  finished_reps = 0;
-  foldername = "data/"+filename+"/";
-  std::filesystem::create_directories(foldername);
-  std::ofstream outfile_CG_ILU(foldername+"CGilu.txt", std::ios::app);
-  while (duration_sum < min_time && rep < 1000000000)
-  {
-    for (long k = 0; k < rep; k++){
-      //auto rhs = gko::clone(x); //unlike with DUNE not necessary 
-      x_k = gko::clone(x);
-      exec->synchronize();
-      time_start = std::chrono::high_resolution_clock::now();
-      solver_CG_ILU->apply(rhs, x_k);
-      exec->synchronize();
-      time_stop = std::chrono::high_resolution_clock::now();
-      duration = time_stop - time_start;
-      duration_cast = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
-      outfile_CG_ILU 
-        << n << " "
-        << dim << " "
-        << k+finished_reps << " "
-        << duration_cast << "\n";
-      duration_sum += duration_cast;
-    }
-    outfile_CG_ILU.flush();
-    finished_reps +=rep;
-    std::cout << "(Ginkgo) CG_ILU: n="<<n<<" dim="<<dim<<" finished_reps=" << finished_reps <<" duration_sum in ms=" << duration_sum/1000000 << std::endl;
-    rep *= 2;
-  }
-  outfile_CG_ILU.close();
+  std::cout<< "CG_ilu calculating ..."<<std::endl;
+    auto experiment_CGilu = \
+      [&x_k, &solver_CGilu,&rhs](){
+        x_k->fill(1.0);
+        solver_CGilu->apply(rhs, x_k); 
+      };
+  auto result_CGilu = time_experiment_gko(experiment_CGilu, exec, min_time, min_reps);
+  std::cout << "(Ginkgo) CGilu: n="<<n<<" dim="<<dim<<" reps=" << result_CGilu.first << " in ms=" << result_CGilu.second/1000000 << std::endl;
+
 
   // store CG result after max_iters iterations
   if(n<=30){
-    std::string foldername = "result-verification/x_k_ilu/";
+    std::string foldername = "result-verification/"+filename+"/x_k_ilu/";
     std::filesystem::create_directories(foldername);
-    std::string filename_x_k_ilu = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_x_k_ilu_"+filename+".mtx";
+    std::string filename_x_k_ilu = foldername+std::to_string(n)+"_"+std::to_string(dim)+"_x_k_ilu.mtx";
     std::ofstream outfilestream(filename_x_k_ilu);
     gko::write(outfilestream,x_k);
     std::cout<< "CG result x_k after "+std::to_string(max_iters)+" iterations to "+filename_x_k_ilu<<std::endl;
   }
+
+  return std::vector<decltype(result_gen)>{result_gen,result_SpMV,result_CGjac,result_CGilu};
 
 }
 
@@ -622,7 +517,7 @@ int main(int argc, char* argv[])
   const std::string   exec_string = argv[8];
   const std::string   mtx_string = argv[9];
  
-  std::string         output_filename = "gko_"+assebly_structure_string+"_"+exec_string+"_"+mtx_string+"_" \
+  std::string         filename = "gko_"+assebly_structure_string+"_"+exec_string+"_"+mtx_string+"_" \
                                         +std::to_string(n_lowerBound)+"-"+std::to_string(n_upperBound)+"n_CG"+std::to_string(max_iters)+"_" \
                                         +std::to_string(min_reps)+"r_"+std::to_string(dim)+"d";
  
@@ -640,7 +535,7 @@ int main(int argc, char* argv[])
   auto dirichlet_boundary = [](const std::vector<double> &x) { return true; };
   std::map<
     std::string, 
-    std::function<void(size_t, size_t, size_t, size_t, size_t, std::string)>>
+    std::function<std::vector<std::pair<long, long>>(size_t, size_t, size_t, size_t, size_t, std::string)>>
     execute_round_map{
       {"csr", [&] (size_t n, size_t dim, size_t max_iters, size_t min_reps, size_t min_time, std::string filename)
         { return executeRound<gko::matrix::Csr<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }},
@@ -658,14 +553,31 @@ int main(int argc, char* argv[])
   std::cout<<argv[0]<< ": Computing all matrixes with d=2 and d=3, with n="<<n_lowerBound<<" to "<<n_upperBound<<std::endl;
   std::cout<<argv[0]<< ": Computing every variation at least "<<min_reps<<" times"<<std::endl;
   std::cout<<argv[0]<< ": Configuration: "<<assebly_structure_string<<" "<< exec_string<< " "<< mtx_string<<std::endl;
-  std::cout<<argv[0]<< ": Outputting to: "<< output_filename<<std::endl;
+  std::cout<<argv[0]<< ": Outputting to: "<< filename<<std::endl;
 
 
   std::cout << "-------------------------------running Experiment---------------------------------------------------" << std::endl;
 
+  std::string foldername = "data/"+filename+"/";
+  std::filesystem::create_directories(foldername);
+  std::vector<std::string>dataTypes = {"gen","SpMV","CGjac","CGilu"};
+  std::vector<std::vector<std::pair<long, long>>> results;
+
   for(size_t n=n_lowerBound; n<=n_upperBound; n++){
     // generate data
-    execute_round_map.at(mtx_string)(n,dim,max_iters,min_reps,min_time,output_filename);
+    results.push_back(execute_round_map.at(mtx_string)(n,dim,max_iters,min_reps,min_time,filename));
+  }
+
+  for(int i=0; i<4;i++){
+    std::ofstream outfile(foldername+dataTypes[i]+".txt");
+    for(size_t n=1; n<n_upperBound+1; n++){
+    outfile 
+        << n << " "
+        << dim << " "
+        << results[n-1][i].first << " "
+        << results[n-1][i].second << "\n";
+    }
+    outfile.close();
   }
 
   std::cout << "-------------------------------FINISHED:ginkgo-evaluation-------------------------------------------" << std::endl;

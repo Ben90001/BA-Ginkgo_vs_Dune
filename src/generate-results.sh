@@ -6,8 +6,8 @@ set -e
 
 n_lowerBound="1"
 
-n_upperBound="110"
-min_reps="4"
+n_upperBound="80"
+min_reps="2"
 min_time="250000000"
 max_iters="10"
 dims=("3")
@@ -20,7 +20,7 @@ buildModes=("implicit" "row_wise")
 # ref 1omp omp cuda
 executors=("1omp" "ref")
 # md mad (dmd?)
-assembly_structures=("md" "mad")
+assembly_structures=("md")
 # csr coo ell sellp hybrid
 mtx_formats=("csr")
 

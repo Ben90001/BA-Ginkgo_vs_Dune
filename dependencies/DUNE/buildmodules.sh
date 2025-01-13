@@ -15,6 +15,5 @@ for i in $MODULES; do
     ./dune-common/bin/dunecontrol --builddir=$BUILDDIR  --opts=$OPTSFILE --only=dune-$i all
 done
 
-#echo "testing with 3 1 row_wise"
-#./release-build/dune-evaluation/src/dune-evaluation 3 1 row_wise
-
+#echo "testing up to n=5"
+#./release-build/dune-evaluation/src/dune-evaluation 5 3 10 4 250000000 implicit
