@@ -337,6 +337,8 @@ auto executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     //linOp, precond, reduction, maxIt, verbose, condition_estimate(missing? (bool))
     Dune::CGSolver<Vector> solver_jac(linOp_A, preconditioner_jac, 0.0, max_iters,1);
     Vector x_k(pA->N()),b(pA->N());
+    x_k = 1.0;
+    b = 1.0;
     Dune::InverseOperatorResult results;
 
   // apply CG_jac
@@ -346,7 +348,6 @@ auto executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
           [&solver_jac, &x_k, &b, &results](){
             x_k = 1.0;
             b = 1.0;
-            //results.clear();
             solver_jac.apply(x_k,b,results);
           };
     //run experiment
@@ -368,7 +369,9 @@ auto executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     Dune::SeqILU<Matrix,Vector,Vector> preconditioner_ILU(*pA,0, w); 
     //linOp, precond, reduction, maxIt, verbose (, condition_estimate(default value false (bool)))
     Dune::CGSolver<Vector> solver_ilu(linOp_A, preconditioner_ILU, 0.0, max_iters,1);
-
+    x_k = 1.0;
+    b = 1.0;
+    
   // apply CG_ilu
     //experiment
     std::cout<< "CG_ilu calculating ..."<<std::endl;

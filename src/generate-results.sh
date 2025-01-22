@@ -19,8 +19,8 @@ buildModes=("implicit" "row_wise")
 #GINKGO
 # ref 1omp omp cuda
 executors=("1omp" "ref")
-# md mad (dmd?)
-assembly_structures=("md")
+# md mad dmd
+assembly_structures=("dmd")
 # csr coo ell sellp hybrid
 mtx_formats=("csr")
 
@@ -35,7 +35,7 @@ echo "Script execution started at: $(date)" > $log_file
 # generate data -------------------------------------------------------------------------------------------------------
 for buildMode in "${buildModes[@]}"; do
     for dim in "${dims[@]}"; do
-        ./../../dependencies/DUNE/release-build/dune-evaluation/src/dune-evaluation $n_upperBound $dim $max_iters $min_reps $min_time $buildMode
+        #./../../dependencies/DUNE/release-build/dune-evaluation/src/dune-evaluation $n_upperBound $dim $max_iters $min_reps $min_time $buildMode
         echo "Finished ISTL with buildMode $buildMode at       $(date)" >> $log_file
     done
 done

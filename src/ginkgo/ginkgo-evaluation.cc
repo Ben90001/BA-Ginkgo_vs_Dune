@@ -13,7 +13,7 @@ size_t getNNZ(int n, int dim){
   if(dim==2) return 5*n*n - 4*n;
   if(dim==3) return 7*n*n*n - 6*n*n;
   for(int i=0; i<10000; i++){
-    std::cout<< "This should not have happend, no applicable n for getNNZ in dune-evaluation.cc"<<"\n";
+    std::cout<< "This should not have happend, no applicable n for getNNZ in ginkgo-evaluation.cc"<<"\n";
   }
 }
 
@@ -110,7 +110,6 @@ std::unique_ptr<MatrixType> diffusion_matrix_optimizedCSR(const size_t n, const 
     mtx_data.nonzeros.emplace_back(index, index, center_matrix_entry); ///@changed
   }
   // create matrix from data
-  mtx_data.sort_row_major();
   auto pA = mtx::create(exec,GKOdim,getNNZ(n,d));
   pA->read(mtx_data);
 
@@ -319,7 +318,8 @@ std::unique_ptr<MatrixType> diffusion_matrix_mad(const size_t n, const size_t d,
   // create matrix from data
   // size_t nnz = (2*d+1)*N;
   auto pA = mtx::create(exec); ///@optimize (line below included)
-  pA->read(mtx_assembly_data.get_ordered_data());
+  //pA->read(mtx_assembly_data.get_ordered_data());
+  pA->read(mtx_assembly_data);
 
   return pA;
 }
@@ -378,9 +378,10 @@ auto executeRound(
   auto x = vec::create(exec, gko::dim<2, size_t>(N, 1));
   auto y = vec::create(exec, gko::dim<2, size_t>(N, 1));
 
-  gko::matrix_data<> vec_data{gko::dim<2>(N, 1)};
-  for(size_t i=0; i<N;i++) vec_data.nonzeros.emplace_back(i,0,1.0);
-  x->read(vec_data);
+  //gko::matrix_data<> vec_data{gko::dim<2>(N, 1)};
+  //for(size_t i=0; i<N;i++) vec_data.nonzeros.emplace_back(i,0,1.0);
+  //x->read(vec_data);
+  x->fill(1.0);
 
   std::cout<< "SpMV calculating ..."<<std::endl;
   auto experiment_SpMV = \
@@ -457,8 +458,8 @@ auto executeRound(
 
 // apply CG-ILU
   // set both rhs and initial iterate x_k to 1
-  rhs = gko::clone(x);
-  x_k = gko::clone(x);
+  rhs->fill(1.0);
+  x_k->fill(1.0);
   
   //experiment
   std::cout<< "CG_ilu calculating ..."<<std::endl;
@@ -521,11 +522,11 @@ int main(int argc, char* argv[])
                                         +std::to_string(n_lowerBound)+"-"+std::to_string(n_upperBound)+"n_CG"+std::to_string(max_iters)+"_" \
                                         +std::to_string(min_reps)+"r_"+std::to_string(dim)+"d";
  
-
+  // 1omp: threadcount set to 1 via generation script, didnt work via code
   std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>
         exec_map{
             {"omp", [] { return gko::OmpExecutor::create(); }},
-            {"1omp", [] { putenv((char*)"OMP_NUM_THREADS=1"); /*setenv((char*)"OMP_NUM_THREADS", (char*)"1",1);*/ return gko::OmpExecutor::create(); }},
+            {"1omp", [] { /*putenv((char*)"OMP_NUM_THREADS=1");*/ /*setenv((char*)"OMP_NUM_THREADS", (char*)"1",1);*/ return gko::OmpExecutor::create(); }},
             {"cuda",[] { return gko::CudaExecutor::create(0,gko::OmpExecutor::create()); }},
             {"hip",[] { return gko::HipExecutor::create(0, gko::OmpExecutor::create()); }},
             {"dpcpp",[] { return gko::DpcppExecutor::create(0,gko::OmpExecutor::create()); }},
