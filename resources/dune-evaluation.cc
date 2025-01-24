@@ -183,6 +183,173 @@ std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matri
     row.insert(row.index());
   }
 
+// fill in nnz values
+  for (std::size_t index=0; index<sizes[d]; index++)  ///each grid cell
+  {
+    // create multiindex from row number          ///fancy way of doing 3 for loops over n -> more general, works for all d
+    std::vector<std::size_t> multiindex(d,0);
+    auto copiedindex=index;
+    for (int i=d-1; i>=0; i--)
+    {
+      multiindex[i] = copiedindex/sizes[i];
+      copiedindex = copiedindex%sizes[i];
+    }
+    //std::cout<<"Fill in iteration: index=" << index<< std::endl;            //debug
+    // the current cell
+    std::vector<double> center_position(d);       ///scaled up multigrid/cell-position
+    for (int i=0; i<d; ++i) 
+      center_position[i] = multiindex[i]*mesh_size;
+    double center_coefficient = diffusion_coefficient(center_position);
+    double center_matrix_entry = 0.0;
+
+    // loop over all neighbors
+    for (int i=0; i<d; i++)
+    {
+      // down neighbor
+      if (multiindex[i]>0)
+      {
+        // we have a neighbor cell
+        std::vector<double> neighbor_position(center_position);
+        neighbor_position[i] -= mesh_size;
+        double neighbor_coefficient = diffusion_coefficient(neighbor_position);
+        double harmonic_average = 2.0/( (1.0/neighbor_coefficient) + (1.0/center_coefficient) );
+        (*pA)[index][index-sizes[i]] = -harmonic_average;          /// row is same as center, but column in grid -1 on i-axis
+        center_matrix_entry += harmonic_average;
+      }
+      else
+      {
+        // current cell is on the boundary in this direction
+        std::vector<double> neighbor_position(center_position);
+        neighbor_position[i] = 0.0;
+        if (dirichlet_boundary(neighbor_position))
+          center_matrix_entry += center_coefficient*2.0;
+      }
+
+      // up neighbor
+      if (multiindex[i]<n-1)
+      {
+        // we have a neighbor cell
+        std::vector<double> neighbor_position(center_position);
+        neighbor_position[i] += mesh_size;
+        double neighbor_coefficient = diffusion_coefficient(neighbor_position);
+        double harmonic_average = 2.0/( (1.0/neighbor_coefficient) + (1.0/center_coefficient) );
+        (*pA)[index][index+sizes[i]] = -harmonic_average;
+        center_matrix_entry += harmonic_average;
+      }
+      else
+      {
+        // current cell is on the boundary in this direction
+        std::vector<double> neighbor_position(center_position);
+        neighbor_position[i] = 1.0;
+        if (dirichlet_boundary(neighbor_position))
+          center_matrix_entry += center_coefficient*2.0;
+      }
+    }
+
+    // finally the diagonal entry
+    (*pA)[index][index] = center_matrix_entry;
+  }
+
+  return pA;
+}
+
+//two loops prior to value adding (1. rows 2. columns 3. values)
+template <typename CoefficientFunction, typename BoundaryTypeFunction>
+std::shared_ptr<Dune::BCRSMatrix<Dune::FieldMatrix<double,1,1>>> diffusion_matrix_random (int n, int d,
+   CoefficientFunction diffusion_coefficient, BoundaryTypeFunction dirichlet_boundary)
+{
+  // relevant types
+  using MatrixEntry = Dune::FieldMatrix<double,1,1>;
+  using Matrix = Dune::BCRSMatrix<MatrixEntry>;
+
+  // prepare grid information
+  std::vector<std::size_t> sizes(d+1,1);
+  for (int i=1; i<=d; ++i) sizes[i] = sizes[i-1]*n;
+  double mesh_size = 1.0/n;
+  int N = sizes[d];
+
+  // create sparse matrix
+  std::shared_ptr<Matrix> pA = nullptr;
+    // third parameter is an optional upper bound for the number
+    // of nonzeros. If given the matrix will use one array for all values
+    // as opposed to one for each row.
+  pA= std::make_shared<Matrix>(N,N,getNNZ(n,d),Matrix::random);
+
+  // calculate row sizes
+  for(size_t row=0; row<sizes[d]; ++row)
+  {
+    // create multiindex from row number
+    std::vector<std::size_t> multiindex(d,0);
+    auto copiedindex=row;
+    for (int i=d-1; i>=0; i--)
+    {
+      multiindex[i] = copiedindex/sizes[i];
+      copiedindex = copiedindex%sizes[i];
+    }
+
+    // loop over all neighbors
+    for (int i=0; i<d; i++)
+    {
+      // down neighbor
+      if (multiindex[i]>0)
+      {
+        // we have a neighbor cell
+        //row.insert(row.index()-sizes[i]);
+        pA->incrementrowsize(row);
+      }// else: cell is on boundary
+
+      // up neighbor
+      if (multiindex[i]<n-1)
+      {
+        // we have a neighbor cell
+        //row.insert(row+sizes[i]);
+        pA->incrementrowsize(row);
+      }// else: cell is on boundary
+    }
+    // finally the diagonal entry
+    //row.insert(row);
+    pA->incrementrowsize(row);
+  }
+  pA->endrowsizes();
+
+  // add column indices
+  for(size_t row=0; row<sizes[d]; ++row)
+  {
+    // create multiindex from row number
+    std::vector<std::size_t> multiindex(d,0);
+    auto copiedindex=row;
+    for (int i=d-1; i>=0; i--)
+    {
+      multiindex[i] = copiedindex/sizes[i];
+      copiedindex = copiedindex%sizes[i];
+    }
+
+    // loop over all neighbors
+    for (int i=0; i<d; i++)
+    {
+      // down neighbor
+      if (multiindex[i]>0)
+      {
+        // we have a neighbor cell
+        //row.insert(row.index()-sizes[i]);
+        pA->addindex(row,row-sizes[i]);
+      }// else: cell is on boundary
+
+      // up neighbor
+      if (multiindex[i]<n-1)
+      {
+        // we have a neighbor cell
+        //row.insert(row+sizes[i]);
+        pA->addindex(row,row+sizes[i]);
+      }// else: cell is on boundary
+    }
+    // finally the diagonal entry
+    //row.insert(row);
+    pA->addindex(row,row);
+  }
+  pA->endindices();
+
+
   // fill in nnz values
   for (std::size_t index=0; index<sizes[d]; index++)  ///each grid cell
   {
@@ -284,6 +451,13 @@ auto executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
           pA=diffusion_matrix_row_wise(n,dim,diffusion_coefficient,dirichlet_boundary);
         };
     }
+    else if(buildMode == "random"){
+      std::cout<< "Generating with BuildMode random"<<std::endl;
+      experiment_gen = \
+        [&pA, &n, &dim, &diffusion_coefficient, &dirichlet_boundary](){
+          pA=diffusion_matrix_random(n,dim,diffusion_coefficient,dirichlet_boundary);
+        };
+    }
     else{ throw std::runtime_error("Unknown BuildMode!");}
     auto result_gen = time_experiment(experiment_gen,min_time,min_reps);
     std::cout << "(DUNE) Gen: n="<<n<<" dim="<<dim<<" reps=" << result_gen.first << " in ms=" << result_gen.second/1000000 << std::endl;
@@ -335,7 +509,7 @@ auto executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     //make pA into Linear Operator
     Dune::MatrixAdapter<Matrix,Vector,Vector> linOp_A{pA};
     //linOp, precond, reduction, maxIt, verbose, condition_estimate(missing? (bool))
-    Dune::CGSolver<Vector> solver_jac(linOp_A, preconditioner_jac, 0.0, max_iters,1);
+    Dune::CGSolver<Vector> solver_jac(linOp_A, preconditioner_jac, 0.0, max_iters,0);
     Vector x_k(pA->N()),b(pA->N());
     x_k = 1.0;
     b = 1.0;
@@ -368,9 +542,10 @@ auto executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     //A, "The order of the ILU decomposition.", "The relaxation factor."
     Dune::SeqILU<Matrix,Vector,Vector> preconditioner_ILU(*pA,0, w); 
     //linOp, precond, reduction, maxIt, verbose (, condition_estimate(default value false (bool)))
-    Dune::CGSolver<Vector> solver_ilu(linOp_A, preconditioner_ILU, 0.0, max_iters,1);
+    Dune::CGSolver<Vector> solver_ilu(linOp_A, preconditioner_ILU, 0.0, max_iters,0);
     x_k = 1.0;
     b = 1.0;
+    results.clear();
     
   // apply CG_ilu
     //experiment
@@ -426,7 +601,7 @@ int main(int argc, char** argv)
   const size_t min_reps = std::stoi(argv[4]);
   std::cout<<argv[0]<< ": Computing every variation  "<<min_reps<<" times"<<std::endl;
   // minimum number of nanoseconds per experiment(gen,spmv,cg_jac) 
-  const size_t min_time = std::stoi(argv[5]);
+  const size_t min_time = std::stoi(argv[5])*1000000;
   std::cout<<argv[0]<< ": Computing every variation for  "<<min_time<<" nanoseconds"<<std::endl;
   const std::string buildMode = argv[6];
   std::cout<<argv[0]<< ": Computing with BuildMode:  "<<buildMode<<" "<<std::endl;
@@ -445,7 +620,8 @@ int main(int argc, char** argv)
   for(size_t n=1; n<=n_max; n++){
     results.push_back(executeRound(n,dim,max_iters,min_reps,min_time,filename,buildMode));
   }
-  
+
+  // save results to file
   for(int i=0; i<4;i++){
     std::ofstream outfile(foldername+dataTypes[i]+".txt");
     for(size_t n=1; n<n_max+1; n++){

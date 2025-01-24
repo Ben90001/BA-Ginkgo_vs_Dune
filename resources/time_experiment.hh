@@ -22,7 +22,7 @@
  *
  */
 template <typename Func>
-auto time_experiment(const Func& experiment, int mintime, long minreps)
+auto time_experiment(const Func& experiment, size_t mintime, long minreps)
 {
   auto start = std::chrono::high_resolution_clock::now();
   auto stop = start;
@@ -46,7 +46,7 @@ auto time_experiment(const Func& experiment, int mintime, long minreps)
   return rv;
 }
 template <typename Func, typename ExecType>
-auto time_experiment_gko(const Func& experiment, const ExecType& exec, int mintime, long minreps)
+auto time_experiment_gko(const Func& experiment, const ExecType& exec, size_t mintime, long minreps)
 {
   auto start = std::chrono::high_resolution_clock::now();
   auto stop = start;
