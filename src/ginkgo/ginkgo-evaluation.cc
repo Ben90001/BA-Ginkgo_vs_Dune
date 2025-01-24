@@ -17,9 +17,9 @@ size_t getNNZ(int n, int dim){
   }
 }
 
-// implementation using matrix_data -> uses AoS
+// test function
 template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction, class ExecutorType>
-std::unique_ptr<MatrixType> diffusion_matrix_optimizedCSR(const size_t n, const size_t d,
+std::unique_ptr<MatrixType> diffusion_matrix_directCSR(const size_t n, const size_t d,
                                               CoefficientFunction diffusion_coefficient,
                                               BoundaryTypeFunction dirichlet_boundary,
                                               ExecutorType exec)
@@ -38,6 +38,8 @@ std::unique_ptr<MatrixType> diffusion_matrix_optimizedCSR(const size_t n, const 
   // create matrix entries
   auto GKOdim = gko::dim<2>(N);
   gko::matrix_data<> mtx_data{GKOdim};
+  
+
   for (std::size_t index = 0; index < sizes[d]; index++) /// each grid cell
   {
     // create multiindex from row number                    ///fancy way of doing 3(=d) for loops over n
@@ -325,6 +327,111 @@ std::unique_ptr<MatrixType> diffusion_matrix_mad(const size_t n, const size_t d,
 }
 
 
+// implementation using matrix_data -> uses AoS
+template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction, class ExecutorType>
+std::unique_ptr<MatrixType> diffusion_matrix_dmd(const size_t n, const size_t d,
+                                              CoefficientFunction diffusion_coefficient,
+                                              BoundaryTypeFunction dirichlet_boundary,
+                                              ExecutorType exec)
+{
+  // relevant types
+  // using MatrixEntry = double;
+  using mtx = MatrixType;
+
+  // prepare grid information
+  std::vector<std::size_t> sizes(d + 1, 1);
+  for (int i = 1; i <= d; ++i)
+    sizes[i] = sizes[i - 1] * n; /// sizes={1,n,n^2,n^3,...,n^d}
+  double mesh_size = 1.0 / n;
+  long N = sizes[d];
+
+  // create matrix entries
+  // gko::matrix_data<double,size_t> mtx_data{gko::dim<2,size_t>(N,N)};     //temporary COO representation (!might be unefficient) @changed
+  auto gkoDim = gko::dim<2>(N);
+  gko::matrix_data<double,int> mtx_data{gkoDim};           ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
+  //gko::matrix_data<> mtx_data{gko::dim<2>{N}}; //tested in 400-4 dataset
+  for (std::size_t index = 0; index < sizes[d]; index++) /// each grid cell
+  {
+    // create multiindex from row number                    ///fancy way of doing 3(=d) for loops over n
+    std::vector<std::size_t> multiindex(d, 0);
+    auto copiedindex = index;
+    for (int i = d - 1; i >= 0; i--)
+    {                                         /// start from the back!
+      multiindex[i] = copiedindex / sizes[i]; /// implicit size_t cast? Yes: returns only how ofter size fites into cindex
+      copiedindex = copiedindex % sizes[i];   /// basically returns the (missing) rest of the checking above
+    }
+
+    // std::cout << "index=" << index;
+    // for (int i=0; i<d; ++i) std::cout << " " << multiindex[i];
+    // std::cout << std::endl;
+
+    // the current cell
+    std::vector<double> center_position(d); /// scaled up multigrid/cell-position
+    for (int i = 0; i < d; ++i)
+      center_position[i] = multiindex[i] * mesh_size;
+    double center_coefficient = diffusion_coefficient(center_position);
+    double center_matrix_entry = 0.0;
+
+    // loop over all neighbors
+    for (int i = 0; i < d; i++)
+    {
+      // down neighbor
+      if (multiindex[i] > 0)
+      {
+        // we have a neighbor cell
+        std::vector<double> neighbor_position(center_position);
+        neighbor_position[i] -= mesh_size;
+        double neighbor_coefficient = diffusion_coefficient(neighbor_position);
+        double harmonic_average = 2.0 / ((1.0 / neighbor_coefficient) + (1.0 / center_coefficient));
+        // pA->entry(index,index-sizes[i]) = -harmonic_average;
+        mtx_data.nonzeros.emplace_back(index, index - sizes[i], -harmonic_average); ///@changed
+        center_matrix_entry += harmonic_average;
+      }
+      else
+      {
+        // current cell is on the boundary in this direction
+        std::vector<double> neighbor_position(center_position);
+        neighbor_position[i] = 0.0;
+        if (dirichlet_boundary(neighbor_position))
+          center_matrix_entry += center_coefficient * 2.0;
+      }
+
+      // up neighbor
+      if (multiindex[i] < n - 1)
+      {
+        // we have a neighbor cell
+        std::vector<double> neighbor_position(center_position);
+        neighbor_position[i] += mesh_size;
+        double neighbor_coefficient = diffusion_coefficient(neighbor_position);
+        double harmonic_average = 2.0 / ((1.0 / neighbor_coefficient) + (1.0 / center_coefficient));
+        // pA->entry(index,index+sizes[i]) = -harmonic_average;
+        mtx_data.nonzeros.emplace_back(index, index + sizes[i], -harmonic_average); ///@changed
+        center_matrix_entry += harmonic_average;
+      }
+      else
+      {
+        // current cell is on the boundary in this direction
+        std::vector<double> neighbor_position(center_position);
+        neighbor_position[i] = 1.0;
+        if (dirichlet_boundary(neighbor_position))
+          center_matrix_entry += center_coefficient * 2.0;
+      }
+    }
+
+    // finally the diagonal entry
+    // pA->entry(index,index) = center_matrix_entry;     //# easyer if more positive, time would be added here
+    mtx_data.nonzeros.emplace_back(index, index, center_matrix_entry); ///@changed
+  }
+  // create matrix from data
+  //gko::device_matrix_data<double,size_t> dmd{gkoDim};
+  auto dmd = gko::device_matrix_data<double,int>::create_from_host(exec,mtx_data);
+  auto pA = mtx::create(exec); ///@optimize (line below included)
+  pA->read(dmd);
+
+  return pA;
+}
+
+
 // returns time_to_generate and time_to_SpMV
 template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction>
 auto executeRound(
@@ -336,6 +443,8 @@ auto executeRound(
                                              std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>& exec_map,
                                              std::string assebly_structure_string)
 {
+  std::cout<< "---------------------"<<"(Ginkgo) n="<<n<<" dim="<<dim<<"---------------------"<<std::endl;
+
   // set up
   using vec = gko::matrix::Dense<double>;
   const auto exec = exec_map.at(exec_string)();
@@ -346,7 +455,8 @@ auto executeRound(
   GeneratingFunction generate_matrix = nullptr;
   if(assebly_structure_string=="md") generate_matrix = diffusion_matrix_md<MatrixType>;
   else if (assebly_structure_string=="mad") generate_matrix = diffusion_matrix_mad<MatrixType>;
-  else if (assebly_structure_string=="optimizedCSR") generate_matrix=diffusion_matrix_optimizedCSR<MatrixType>;
+  else if (assebly_structure_string=="dmd") generate_matrix = diffusion_matrix_dmd<MatrixType>;
+  else if (assebly_structure_string=="optimizedCSR") generate_matrix=diffusion_matrix_directCSR<MatrixType>;
   else throw std::invalid_argument("Invalid argument for assebly_structure_string");
 
 
@@ -498,7 +608,7 @@ int main(int argc, char* argv[])
               <<"\n n_upperBound:           evaluate up to this n "
               <<"\n dim:                    evaluate for this dimension "
               <<"\n min_reps:               minimum repitions per experiment "
-              <<"\n min_time:               minimum time to run each experiment "
+              <<"\n min_time:               minimum time to run each experiment in ms "
               <<"\n max_iters:              stoping criterion for CG - stopping after max_iters iterations "
               <<"\n assembly_datastrucure:  for usage of matrix_data or matrix_assembly_data (md,mad,optimizedCSR) "
               <<"\n executor:               what ginkgo executor to use (ref,omp,cuda,dpcpp,hip) "
@@ -512,7 +622,7 @@ int main(int argc, char* argv[])
   const size_t        n_upperBound = std::stoi(argv[2]);
   const size_t        dim = std::stoi(argv[3]);
   const size_t        min_reps = std::stoi(argv[4]);
-  const size_t        min_time = std::stoi(argv[5]);
+  const size_t        min_time = std::stoi(argv[5])*1000000;
   const size_t        max_iters = std::stoi(argv[6]);
   const std::string   assebly_structure_string = argv[7];
   const std::string   exec_string = argv[8];
@@ -522,11 +632,11 @@ int main(int argc, char* argv[])
                                         +std::to_string(n_lowerBound)+"-"+std::to_string(n_upperBound)+"n_CG"+std::to_string(max_iters)+"_" \
                                         +std::to_string(min_reps)+"r_"+std::to_string(dim)+"d";
  
-  // 1omp: threadcount set to 1 via generation script, didnt work via code
   std::map<std::string, std::function<std::shared_ptr<gko::Executor>()>>
         exec_map{
             {"omp", [] { return gko::OmpExecutor::create(); }},
-            {"1omp", [] { /*putenv((char*)"OMP_NUM_THREADS=1");*/ /*setenv((char*)"OMP_NUM_THREADS", (char*)"1",1);*/ return gko::OmpExecutor::create(); }},
+            {"1omp", [] { /*putenv((char*)"OMP_NUM_THREADS=1");*/ /*setenv((char*)"OMP_NUM_THREADS", (char*)"1",1);*/ \
+                          return gko::OmpExecutor::create(); }}, // thread count set to 1 via generation script
             {"cuda",[] { return gko::CudaExecutor::create(0,gko::OmpExecutor::create()); }},
             {"hip",[] { return gko::HipExecutor::create(0, gko::OmpExecutor::create()); }},
             {"dpcpp",[] { return gko::DpcppExecutor::create(0,gko::OmpExecutor::create()); }},
@@ -553,6 +663,7 @@ int main(int argc, char* argv[])
 
   std::cout<<argv[0]<< ": Computing all matrixes with d=2 and d=3, with n="<<n_lowerBound<<" to "<<n_upperBound<<std::endl;
   std::cout<<argv[0]<< ": Computing every variation at least "<<min_reps<<" times"<<std::endl;
+  std::cout<<argv[0]<< ": Computing every variation at least "<<min_time<<" ms"<<std::endl;
   std::cout<<argv[0]<< ": Configuration: "<<assebly_structure_string<<" "<< exec_string<< " "<< mtx_string<<std::endl;
   std::cout<<argv[0]<< ": Outputting to: "<< filename<<std::endl;
 
