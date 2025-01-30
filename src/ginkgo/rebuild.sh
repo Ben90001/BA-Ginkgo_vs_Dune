@@ -17,4 +17,4 @@ make
 
 # test immediately
 # n_lowerBound n_upperBound dim min_reps min_time max_iters assembly_structure executor format
-./ginkgo-evaluation 1 5 3 1 250000000 10 md ref csr
+./ginkgo-evaluation 1 5 3 1 250 10 md ref csr

@@ -4,25 +4,25 @@
 set -x
 set -e
 
-n_lowerBound="1"
+n_lowerBound="127"
 
-n_upperBound="80"
-min_reps="2"
-min_time="250000000"
+n_upperBound="130"
+min_reps="1"
+min_time="250" #in ms (was 250 initially)
 max_iters="10"
 dims=("3")
 
 #ISTL
-# implicit row_wise (random?)
-buildModes=("implicit" "row_wise")
+# implicit row_wise random
+buildModes=("implicit" "row_wise" "random")
 
 #GINKGO
 # ref 1omp omp cuda
-executors=("1omp" "ref")
+executors=("ref")
 # md mad dmd
-assembly_structures=("dmd")
+assembly_structures=("md")
 # csr coo ell sellp hybrid
-mtx_formats=("csr")
+mtx_formats=("ell")
 
 
 rm -rf results

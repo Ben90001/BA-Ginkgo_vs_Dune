@@ -545,8 +545,8 @@ auto executeRound (int n, int dim, int max_iters, size_t min_reps, size_t min_ti
     Dune::CGSolver<Vector> solver_ilu(linOp_A, preconditioner_ILU, 0.0, max_iters,0);
     x_k = 1.0;
     b = 1.0;
-    results.clear();
-    
+    results.clear(); // should be overwritten anyways, also not used by us, so most likely unnecessary
+
   // apply CG_ilu
     //experiment
     std::cout<< "CG_ilu calculating ..."<<std::endl;

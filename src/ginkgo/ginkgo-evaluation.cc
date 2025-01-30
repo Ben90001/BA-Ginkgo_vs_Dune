@@ -529,7 +529,7 @@ auto executeRound(
   // build Solver
   auto solver_CG_jac = solver_factory_CG_jac->generate(pA);
 
-// apply CG solver
+// apply CG_jac solver
   // set both rhs and initial iterate x_k to 1
   auto rhs = gko::clone(x);
   auto x_k = gko::clone(x);
@@ -564,8 +564,10 @@ auto executeRound(
                              .with_preconditioner(ilu::build()
                                                 .on(exec))
                              .on(exec);
-  auto solver_CGilu = solver_factory_CGilu->generate(pA);
 
+std::cout<<"CGilu factory was build"<<std::endl;
+  auto solver_CGilu = solver_factory_CGilu->generate(pA);
+std::cout<<"CGilu solver was generated"<<std::endl;
 // apply CG-ILU
   // set both rhs and initial iterate x_k to 1
   rhs->fill(1.0);
