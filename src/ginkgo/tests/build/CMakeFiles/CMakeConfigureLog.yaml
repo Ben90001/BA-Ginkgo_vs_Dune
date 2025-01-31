@@ -1,0 +1,650 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeDetermineSystem.cmake:211 (message)"
+      - "CMakeLists.txt:8 (project)"
+    message: |
+      The system is: Linux - 6.1.0-25-amd64 - x86_64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:8 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicc 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+      
+      The C compiler identification is GNU, found in:
+        /home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/3.27.9/CompilerIdC/a.out
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:8 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicxx 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+      
+      The CXX compiler identification is GNU, found in:
+        /home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/3.27.9/CompilerIdCXX/a.out
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:57 (try_compile)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:8 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-EZ3CRE"
+      binary: "/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-EZ3CRE"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-EZ3CRE'
+        
+        Run Build Command(s): /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_95a43/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_95a43.dir/build.make CMakeFiles/cmTC_95a43.dir/build
+        gmake[1]: Entering directory '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-EZ3CRE'
+        Building C object CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o
+        /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicc   -v -o CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o -c /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeCCompilerABI.c
+        Reading specs from /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/specs
+        COLLECT_GCC=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/bin/gcc
+        Target: x86_64-pc-linux-gnu
+        Configured with: /home/spack/.spack/stage/spack-stage-gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/spack-src/configure --prefix=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c,c++,fortran --disable-nls --disable-canonical-system-headers --with-system-zlib --with-zstd-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/include --with-zstd-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib --enable-bootstrap --with-mpfr-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/include --with-mpfr-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib --with-gmp-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/include --with-gmp-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib --with-mpc-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/include --with-mpc-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib --without-isl --with-stage1-ldflags='-Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl,-rpath,/usr/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl,-rpath,/usr/lib64' --with-boot-ldflags='-Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl,-rpath,/usr/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl,-rpath,/usr/lib64 -static-libstdc++ -static-libgcc' --with-build-config=spack
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.2.0 (Spack GCC) 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o' '-c' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_95a43.dir/'
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/cc1 -quiet -v -I /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include -imultiarch x86_64-linux-gnu -D_REENTRANT /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_95a43.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -o /tmp/ccAORc9q.s
+        GNU C17 (Spack GCC) version 13.2.0 (x86_64-pc-linux-gnu)
+        	compiled by GNU C version 13.2.0, GMP version 6.2.1, MPFR version 4.2.1, MPC version 1.3.1, isl version none
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
+        ignoring nonexistent directory "/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../x86_64-pc-linux-gnu/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include
+         /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/include
+         .
+         /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/include
+         /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/include/eigen3
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include
+         /usr/local/include
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed/x86_64-linux-gnu
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed
+         /usr/include/x86_64-linux-gnu
+         /usr/include
+        End of search list.
+        Compiler executable checksum: d8794b7b185337c6c47b136ee776b600
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o' '-c' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_95a43.dir/'
+         as -v -I /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include --64 -o CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o /tmp/ccAORc9q.s
+        GNU assembler version 2.40 (x86_64-linux-gnu) using BFD version (GNU Binutils for Debian) 2.40
+        COMPILER_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/
+        LIBRARY_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64/:/lib/x86_64-linux-gnu/:/lib/../lib64/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib64/:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib/:./:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o' '-c' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.'
+        Linking C executable cmTC_95a43
+        /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/bin/cmake -E cmake_link_script CMakeFiles/cmTC_95a43.dir/link.txt --verbose=1
+        /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicc  -v CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o -o cmTC_95a43 
+        Reading specs from /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/specs
+        COLLECT_GCC=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/bin/gcc
+        COLLECT_LTO_WRAPPER=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/lto-wrapper
+        Target: x86_64-pc-linux-gnu
+        Configured with: /home/spack/.spack/stage/spack-stage-gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/spack-src/configure --prefix=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c,c++,fortran --disable-nls --disable-canonical-system-headers --with-system-zlib --with-zstd-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/include --with-zstd-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib --enable-bootstrap --with-mpfr-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/include --with-mpfr-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib --with-gmp-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/include --with-gmp-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib --with-mpc-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/include --with-mpc-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib --without-isl --with-stage1-ldflags='-Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl,-rpath,/usr/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl,-rpath,/usr/lib64' --with-boot-ldflags='-Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl,-rpath,/usr/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl,-rpath,/usr/lib64 -static-libstdc++ -static-libgcc' --with-build-config=spack
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.2.0 (Spack GCC) 
+        COMPILER_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/
+        LIBRARY_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64/:/lib/x86_64-linux-gnu/:/lib/../lib64/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib64/:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib/:./:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_95a43' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-L/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_95a43.'
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/collect2 -plugin /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/liblto_plugin.so -plugin-opt=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccw57V1N.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_95a43 /lib/x86_64-linux-gnu/crt1.o /lib/x86_64-linux-gnu/crti.o /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtbegin.o -L/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib -L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0 -L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib64 -L/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib -L. -L/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8 -L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../.. -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0 -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -rpath /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib -lmpi -lgcc --push-state --as-needed -lgcc_s --pop-state -lpthread -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtend.o /lib/x86_64-linux-gnu/crtn.o
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_95a43' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-L/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_95a43.'
+        gmake[1]: Leaving directory '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-EZ3CRE'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:127 (message)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:8 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include]
+          add: [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/include]
+          add: [.]
+          add: [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/include]
+          add: [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/include/eigen3]
+          add: [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include]
+          add: [/usr/local/include]
+          add: [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include]
+          add: [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed/x86_64-linux-gnu]
+          add: [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed]
+          add: [/usr/include/x86_64-linux-gnu]
+          add: [/usr/include]
+        end of search list found
+        collapse include dir [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include] ==> [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include]
+        collapse include dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/include] ==> [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/include]
+        skipping relative include dir [.]
+        collapse include dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/include] ==> [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/include]
+        collapse include dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/include/eigen3] ==> [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/include/eigen3]
+        collapse include dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include]
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include]
+        collapse include dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed/x86_64-linux-gnu] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed/x86_64-linux-gnu]
+        collapse include dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed]
+        collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
+        collapse include dir [/usr/include] ==> [/usr/include]
+        implicit include dirs: [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include;/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/include;/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/include;/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/include/eigen3;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include;/usr/local/include;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed/x86_64-linux-gnu;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed;/usr/include/x86_64-linux-gnu;/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:152 (message)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:8 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        ignore line: [Change Dir: '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-EZ3CRE']
+        ignore line: []
+        ignore line: [Run Build Command(s): /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_95a43/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_95a43.dir/build.make CMakeFiles/cmTC_95a43.dir/build]
+        ignore line: [gmake[1]: Entering directory '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-EZ3CRE']
+        ignore line: [Building C object CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o]
+        ignore line: [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicc   -v -o CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o -c /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeCCompilerABI.c]
+        ignore line: [Reading specs from /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/specs]
+        ignore line: [COLLECT_GCC=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/bin/gcc]
+        ignore line: [Target: x86_64-pc-linux-gnu]
+        ignore line: [Configured with: /home/spack/.spack/stage/spack-stage-gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/spack-src/configure --prefix=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c c++ fortran --disable-nls --disable-canonical-system-headers --with-system-zlib --with-zstd-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/include --with-zstd-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib --enable-bootstrap --with-mpfr-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/include --with-mpfr-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib --with-gmp-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/include --with-gmp-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib --with-mpc-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/include --with-mpc-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib --without-isl --with-stage1-ldflags='-Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl -rpath /usr/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl -rpath /usr/lib64' --with-boot-ldflags='-Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl -rpath /usr/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl -rpath /usr/lib64 -static-libstdc++ -static-libgcc' --with-build-config=spack]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.2.0 (Spack GCC) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o' '-c' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_95a43.dir/']
+        ignore line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/cc1 -quiet -v -I /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include -imultiarch x86_64-linux-gnu -D_REENTRANT /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_95a43.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -o /tmp/ccAORc9q.s]
+        ignore line: [GNU C17 (Spack GCC) version 13.2.0 (x86_64-pc-linux-gnu)]
+        ignore line: [	compiled by GNU C version 13.2.0  GMP version 6.2.1  MPFR version 4.2.1  MPC version 1.3.1  isl version none]
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../x86_64-pc-linux-gnu/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include]
+        ignore line: [ /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/include]
+        ignore line: [ .]
+        ignore line: [ /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/include]
+        ignore line: [ /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/include/eigen3]
+        ignore line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include]
+        ignore line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed/x86_64-linux-gnu]
+        ignore line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed]
+        ignore line: [ /usr/include/x86_64-linux-gnu]
+        ignore line: [ /usr/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: d8794b7b185337c6c47b136ee776b600]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o' '-c' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_95a43.dir/']
+        ignore line: [ as -v -I /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include --64 -o CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o /tmp/ccAORc9q.s]
+        ignore line: [GNU assembler version 2.40 (x86_64-linux-gnu) using BFD version (GNU Binutils for Debian) 2.40]
+        ignore line: [COMPILER_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64/:/lib/x86_64-linux-gnu/:/lib/../lib64/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib64/:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib/:./:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o' '-c' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.']
+        ignore line: [Linking C executable cmTC_95a43]
+        ignore line: [/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/bin/cmake -E cmake_link_script CMakeFiles/cmTC_95a43.dir/link.txt --verbose=1]
+        ignore line: [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicc  -v CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o -o cmTC_95a43 ]
+        ignore line: [Reading specs from /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/specs]
+        ignore line: [COLLECT_GCC=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/bin/gcc]
+        ignore line: [COLLECT_LTO_WRAPPER=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/lto-wrapper]
+        ignore line: [Target: x86_64-pc-linux-gnu]
+        ignore line: [Configured with: /home/spack/.spack/stage/spack-stage-gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/spack-src/configure --prefix=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c c++ fortran --disable-nls --disable-canonical-system-headers --with-system-zlib --with-zstd-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/include --with-zstd-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib --enable-bootstrap --with-mpfr-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/include --with-mpfr-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib --with-gmp-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/include --with-gmp-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib --with-mpc-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/include --with-mpc-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib --without-isl --with-stage1-ldflags='-Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl -rpath /usr/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl -rpath /usr/lib64' --with-boot-ldflags='-Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl -rpath /usr/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl -rpath /usr/lib64 -static-libstdc++ -static-libgcc' --with-build-config=spack]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.2.0 (Spack GCC) ]
+        ignore line: [COMPILER_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64/:/lib/x86_64-linux-gnu/:/lib/../lib64/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib64/:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib/:./:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_95a43' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-L/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_95a43.']
+        link line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/collect2 -plugin /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/liblto_plugin.so -plugin-opt=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccw57V1N.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_95a43 /lib/x86_64-linux-gnu/crt1.o /lib/x86_64-linux-gnu/crti.o /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtbegin.o -L/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib -L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0 -L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib64 -L/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib -L. -L/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8 -L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../.. -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0 -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -rpath /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib -lmpi -lgcc --push-state --as-needed -lgcc_s --pop-state -lpthread -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtend.o /lib/x86_64-linux-gnu/crtn.o]
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccw57V1N.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lpthread] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_95a43] ==> ignore
+          arg [/lib/x86_64-linux-gnu/crt1.o] ==> obj [/lib/x86_64-linux-gnu/crt1.o]
+          arg [/lib/x86_64-linux-gnu/crti.o] ==> obj [/lib/x86_64-linux-gnu/crti.o]
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtbegin.o] ==> obj [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtbegin.o]
+          arg [-L/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib] ==> dir [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib]
+          arg [-L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0] ==> dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0]
+          arg [-L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64] ==> dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64]
+          arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+          arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+          arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+          arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+          arg [-L/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib] ==> dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib]
+          arg [-L.] ==> ignore
+          arg [-L/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8] ==> dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8]
+          arg [-L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../..] ==> dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../..]
+          arg [-rpath] ==> ignore
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64] ==> ignore
+          arg [CMakeFiles/cmTC_95a43.dir/CMakeCCompilerABI.c.o] ==> ignore
+          arg [-rpath] ==> ignore
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0] ==> ignore
+          arg [-rpath] ==> ignore
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64] ==> ignore
+          arg [-rpath] ==> ignore
+          arg [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib] ==> ignore
+          arg [-lmpi] ==> lib [mpi]
+          arg [-lgcc] ==> lib [gcc]
+          arg [--push-state] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [--pop-state] ==> ignore
+          arg [-lpthread] ==> lib [pthread]
+          arg [-lc] ==> lib [c]
+          arg [-lgcc] ==> lib [gcc]
+          arg [--push-state] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [--pop-state] ==> ignore
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtend.o] ==> obj [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtend.o]
+          arg [/lib/x86_64-linux-gnu/crtn.o] ==> obj [/lib/x86_64-linux-gnu/crtn.o]
+        collapse library dir [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib] ==> [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib]
+        collapse library dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0]
+        collapse library dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64]
+        collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+        collapse library dir [/lib/../lib64] ==> [/lib64]
+        collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+        collapse library dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib] ==> [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib]
+        collapse library dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8] ==> [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8]
+        collapse library dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../..] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib]
+        implicit libs: [mpi;gcc;gcc_s;pthread;c;gcc;gcc_s]
+        implicit objs: [/lib/x86_64-linux-gnu/crt1.o;/lib/x86_64-linux-gnu/crti.o;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtbegin.o;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtend.o;/lib/x86_64-linux-gnu/crtn.o]
+        implicit dirs: [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64;/lib/x86_64-linux-gnu;/lib64;/usr/lib/x86_64-linux-gnu;/usr/lib64;/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib;/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:57 (try_compile)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:8 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-kmXw5R"
+      binary: "/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-kmXw5R"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-kmXw5R'
+        
+        Run Build Command(s): /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_c28ba/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_c28ba.dir/build.make CMakeFiles/cmTC_c28ba.dir/build
+        gmake[1]: Entering directory '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-kmXw5R'
+        Building CXX object CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o
+        /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicxx   -v -o CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o -c /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp
+        Reading specs from /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/specs
+        COLLECT_GCC=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/bin/g++
+        Target: x86_64-pc-linux-gnu
+        Configured with: /home/spack/.spack/stage/spack-stage-gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/spack-src/configure --prefix=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c,c++,fortran --disable-nls --disable-canonical-system-headers --with-system-zlib --with-zstd-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/include --with-zstd-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib --enable-bootstrap --with-mpfr-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/include --with-mpfr-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib --with-gmp-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/include --with-gmp-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib --with-mpc-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/include --with-mpc-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib --without-isl --with-stage1-ldflags='-Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl,-rpath,/usr/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl,-rpath,/usr/lib64' --with-boot-ldflags='-Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl,-rpath,/usr/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl,-rpath,/usr/lib64 -static-libstdc++ -static-libgcc' --with-build-config=spack
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.2.0 (Spack GCC) 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c28ba.dir/'
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/cc1plus -quiet -v -I /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include -imultiarch x86_64-linux-gnu -D_GNU_SOURCE -D_REENTRANT /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_c28ba.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /tmp/ccCPfT6Z.s
+        GNU C++17 (Spack GCC) version 13.2.0 (x86_64-pc-linux-gnu)
+        	compiled by GNU C version 13.2.0, GMP version 6.2.1, MPFR version 4.2.1, MPC version 1.3.1, isl version none
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
+        ignoring nonexistent directory "/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../x86_64-pc-linux-gnu/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include
+         /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/include
+         .
+         /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/include
+         /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/include/eigen3
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/x86_64-pc-linux-gnu
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/backward
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include
+         /usr/local/include
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed/x86_64-linux-gnu
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed
+         /usr/include/x86_64-linux-gnu
+         /usr/include
+        End of search list.
+        Compiler executable checksum: ec62b4cfaaec31b4c74757ee7064cc3e
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c28ba.dir/'
+         as -v -I /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include --64 -o CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccCPfT6Z.s
+        GNU assembler version 2.40 (x86_64-linux-gnu) using BFD version (GNU Binutils for Debian) 2.40
+        COMPILER_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/
+        LIBRARY_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64/:/lib/x86_64-linux-gnu/:/lib/../lib64/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib64/:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib/:./:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.'
+        Linking CXX executable cmTC_c28ba
+        /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c28ba.dir/link.txt --verbose=1
+        /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicxx  -v CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_c28ba 
+        Reading specs from /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/specs
+        COLLECT_GCC=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/bin/g++
+        COLLECT_LTO_WRAPPER=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/lto-wrapper
+        Target: x86_64-pc-linux-gnu
+        Configured with: /home/spack/.spack/stage/spack-stage-gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/spack-src/configure --prefix=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c,c++,fortran --disable-nls --disable-canonical-system-headers --with-system-zlib --with-zstd-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/include --with-zstd-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib --enable-bootstrap --with-mpfr-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/include --with-mpfr-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib --with-gmp-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/include --with-gmp-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib --with-mpc-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/include --with-mpc-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib --without-isl --with-stage1-ldflags='-Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl,-rpath,/usr/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl,-rpath,/usr/lib64' --with-boot-ldflags='-Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl,-rpath,/usr/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl,-rpath,/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl,-rpath,/usr/lib64 -static-libstdc++ -static-libgcc' --with-build-config=spack
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.2.0 (Spack GCC) 
+        COMPILER_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/
+        LIBRARY_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64/:/lib/x86_64-linux-gnu/:/lib/../lib64/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib64/:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib/:./:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c28ba' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-L/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_c28ba.'
+         /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/collect2 -plugin /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/liblto_plugin.so -plugin-opt=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/cc9m7e9e.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_c28ba /lib/x86_64-linux-gnu/crt1.o /lib/x86_64-linux-gnu/crti.o /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtbegin.o -L/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib -L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0 -L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib64 -L/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib -L. -L/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8 -L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../.. -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0 -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -rpath /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib -lmpi -lstdc++ -lm -lgcc_s -lgcc -lpthread -lc -lgcc_s -lgcc /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtend.o /lib/x86_64-linux-gnu/crtn.o
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c28ba' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-L/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_c28ba.'
+        gmake[1]: Leaving directory '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-kmXw5R'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:127 (message)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:8 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include]
+          add: [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/include]
+          add: [.]
+          add: [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/include]
+          add: [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/include/eigen3]
+          add: [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0]
+          add: [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/x86_64-pc-linux-gnu]
+          add: [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/backward]
+          add: [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include]
+          add: [/usr/local/include]
+          add: [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include]
+          add: [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed/x86_64-linux-gnu]
+          add: [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed]
+          add: [/usr/include/x86_64-linux-gnu]
+          add: [/usr/include]
+        end of search list found
+        collapse include dir [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include] ==> [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include]
+        collapse include dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/include] ==> [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/include]
+        skipping relative include dir [.]
+        collapse include dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/include] ==> [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/include]
+        collapse include dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/include/eigen3] ==> [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/include/eigen3]
+        collapse include dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include/c++/13.2.0]
+        collapse include dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/x86_64-pc-linux-gnu] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include/c++/13.2.0/x86_64-pc-linux-gnu]
+        collapse include dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/backward] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include/c++/13.2.0/backward]
+        collapse include dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include]
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include]
+        collapse include dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed/x86_64-linux-gnu] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed/x86_64-linux-gnu]
+        collapse include dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed]
+        collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
+        collapse include dir [/usr/include] ==> [/usr/include]
+        implicit include dirs: [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include;/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/include;/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/include;/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/include/eigen3;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include/c++/13.2.0;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include/c++/13.2.0/x86_64-pc-linux-gnu;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include/c++/13.2.0/backward;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include;/usr/local/include;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed/x86_64-linux-gnu;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed;/usr/include/x86_64-linux-gnu;/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:152 (message)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:8 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        ignore line: [Change Dir: '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-kmXw5R']
+        ignore line: []
+        ignore line: [Run Build Command(s): /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_c28ba/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_c28ba.dir/build.make CMakeFiles/cmTC_c28ba.dir/build]
+        ignore line: [gmake[1]: Entering directory '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-kmXw5R']
+        ignore line: [Building CXX object CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o]
+        ignore line: [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicxx   -v -o CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o -c /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Reading specs from /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/specs]
+        ignore line: [COLLECT_GCC=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/bin/g++]
+        ignore line: [Target: x86_64-pc-linux-gnu]
+        ignore line: [Configured with: /home/spack/.spack/stage/spack-stage-gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/spack-src/configure --prefix=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c c++ fortran --disable-nls --disable-canonical-system-headers --with-system-zlib --with-zstd-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/include --with-zstd-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib --enable-bootstrap --with-mpfr-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/include --with-mpfr-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib --with-gmp-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/include --with-gmp-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib --with-mpc-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/include --with-mpc-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib --without-isl --with-stage1-ldflags='-Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl -rpath /usr/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl -rpath /usr/lib64' --with-boot-ldflags='-Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl -rpath /usr/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl -rpath /usr/lib64 -static-libstdc++ -static-libgcc' --with-build-config=spack]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.2.0 (Spack GCC) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c28ba.dir/']
+        ignore line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/cc1plus -quiet -v -I /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include -imultiarch x86_64-linux-gnu -D_GNU_SOURCE -D_REENTRANT /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_c28ba.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /tmp/ccCPfT6Z.s]
+        ignore line: [GNU C++17 (Spack GCC) version 13.2.0 (x86_64-pc-linux-gnu)]
+        ignore line: [	compiled by GNU C version 13.2.0  GMP version 6.2.1  MPFR version 4.2.1  MPC version 1.3.1  isl version none]
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../x86_64-pc-linux-gnu/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include]
+        ignore line: [ /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/include]
+        ignore line: [ .]
+        ignore line: [ /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/include]
+        ignore line: [ /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/include/eigen3]
+        ignore line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0]
+        ignore line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/x86_64-pc-linux-gnu]
+        ignore line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/backward]
+        ignore line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/include]
+        ignore line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed/x86_64-linux-gnu]
+        ignore line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include-fixed]
+        ignore line: [ /usr/include/x86_64-linux-gnu]
+        ignore line: [ /usr/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: ec62b4cfaaec31b4c74757ee7064cc3e]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c28ba.dir/']
+        ignore line: [ as -v -I /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include --64 -o CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccCPfT6Z.s]
+        ignore line: [GNU assembler version 2.40 (x86_64-linux-gnu) using BFD version (GNU Binutils for Debian) 2.40]
+        ignore line: [COMPILER_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64/:/lib/x86_64-linux-gnu/:/lib/../lib64/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib64/:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib/:./:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.']
+        ignore line: [Linking CXX executable cmTC_c28ba]
+        ignore line: [/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c28ba.dir/link.txt --verbose=1]
+        ignore line: [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicxx  -v CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_c28ba ]
+        ignore line: [Reading specs from /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/specs]
+        ignore line: [COLLECT_GCC=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/bin/g++]
+        ignore line: [COLLECT_LTO_WRAPPER=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/lto-wrapper]
+        ignore line: [Target: x86_64-pc-linux-gnu]
+        ignore line: [Configured with: /home/spack/.spack/stage/spack-stage-gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/spack-src/configure --prefix=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c c++ fortran --disable-nls --disable-canonical-system-headers --with-system-zlib --with-zstd-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/include --with-zstd-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib --enable-bootstrap --with-mpfr-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/include --with-mpfr-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib --with-gmp-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/include --with-gmp-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib --with-mpc-include=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/include --with-mpc-lib=/opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib --without-isl --with-stage1-ldflags='-Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl -rpath /usr/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl -rpath /usr/lib64' --with-boot-ldflags='-Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-runtime-10.2.1-7ex2fv264zkleawqq3tqcbw6yfhlfmmh/lib -Wl -rpath /usr/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gmp-6.2.1-j56xxcy5esbkkez3kiocat3hcd4gw6dd/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpc-1.3.1-c6ae676zrh6ffbyqhqdjkult5laxo5hn/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/mpfr-4.2.1-3idtx2vcntm5ra3yjbguweo4usj3uce5/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zlib-ng-2.1.6-rxy7o32dom2ud7poi3xesaplc5p2tnpf/lib -Wl -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/zstd-1.5.6-kmnjbmxh5hfybulxyvzx2bxvt5hn4kax/lib -Wl -rpath /usr/lib64 -static-libstdc++ -static-libgcc' --with-build-config=spack]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.2.0 (Spack GCC) ]
+        ignore line: [COMPILER_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64/:/lib/x86_64-linux-gnu/:/lib/../lib64/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib64/:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib/:./:/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8/:/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c28ba' '-I' '/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/include' '-pthread' '-L/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_c28ba.']
+        link line: [ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/collect2 -plugin /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/liblto_plugin.so -plugin-opt=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/cc9m7e9e.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_c28ba /lib/x86_64-linux-gnu/crt1.o /lib/x86_64-linux-gnu/crti.o /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtbegin.o -L/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib -L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0 -L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib64 -L/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib -L. -L/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8 -L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../.. -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0 -rpath /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64 -rpath /opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib -lmpi -lstdc++ -lm -lgcc_s -lgcc -lpthread -lc -lgcc_s -lgcc /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtend.o /lib/x86_64-linux-gnu/crtn.o]
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/libexec/gcc/x86_64-pc-linux-gnu/13.2.0/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/cc9m7e9e.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lpthread] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_c28ba] ==> ignore
+          arg [/lib/x86_64-linux-gnu/crt1.o] ==> obj [/lib/x86_64-linux-gnu/crt1.o]
+          arg [/lib/x86_64-linux-gnu/crti.o] ==> obj [/lib/x86_64-linux-gnu/crti.o]
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtbegin.o] ==> obj [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtbegin.o]
+          arg [-L/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib] ==> dir [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib]
+          arg [-L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0] ==> dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0]
+          arg [-L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64] ==> dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64]
+          arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+          arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+          arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+          arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+          arg [-L/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib] ==> dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib]
+          arg [-L.] ==> ignore
+          arg [-L/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8] ==> dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8]
+          arg [-L/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../..] ==> dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../..]
+          arg [-rpath] ==> ignore
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64] ==> ignore
+          arg [CMakeFiles/cmTC_c28ba.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [-rpath] ==> ignore
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0] ==> ignore
+          arg [-rpath] ==> ignore
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64] ==> ignore
+          arg [-rpath] ==> ignore
+          arg [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib] ==> ignore
+          arg [-lmpi] ==> lib [mpi]
+          arg [-lstdc++] ==> lib [stdc++]
+          arg [-lm] ==> lib [m]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [-lpthread] ==> lib [pthread]
+          arg [-lc] ==> lib [c]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtend.o] ==> obj [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtend.o]
+          arg [/lib/x86_64-linux-gnu/crtn.o] ==> obj [/lib/x86_64-linux-gnu/crtn.o]
+        collapse library dir [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib] ==> [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib]
+        collapse library dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0]
+        collapse library dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../lib64] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64]
+        collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+        collapse library dir [/lib/../lib64] ==> [/lib64]
+        collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+        collapse library dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib] ==> [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib]
+        collapse library dir [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8] ==> [/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8]
+        collapse library dir [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../..] ==> [/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib]
+        implicit libs: [mpi;stdc++;m;gcc_s;gcc;pthread;c;gcc_s;gcc]
+        implicit objs: [/lib/x86_64-linux-gnu/crt1.o;/lib/x86_64-linux-gnu/crti.o;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtbegin.o;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/crtend.o;/lib/x86_64-linux-gnu/crtn.o]
+        implicit dirs: [/opt/spack/linux-debian11-zen3/gcc-13.2.0/openmpi-5.0.3-lden24qbpb3d3v7bvgqf6ph3latfhmwk/lib;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib64;/lib/x86_64-linux-gnu;/lib64;/usr/lib/x86_64-linux-gnu;/usr/lib64;/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/mkl/2024.0/lib;/opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/tbb/2021.12/lib/intel64/gcc4.8;/opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeFindDependencyMacro.cmake:76 (find_package)"
+      - "/home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/build/GinkgoConfig.cmake:179 (find_dependency)"
+      - "CMakeLists.txt:10 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode MPICXX"
+    directories:
+      source: "/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-XrY7Qe"
+      binary: "/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-XrY7Qe"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/cmake/Modules/"
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
+      cached: true
+      stdout: |
+        Change Dir: '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-XrY7Qe'
+        
+        Run Build Command(s): /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_4ccc1/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_4ccc1.dir/build.make CMakeFiles/cmTC_4ccc1.dir/build
+        gmake[1]: Entering directory '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-XrY7Qe'
+        Building CXX object CMakeFiles/cmTC_4ccc1.dir/test_mpi.cpp.o
+        /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicxx    -o CMakeFiles/cmTC_4ccc1.dir/test_mpi.cpp.o -c /home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-XrY7Qe/test_mpi.cpp
+        Linking CXX executable cmTC_4ccc1
+        /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/bin/cmake -E cmake_link_script CMakeFiles/cmTC_4ccc1.dir/link.txt --verbose=1
+        /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicxx CMakeFiles/cmTC_4ccc1.dir/test_mpi.cpp.o -o cmTC_4ccc1 
+        gmake[1]: Leaving directory '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-XrY7Qe'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CheckCSourceCompiles.cmake:52 (cmake_check_source_compiles)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/FindThreads.cmake:97 (CHECK_C_SOURCE_COMPILES)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/FindThreads.cmake:163 (_threads_check_libc)"
+      - "/opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/share/cmake-3.27/Modules/CMakeFindDependencyMacro.cmake:76 (find_package)"
+      - "/home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/build/GinkgoConfig.cmake:184 (find_dependency)"
+      - "CMakeLists.txt:10 (find_package)"
+    checks:
+      - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
+    directories:
+      source: "/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-2WcLSs"
+      binary: "/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-2WcLSs"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/cmake/Modules/"
+    buildResult:
+      variable: "CMAKE_HAVE_LIBC_PTHREAD"
+      cached: true
+      stdout: |
+        Change Dir: '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-2WcLSs'
+        
+        Run Build Command(s): /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_96e1e/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_96e1e.dir/build.make CMakeFiles/cmTC_96e1e.dir/build
+        gmake[1]: Entering directory '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-2WcLSs'
+        Building C object CMakeFiles/cmTC_96e1e.dir/src.c.o
+        /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicc -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_96e1e.dir/src.c.o -c /home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-2WcLSs/src.c
+        Linking C executable cmTC_96e1e
+        /opt/spack/linux-debian11-zen3/gcc-13.2.0/cmake-3.27.9-w2agh2qfzkglq7llvzg4uufdl6fqb3nu/bin/cmake -E cmake_link_script CMakeFiles/cmTC_96e1e.dir/link.txt --verbose=1
+        /opt/spack/spack/var/spack/environments/gcc-13/.spack-env/view/bin/mpicc CMakeFiles/cmTC_96e1e.dir/src.c.o -o cmTC_96e1e 
+        gmake[1]: Leaving directory '/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/CMakeScratch/TryCompile-2WcLSs'
+        
+      exitCode: 0
+...

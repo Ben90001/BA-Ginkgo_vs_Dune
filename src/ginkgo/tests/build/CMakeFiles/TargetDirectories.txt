@@ -1,0 +1,4 @@
+/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/ginkgo-testing.dir
+/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/test.dir
+/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/edit_cache.dir
+/home/benh/BA-Ginkgo_vs_Dune/src/ginkgo/tests/build/CMakeFiles/rebuild_cache.dir
