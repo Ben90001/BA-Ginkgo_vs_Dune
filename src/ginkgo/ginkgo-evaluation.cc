@@ -565,9 +565,9 @@ auto executeRound(
                                                 .on(exec))
                              .on(exec);
 
-std::cout<<"CGilu factory was build"<<std::endl;
+  std::cout<<"CGilu factory was build"<<std::endl;
   auto solver_CGilu = solver_factory_CGilu->generate(pA);
-std::cout<<"CGilu solver was generated"<<std::endl;
+  std::cout<<"CGilu solver was generated"<<std::endl;
 // apply CG-ILU
   // set both rhs and initial iterate x_k to 1
   rhs->fill(1.0);
@@ -663,7 +663,7 @@ int main(int argc, char* argv[])
 
 
 
-  std::cout<<argv[0]<< ": Computing all matrixes with d=2 and d=3, with n="<<n_lowerBound<<" to "<<n_upperBound<<std::endl;
+  std::cout<<argv[0]<< ": Computing all matrices with d="<<std::to_string(dim)<<", with n="<<n_lowerBound<<" to "<<n_upperBound<<std::endl;
   std::cout<<argv[0]<< ": Computing every variation at least "<<min_reps<<" times"<<std::endl;
   std::cout<<argv[0]<< ": Computing every variation at least "<<min_time<<" ms"<<std::endl;
   std::cout<<argv[0]<< ": Configuration: "<<assebly_structure_string<<" "<< exec_string<< " "<< mtx_string<<std::endl;
@@ -684,7 +684,7 @@ int main(int argc, char* argv[])
 
   for(int i=0; i<4;i++){
     std::ofstream outfile(foldername+dataTypes[i]+".txt");
-    for(size_t n=1; n<n_upperBound+1; n++){
+    for(size_t n=n_lowerBound; n<n_upperBound+1; n++){
     outfile 
         << n << " "
         << dim << " "

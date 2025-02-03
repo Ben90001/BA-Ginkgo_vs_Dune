@@ -4,9 +4,9 @@
 set -x
 set -e
 
-n_lowerBound="127"
+n_lowerBound="450"
 
-n_upperBound="130"
+n_upperBound="451"
 min_reps="1"
 min_time="250" #in ms (was 250 initially)
 max_iters="10"
@@ -18,7 +18,7 @@ buildModes=("implicit" "row_wise" "random")
 
 #GINKGO
 # ref 1omp omp cuda
-executors=("ref")
+executors=("1omp")
 # md mad dmd
 assembly_structures=("md")
 # csr coo ell sellp hybrid

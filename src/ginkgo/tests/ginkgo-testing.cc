@@ -38,13 +38,14 @@ int main(int argc, char* argv[]){
   using ValueType = double;
   using IndexType = int;
 
-  using Mtx = gko::matrix::Csr<double, int>;
+  using Mtx = gko::matrix::Csr<double, long>;
   using Vec = gko::matrix::Dense<double>;
   using dim = gko::dim<2>;
-  using matrix_data = gko::matrix_data<double, unsigned long long>;
+  using matrix_data = gko::matrix_data<double, long>;
 
   auto exec = gko::ReferenceExecutor::create();
   auto x = Vec::create(exec, dim{10, 1});
+  x->fill(1);
   auto y = Vec::create(exec, dim{10, 1});
 
   /*matrix_data data{dim{10, 10}};
@@ -56,11 +57,11 @@ int main(int argc, char* argv[]){
   }*/
   auto mtx = Mtx::create(exec);
   printClassInfo(mtx);
-  auto data = gko::matrix_data<>::diag(dim{2333222111},3);
+  auto data = matrix_data::diag(dim{4333222111},3);
   std::cout<<"starting spmv"<<std::endl;
   mtx->read(data);
   mtx->apply(x, y);
-  //gko::write(std::cout, y);
+  gko::write(std::cout, y);
 
 
 
