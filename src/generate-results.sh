@@ -4,7 +4,7 @@
 set -x
 set -e
 
-n_lowerBound="450"
+n_lowerBound="200"
 
 n_upperBound="451"
 min_reps="1"
@@ -18,7 +18,7 @@ buildModes=("implicit" "row_wise" "random")
 
 #GINKGO
 # ref 1omp omp cuda
-executors=("1omp")
+executors=("cuda")
 # md mad dmd
 assembly_structures=("md")
 # csr coo ell sellp hybrid

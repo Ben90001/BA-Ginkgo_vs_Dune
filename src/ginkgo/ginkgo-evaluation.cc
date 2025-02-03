@@ -17,106 +17,6 @@ size_t getNNZ(int n, int dim){
   }
 }
 
-// test function
-template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction, class ExecutorType>
-std::unique_ptr<MatrixType> diffusion_matrix_directCSR(const size_t n, const size_t d,
-                                              CoefficientFunction diffusion_coefficient,
-                                              BoundaryTypeFunction dirichlet_boundary,
-                                              ExecutorType exec)
-{
-  // relevant types
-  // using MatrixEntry = double;
-  using mtx = MatrixType;
-
-  // prepare grid information
-  std::vector<std::size_t> sizes(d + 1, 1);
-  for (int i = 1; i <= d; ++i)
-    sizes[i] = sizes[i - 1] * n; /// sizes={1,n,n^2,n^3,...,n^d}
-  double mesh_size = 1.0 / n;
-  int N = sizes[d];
-
-  // create matrix entries
-  auto GKOdim = gko::dim<2>(N);
-  gko::matrix_data<> mtx_data{GKOdim};
-  
-
-  for (std::size_t index = 0; index < sizes[d]; index++) /// each grid cell
-  {
-    // create multiindex from row number                    ///fancy way of doing 3(=d) for loops over n
-    std::vector<std::size_t> multiindex(d, 0);
-    auto copiedindex = index;
-    for (int i = d - 1; i >= 0; i--)
-    {
-      multiindex[i] = copiedindex / sizes[i]; /// implicit size_t cast? Yes: returns only how ofter size fites into cindex
-      copiedindex = copiedindex % sizes[i];   /// basically returns the (missing) rest of the checking above
-    }
-
-    // std::cout << "index=" << index;
-    // for (int i=0; i<d; ++i) std::cout << " " << multiindex[i];
-    // std::cout << std::endl;
-
-    // the current cell
-    std::vector<double> center_position(d); /// scaled up multigrid/cell-position
-    for (int i = 0; i < d; ++i)
-      center_position[i] = multiindex[i] * mesh_size;
-    double center_coefficient = diffusion_coefficient(center_position);
-    double center_matrix_entry = 0.0;
-
-    // loop over all neighbors
-    for (int i = 0; i < d; i++)
-    {
-      // down neighbor
-      if (multiindex[i] > 0)
-      {
-        // we have a neighbor cell
-        std::vector<double> neighbor_position(center_position);
-        neighbor_position[i] -= mesh_size;
-        double neighbor_coefficient = diffusion_coefficient(neighbor_position);
-        double harmonic_average = 2.0 / ((1.0 / neighbor_coefficient) + (1.0 / center_coefficient));
-        // pA->entry(index,index-sizes[i]) = -harmonic_average;
-        mtx_data.nonzeros.emplace_back(index, index - sizes[i], -harmonic_average); ///@changed
-        center_matrix_entry += harmonic_average;
-      }
-      else
-      {
-        // current cell is on the boundary in this direction
-        std::vector<double> neighbor_position(center_position);
-        neighbor_position[i] = 0.0;
-        if (dirichlet_boundary(neighbor_position))
-          center_matrix_entry += center_coefficient * 2.0;
-      }
-
-      // up neighbor
-      if (multiindex[i] < n - 1)
-      {
-        // we have a neighbor cell
-        std::vector<double> neighbor_position(center_position);
-        neighbor_position[i] += mesh_size;
-        double neighbor_coefficient = diffusion_coefficient(neighbor_position);
-        double harmonic_average = 2.0 / ((1.0 / neighbor_coefficient) + (1.0 / center_coefficient));
-        // pA->entry(index,index+sizes[i]) = -harmonic_average;
-        mtx_data.nonzeros.emplace_back(index, index + sizes[i], -harmonic_average); ///@changed
-        center_matrix_entry += harmonic_average;
-      }
-      else
-      {
-        // current cell is on the boundary in this direction
-        std::vector<double> neighbor_position(center_position);
-        neighbor_position[i] = 1.0;
-        if (dirichlet_boundary(neighbor_position))
-          center_matrix_entry += center_coefficient * 2.0;
-      }
-    }
-
-    // finally the diagonal entry
-    mtx_data.nonzeros.emplace_back(index, index, center_matrix_entry); ///@changed
-  }
-  // create matrix from data
-  auto pA = mtx::create(exec,GKOdim,getNNZ(n,d));
-  pA->read(mtx_data);
-
-  return pA;
-}
 
 // implementation using matrix_data -> uses AoS
 template <class MatrixType, typename CoefficientFunction, typename BoundaryTypeFunction, class ExecutorType>
@@ -138,7 +38,7 @@ std::unique_ptr<MatrixType> diffusion_matrix_md(const size_t n, const size_t d,
 
   // create matrix entries
   // gko::matrix_data<double,size_t> mtx_data{gko::dim<2,size_t>(N,N)};     //temporary COO representation (!might be unefficient) @changed
-  gko::matrix_data<> mtx_data{gko::dim<2>(N)};           ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
+  gko::matrix_data<double,gko::int64> mtx_data{gko::dim<2>(N)};           ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
   //gko::matrix_data<> mtx_data{gko::dim<2>{N}}; //tested in 400-4 dataset
   for (std::size_t index = 0; index < sizes[d]; index++) /// each grid cell
   {
@@ -240,7 +140,7 @@ std::unique_ptr<MatrixType> diffusion_matrix_mad(const size_t n, const size_t d,
 
   // create matrix entries
   // gko::matrix_assembly_data<> mtx_assembly_data{gko::dim<2>{N}};              ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
-  auto mtx_assembly_data = gko::matrix_assembly_data<>{gko::dim<2>(N)};
+  auto mtx_assembly_data = gko::matrix_assembly_data<double,gko::int64>{gko::dim<2>(N)};
   // auto mtx_assembly_data = gko::matrix_assembly_data<>{};
   for (std::size_t index = 0; index < sizes[d]; index++)
   {
@@ -348,7 +248,7 @@ std::unique_ptr<MatrixType> diffusion_matrix_dmd(const size_t n, const size_t d,
   // create matrix entries
   // gko::matrix_data<double,size_t> mtx_data{gko::dim<2,size_t>(N,N)};     //temporary COO representation (!might be unefficient) @changed
   auto gkoDim = gko::dim<2>(N);
-  gko::matrix_data<double,int> mtx_data{gkoDim};           ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
+  gko::matrix_data<double,gko::int64> mtx_data{gkoDim};           ///@changed @perfomance->passing size_t as template parameter to dim significant slowdown (why??)
   //gko::matrix_data<> mtx_data{gko::dim<2>{N}}; //tested in 400-4 dataset
   for (std::size_t index = 0; index < sizes[d]; index++) /// each grid cell
   {
@@ -424,7 +324,7 @@ std::unique_ptr<MatrixType> diffusion_matrix_dmd(const size_t n, const size_t d,
   }
   // create matrix from data
   //gko::device_matrix_data<double,size_t> dmd{gkoDim};
-  auto dmd = gko::device_matrix_data<double,int>::create_from_host(exec,mtx_data);
+  auto dmd = gko::device_matrix_data<double,gko::int64>::create_from_host(exec,mtx_data);
   auto pA = mtx::create(exec); ///@optimize (line below included)
   pA->read(dmd);
 
@@ -456,7 +356,6 @@ auto executeRound(
   if(assebly_structure_string=="md") generate_matrix = diffusion_matrix_md<MatrixType>;
   else if (assebly_structure_string=="mad") generate_matrix = diffusion_matrix_mad<MatrixType>;
   else if (assebly_structure_string=="dmd") generate_matrix = diffusion_matrix_dmd<MatrixType>;
-  else if (assebly_structure_string=="optimizedCSR") generate_matrix=diffusion_matrix_directCSR<MatrixType>;
   else throw std::invalid_argument("Invalid argument for assebly_structure_string");
 
 
@@ -516,8 +415,8 @@ auto executeRound(
 
 
 // build CG_jac
-  using cg = gko::solver::Cg<>;
-  using bj = gko::preconditioner::Jacobi<>;
+  using cg = gko::solver::Cg<double>;
+  using bj = gko::preconditioner::Jacobi<double,gko::int64>;
   auto solver_factory_CG_jac = cg::build()
                              .with_criteria(gko::stop::Iteration::build()
                                                 .with_max_iters(max_iters)
@@ -556,7 +455,8 @@ auto executeRound(
   }
 
 // build CG_ILU
-  using ilu = gko::preconditioner::Ilu<>;
+  // specifying  default values, explicitly to use non-default ValueType (default=double) and IndexType (default=int32)
+  using ilu = gko::preconditioner::Ilu<gko::solver::LowerTrs<double,gko::int64>, gko::solver::UpperTrs<double,gko::int64>, false, gko::int64>;
   auto solver_factory_CGilu = cg::build()
                              .with_criteria(gko::stop::Iteration::build()
                                                 .with_max_iters(max_iters)
@@ -651,15 +551,15 @@ int main(int argc, char* argv[])
     std::function<std::vector<std::pair<long, long>>(size_t, size_t, size_t, size_t, size_t, std::string)>>
     execute_round_map{
       {"csr", [&] (size_t n, size_t dim, size_t max_iters, size_t min_reps, size_t min_time, std::string filename)
-        { return executeRound<gko::matrix::Csr<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }},
+        { return executeRound<gko::matrix::Csr<double,gko::int64>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }},
       {"ell", [&] (size_t n, size_t dim, size_t max_iters, size_t min_reps, size_t min_time, std::string filename)
-        { return executeRound<gko::matrix::Ell<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }},
+        { return executeRound<gko::matrix::Ell<double,gko::int64>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }},
       {"sellp", [&] (size_t n, size_t dim, size_t max_iters, size_t min_reps, size_t min_time, std::string filename)
-        { return executeRound<gko::matrix::Sellp<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }},
+        { return executeRound<gko::matrix::Sellp<double,gko::int64>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }},
       {"hybrid", [&] (size_t n, size_t dim, size_t max_iters, size_t min_reps, size_t min_time, std::string filename)
-        { return executeRound<gko::matrix::Hybrid<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }},
+        { return executeRound<gko::matrix::Hybrid<double,gko::int64>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }},
       {"coo", [&] (size_t n, size_t dim, size_t max_iters, size_t min_reps, size_t min_time, std::string filename)
-        { return executeRound<gko::matrix::Coo<>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }}};
+        { return executeRound<gko::matrix::Coo<double,gko::int64>>(n,dim,max_iters,min_reps,min_time,filename,diffusion_coefficient,dirichlet_boundary,exec_string,exec_map,assebly_structure_string); }}};
 
 
 
