@@ -575,24 +575,45 @@ int main(int argc, char* argv[])
   std::string foldername = "data/"+filename+"/";
   std::filesystem::create_directories(foldername);
   std::vector<std::string>dataTypes = {"gen","SpMV","CGjac","CGilu"};
-  std::vector<std::vector<std::pair<long, long>>> results;
+  //std::vector<std::vector<std::pair<long, long>>> results;
+  std::vector<std::pair<long, long>> results;
 
+  std::ofstream gen_file(foldername+dataTypes[0]+".txt");
+  std::ofstream SpMV_file(foldername+dataTypes[1]+".txt");
+  std::ofstream CGjac_file(foldername+dataTypes[2]+".txt");
+  std::ofstream CGilu_file(foldername+dataTypes[3]+".txt");
   for(size_t n=n_lowerBound; n<=n_upperBound; n++){
     // generate data
-    results.push_back(execute_round_map.at(mtx_string)(n,dim,max_iters,min_reps,min_time,filename));
+    //results.push_back(execute_round_map.at(mtx_string)(n,dim,max_iters,min_reps,min_time,filename));
+    results = execute_round_map.at(mtx_string)(n,dim,max_iters,min_reps,min_time,filename);
+    // store data immediately
+    gen_file << n << " "<< dim << " "<< results[0].first << " "<< results[0].second << "\n";
+    gen_file.flush();
+    SpMV_file << n << " "<< dim << " "<< results[1].first << " "<< results[1].second << "\n";
+    SpMV_file.flush();
+    CGjac_file << n << " "<< dim << " "<< results[2].first << " "<< results[2].second << "\n";
+    CGjac_file.flush();
+    CGilu_file << n << " "<< dim << " "<< results[3].first << " "<< results[3].second << "\n";
+    CGilu_file.flush();
   }
+  gen_file.close();
+  SpMV_file.close();
+  CGjac_file.close();
+  CGilu_file.close();
 
-  for(int i=0; i<4;i++){
-    std::ofstream outfile(foldername+dataTypes[i]+".txt");
-    for(size_t n=n_lowerBound; n<n_upperBound+1; n++){
+/*
+for(int i=0; i<4;i++){
+  std::ofstream outfile(foldername+dataTypes[i]+".txt");
+  for(size_t n=n_lowerBound; n<=n_upperBound; n++){
     outfile 
-        << n << " "
-        << dim << " "
-        << results[n-1][i].first << " "
-        << results[n-1][i].second << "\n";
-    }
-    outfile.close();
+    << n << " "
+    << dim << " "
+    << results[n-1][i].first << " "
+    << results[n-1][i].second << "\n";
   }
+  outfile.close();
+}
+*/
 
   std::cout << "-------------------------------FINISHED:ginkgo-evaluation-------------------------------------------" << std::endl;
   return 0;

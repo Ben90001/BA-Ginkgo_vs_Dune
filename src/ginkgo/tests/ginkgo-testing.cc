@@ -4,6 +4,9 @@
 #include<fstream>
 #include<filesystem> //requires cpp17
 #include <cstdlib>
+#include<cmath>
+
+#include </usr/local/cuda-12.6/targets/x86_64-linux/include/cuda_runtime.h>
 
 #include<ginkgo/ginkgo.hpp>
 
@@ -27,43 +30,94 @@ void printClassInfo(const T& obj) {
     free(demangled);
 }
 
+void print (std::string message){
+  std::cout<<message<<std::endl;
+}
+void printGPURAM(){
+  //system("nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | awk '{print $1/1024 \" GB\"}'");
+  system("nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | awk '{print $1 \" MiB\"}'");
+}
+/*
+void setCudaHeapSize(size_t heapSize){
 
-
+    // Attempt to set the heap size
+    cudaError_t err = cudaDeviceSetLimit(cudaLimitMallocHeapSize, heapSize);
+    if (err != cudaSuccess) {
+        std::cerr << "Failed to set heap size: " << cudaGetErrorString(err) << "\n";
+    }
+    else{
+    // Verify the heap size was set correctly
+    size_t setHeapSize;
+    cudaDeviceGetLimit(&setHeapSize, cudaLimitMallocHeapSize);
+    std::cout << "Heap size successfully set to: " << setHeapSize << " bytes\n";
+    }
+}
+*/
 
 
 
 
 
 int main(int argc, char* argv[]){
+  std::cout<<"------------------------------starting to run ginkgo-testing------------------------------"<<std::endl;
   using ValueType = double;
-  using IndexType = int;
+  using IndexType = gko::int64;
 
-  using Mtx = gko::matrix::Csr<double, long>;
-  using Vec = gko::matrix::Dense<double>;
+  using Mtx = gko::matrix::Csr<ValueType,IndexType>;
+  using Vec = gko::matrix::Dense<ValueType>;
   using dim = gko::dim<2>;
-  using matrix_data = gko::matrix_data<double, long>;
+  using matrix_data = gko::matrix_data<ValueType,IndexType>;
+  print("The verry beninging:");
+  printGPURAM();
 
-  auto exec = gko::ReferenceExecutor::create();
-  auto x = Vec::create(exec, dim{10, 1});
+for (long long i= 277078826; i=i+10000; i<277088826){
+  print("i: "+std::to_string(i));
+  IndexType N_size_bytes = 7000L * 1024 * 1024; //MiB
+  IndexType N = (N_size_bytes/8)/3;
+  N = i;
+  //IndexType N = std::pow(650,3) ;
+  print("N:" + std::to_string(N));
+  print("Vec of size N in MiB:" + std::to_string(N*8/(1024 * 1024)));
+  //auto exec = gko::ReferenceExecutor::create();
+  auto exec = gko::CudaExecutor::create(0,gko::OmpExecutor::create());
+  
+  /*
+  print("exec created");
+  printGPURAM();
+  //setCudaHeapSize(heapSize);
+  auto x = Vec::create(exec, dim{N, 1});
+  print("vec x created");
+  printGPURAM();
   x->fill(1);
-  auto y = Vec::create(exec, dim{10, 1});
-
-  /*matrix_data data{dim{10, 10}};
-  for (int row = 0; row < 10; row++) {
-      data.nonzeros.emplace_back(row, row, 2.0);
-      data.nonzeros.emplace_back(row, (row + 1) % 10, -1.0);
-      data.nonzeros.emplace_back(row, (row + 9) % 10, -1.0);
-      x->at(row, 0) = 1.0; // only works on CPU executors
-  }*/
-  auto mtx = Mtx::create(exec);
-  printClassInfo(mtx);
-  auto data = matrix_data::diag(dim{4333222111},3);
-  std::cout<<"starting spmv"<<std::endl;
+  print("vec x filled");
+  printGPURAM();
+  
+  auto y = Vec::create(exec, dim{N, 1});
+  print("vec y created");
+  printGPURAM();
+  */
+ 
+ auto mtx = Mtx::create(exec);
+    printClassInfo(mtx);
+    print("created matrix");
+    printGPURAM();
+  auto data = matrix_data::diag(dim{N},3);
+    print("created matrix_data");
+    printGPURAM();
   mtx->read(data);
-  mtx->apply(x, y);
-  gko::write(std::cout, y);
+    print("filled matrix with matrix_data");
+    printGPURAM();
+    /*
+    mtx->apply(x, y);
+    print("after SpMV");
+    printGPURAM();
+    */
+   //gko::write(std::cout, y);
+  }
+  
 
 
+  std::cout<<"------------------------------finished running ginkgo-testing------------------------------"<<std::endl;
 
 }
 

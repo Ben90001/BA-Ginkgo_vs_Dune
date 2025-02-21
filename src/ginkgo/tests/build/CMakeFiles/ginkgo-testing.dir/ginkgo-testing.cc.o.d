@@ -215,6 +215,55 @@ CMakeFiles/ginkgo-testing.dir/ginkgo-testing.cc.o: \
  /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/bits/unique_ptr.h \
  /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/bits/fs_dir.h \
  /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/bits/fs_ops.h \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/cmath \
+ /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+ /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
+ /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
+ /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
+ /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
+ /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/bits/specfun.h \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/gamma.tcc \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/special_function_util.h \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/bessel_function.tcc \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/beta_function.tcc \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/ell_integral.tcc \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/exp_integral.tcc \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/hypergeometric.tcc \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/legendre_function.tcc \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/modified_bessel_func.tcc \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/poly_hermite.tcc \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/poly_laguerre.tcc \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/riemann_zeta.tcc \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/cuda_runtime.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/crt/host_config.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/builtin_types.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/device_types.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/crt/host_defines.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/driver_types.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/vector_types.h \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include/limits.h \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include/syslimits.h \
+ /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/local_lim.h \
+ /usr/include/linux/limits.h \
+ /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/surface_types.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/texture_types.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/library_types.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/channel_descriptor.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/cuda_runtime_api.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/cuda_device_runtime_api.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/driver_functions.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/vector_functions.h \
+ /usr/local/cuda-12.6/targets/x86_64-linux/include/vector_functions.hpp \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/utility \
+ /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/bits/stl_relops.h \
  /home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/include/ginkgo/ginkgo.hpp \
  /home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/build/include/ginkgo/config.hpp \
  /home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/include/ginkgo/core/base/abstract_factory.hpp \
@@ -260,38 +309,7 @@ CMakeFiles/ginkgo-testing.dir/ginkgo-testing.cc.o: \
  /home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/include/ginkgo/core/base/exception.hpp \
  /home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/include/ginkgo/core/base/types.hpp \
  /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/climits \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include/limits.h \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/include/syslimits.h \
- /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
- /usr/include/x86_64-linux-gnu/bits/local_lim.h \
- /usr/include/linux/limits.h \
- /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
- /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
- /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
  /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/complex \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/cmath \
- /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/math-vector.h \
- /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
- /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
- /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
- /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
- /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/bits/specfun.h \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/gamma.tcc \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/special_function_util.h \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/bessel_function.tcc \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/beta_function.tcc \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/ell_integral.tcc \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/exp_integral.tcc \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/hypergeometric.tcc \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/legendre_function.tcc \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/modified_bessel_func.tcc \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/poly_hermite.tcc \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/poly_laguerre.tcc \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/tr1/riemann_zeta.tcc \
  /home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/include/ginkgo/core/base/exception_helpers.hpp \
  /home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/include/ginkgo/core/base/batch_dim.hpp \
  /home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/include/ginkgo/core/base/dim.hpp \
@@ -311,8 +329,6 @@ CMakeFiles/ginkgo-testing.dir/ginkgo-testing.cc.o: \
  /home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/include/ginkgo/core/base/array.hpp \
  /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/iterator \
  /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/bits/stream_iterator.h \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/utility \
- /opt/spack/linux-debian11-zen2/gcc-10.2.1/gcc-13.2.0-rfvxljw6kjqhyot7jpfwuws4i7ksrsem/lib/gcc/x86_64-pc-linux-gnu/13.2.0/../../../../include/c++/13.2.0/bits/stl_relops.h \
  /home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/include/ginkgo/core/base/batch_lin_op.hpp \
  /home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/include/ginkgo/core/base/batch_multi_vector.hpp \
  /home/benh/BA-Ginkgo_vs_Dune/dependencies/GINKGO/ginkgo-1.8.0/include/ginkgo/core/base/mtx_io.hpp \
